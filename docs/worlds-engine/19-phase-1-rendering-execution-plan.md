@@ -1,6 +1,6 @@
 # 19 — Phase 1 rendering: executable research plan
 
-**Status:** source audit underway; implementation and runtime benchmarks not yet started. This is the canonical short-term plan for Stage 1 of the [roadmap](12-roadmap.md).
+**Status (2026-11-13):** source audit expanded; an independent test project is now present at [benchmarks/rendering](../../benchmarks/rendering/), but it has not yet been run or smoke-tested. No engine implementation changes have started. This is the canonical short-term plan for Stage 1 of the [roadmap](12-roadmap.md).
 
 ## Objective
 
@@ -96,7 +96,7 @@ Review visual correctness, CPU/GPU P50/P95/P99, memory, platform support and sou
 ## Immediate next work
 
 1. Finalize RES-001 path/source map, RES-002 detailed data/visibility analysis.
-2. Create a minimal reproducible Godot benchmark project or use suitable upstream benchmark scenes.
+2. **Created, not yet executed:** a minimal reproducible Godot benchmark project at [benchmarks/rendering](../../benchmarks/rendering/). Smoke-test it on a graphics-capable Godot build before collecting results.
 3. Run Phase 1 tests on a graphics-capable machine with known GPU/driver.
 4. Choose first prototype from the results; update docs before code.
 

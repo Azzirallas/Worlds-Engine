@@ -24,7 +24,7 @@ Active source findings are in [RES-001](17-renderer-source-audit-res-001.md), [R
 - Map culling, MultiMesh, geometry LOD, material dispatch and GPU resource residency.
 - Inspect what is possible through RenderingDevice, engine modules and existing APIs.
 - Compare Godot's renderers and their hardware requirements.
-- Construct repeatable reference scenes and initial profiling runs, beginning with unmodified fork/upstream-equivalent settings.
+- Construct repeatable reference scenes and initial profiling runs, beginning with unmodified fork/upstream-equivalent settings. A standalone scene-generation benchmark has been committed at [benchmarks/rendering](../../benchmarks/rendering/) and still needs a smoke run.
 - Identify actual CPU draw submission, GPU shading, geometry, animation and streaming bottlenecks.
 
 **Exit gate:** a documented list of problems ranked by severity, reproduction cases, upstream baseline data and at least two possible solutions per major bottleneck.
