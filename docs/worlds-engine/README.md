@@ -16,6 +16,7 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 ## Subsystem plans
 
 - [Rendering, geometry, culling, materials](05-rendering-and-geometry.md)
+- [RES-001: first renderer source audit](17-renderer-source-audit-res-001.md)
 - [Lighting, shadows and image quality](06-lighting-and-visual-fidelity.md)
 - [Physics, destruction and collision scalability](07-physics-and-destruction.md)
 - [Large worlds, streaming and procedural content](08-large-worlds-and-streaming.md)
