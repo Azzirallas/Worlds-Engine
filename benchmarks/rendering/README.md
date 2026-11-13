@@ -6,7 +6,7 @@ This is a minimal independent **Godot project** inside the Worlds Engine fork. I
 
 ## Important renderer selection
 
-The project currently sets its default renderer to **Compatibility** as a conservative project-file setting. **For first-phase RD tests, change the renderer to Forward+ in Project Settings before gathering results** (or start the editor with the appropriate supported command-line rendering-method override). Confirm the active renderer from the editor before recording data. We must not accidentally compare different rendering backends.
+The project deliberately does **not** pin a renderer in `project.godot`. On supported desktop hardware Godot generally defaults to Forward+, but **verify the active renderer in the editor** before gathering results. Select Forward+ explicitly for first-phase RenderingDevice tests; record when Mobile or Compatibility is used. Never compare runs with different active backends.
 
 > The project is not intended for `--headless` graphics testing. A headless/dummy backend does not provide meaningful GPU results.
 

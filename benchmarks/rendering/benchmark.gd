@@ -199,7 +199,7 @@ func _percentile(samples: Array[float], p: float) -> float:
 ## Store a CSV summary under user:// and print its physical path for collection.
 func _write_report() -> void:
 	var path := "user://render_baseline_%s_%d_%s_%d.csv" % [
-			mode, count, bounds_mode, Time.get_unix_time_from_system()]
+			mode, count, bounds_mode, int(Time.get_unix_time_from_system())]
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	if file == null:
 		push_error("Could not write " + path)
