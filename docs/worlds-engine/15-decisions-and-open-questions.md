@@ -11,7 +11,9 @@
 | DEC-005 | Chosen | Keep Worlds-ECS independent and integration optional | Engine remains useful for other games | New constraints demand a modular alternative |
 | DEC-006 | Chosen | Use legally appropriate public techniques and original code | Public fork and licensing compliance | Legal review changes policy |
 | DEC-007 | Proposed | Use additive fast paths and flags for specialized systems | Preserve normal Godot projects | Benchmark shows maintenance complexity outweighs value |
-| DEC-008 | Proposed | Start technical investigation with rendering/geometry | Graphics are key priority | Critical correctness/performance blockers emerge elsewhere |
+| DEC-008 | Chosen | Start technical investigation with rendering/geometry | Graphics are key priority | Critical correctness/performance blockers emerge elsewhere |
+| DEC-009 | Chosen | Run frontier rendering research in parallel with Godot baseline optimization | The goal includes surpassing existing engines in scoped workloads, not just catching up | Experiments prove unmaintainable or offer no benefit |
+| DEC-010 | Proposed | Explore representation-adaptive rendering and change/relevance budgets | Can exploit different geometry content types and persistent world state | Image quality, hardware portability or frame-time results do not justify complexity |
 
 Decisions are policies or proposals, not evidence that a subsystem already exists.
 
@@ -56,5 +58,7 @@ Decisions are policies or proposals, not evidence that a subsystem already exist
 - RES-010 Godot editor/scene/GDExtension compatibility coverage.
 
 **Current:** RES-001 and RES-002 source-level audits have progressed; no runtime performance benchmark or optimization prototype has run. See the [Phase 1 plan](19-phase-1-rendering-execution-plan.md). 
+
+**Frontier research next:** evaluate [frontier candidate set](21-frontier-rendering-research.md) and the [experimental lab](22-experimental-renderer-lab.md), starting with E-01a GPU cluster visibility and E-02 baseline update costs. E-01 is not yet implemented or validated.
 
 **First practical follow-up:** benchmark coarse vs region-bounded MultiMesh visibility; compare CPU scene scan cost, update costs and computed vs conservative AABBs. Selecting a code change is deferred until evidence is available.

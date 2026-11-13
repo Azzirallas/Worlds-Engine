@@ -4,7 +4,7 @@
 
 ## Objective
 
-Identify the most valuable, least disruptive graphics scalability improvements for Worlds Engine while preserving Godot's scene/editor and standard rendering paths. Work should be driven by source evidence and reproducible benchmarks.
+Identify both (A) valuable near-term improvements to the existing renderer and (B) new approaches that could surpass contemporary rendering engines on specific workloads. Keep Godot's scene/editor standard paths familiar; let advanced implementations diverge behind an optional experimental boundary. Work must be evaluated through source evidence and reproducible comparative benchmarks.
 
 ## What is confirmed so far
 
@@ -16,6 +16,14 @@ Identify the most valuable, least disruptive graphics scalability improvements f
 - Forward+ builds render lists, then calls RenderingDevice draw functions.
 - MultiMesh has full-buffer and partial dirty-region upload paths, computed/custom bounds, motion-vector paths and indirect draw support.
 - Source also includes BLAS/TLAS/ray-tracing APIs, **not a completed high-end GI solution**. Hardware availability and rendering integration remain unknown.
+
+## Parallel frontier research lane
+
+Do not interpret source audits as the full ambition of Phase 1. See [frontier strategy](21-frontier-rendering-research.md), [lab experiments](22-experimental-renderer-lab.md) and [primary-source evidence](23-frontier-evidence-register.md).
+
+Research a representation-adaptive renderer: standard meshes, GPU cluster hierarchies, sparse implicit/parametric content, selective compute rasterization, low-detail impostors and optional ray-friendly deformation proxies. Explore change-aware temporal budgets for shadows, GI and geometry. These are hypotheses, not promises.
+
+Track A continues providing fair controls. Track B can begin a bounded design/prototype to investigate a different architecture, even if the ordinary Godot bottleneck has not yet been established; however, it cannot be merged as a claimed improvement without matched evidence and fallback compatibility.
 
 ## Work packages
 
@@ -87,7 +95,7 @@ Review visual correctness, CPU/GPU P50/P95/P99, memory, platform support and sou
 ## What not to do yet
 
 - No rewrite of RenderingServer, scene/editor, geometry types or low-level graphics driver.
-- No meshlets/virtualized geometry implementation until ordinary mesh LOD, streaming, indirect and culling costs are measured.
+- No *main-engine integration* of meshlets/virtualized geometry without validated benchmarks and a fallback. A standalone, bounded experimental prototype may be designed in parallel with baseline work; no claim of speedup until tested.
 - No new global spatial index merely because an existing BVH is present; camera culling already uses a fast parallel array scan.
 - No claim that indirect drawing is automatically GPU-driven culling.
 - No promise that ray-tracing API availability means modern dynamic GI is ready.

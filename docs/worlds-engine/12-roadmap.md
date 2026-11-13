@@ -29,6 +29,17 @@ Active source findings are in [RES-001](17-renderer-source-audit-res-001.md), [R
 
 **Exit gate:** a documented list of problems ranked by severity, reproduction cases, upstream baseline data and at least two possible solutions per major bottleneck.
 
+## Stage 1B — Frontier renderer research (STARTS IN PARALLEL)
+
+Phase 1 is **not limited to optimizing Godot**. Alongside Stage 1 baseline/source audits, maintain a frontier-research workstream to examine techniques that could outperform modern production engines in *specific* measured situations. See the [frontier strategy](21-frontier-rendering-research.md), [experimental lab](22-experimental-renderer-lab.md) and [evidence register](23-frontier-evidence-register.md).
+
+- Investigate GPU-resident geometry clusters, hierarchical visibility, hybrid raster, temporal relevance scheduling, deformation-independent ray tracing and adaptive lighting.
+- Design reproducible experiments against strong current-engine baselines; evaluate cross-vendor feature support, quality and total cost.
+- A *small* experimental branch can depart from current graphics architecture when justified; ordinary Godot editing and rendering paths must remain intact.
+- Distinguish speculative original ideas from established published techniques.
+
+**Exit gate:** ranked high-risk prototype candidates, source and licensing assessment, hardware/backend requirements, and objective failure/success criteria. Experimental prototypes enter the engine only after separately reviewed results.
+
 ## Stage 2 — Low-risk rendering improvements
 
 - First evaluate configuration and content-level gains.
@@ -74,7 +85,7 @@ Parallel research tracks:
 ## Priority policy
 
 1. Correctness and compatibility are gating conditions.
-2. Profiled renderer/geometry bottlenecks outrank speculative major rewrites.
+2. Maintain two lanes: evidence-led improvements to current Godot, and bold standalone frontier experiments. Novel architecture may be researched before there is a proven bottleneck, but integration into ordinary Godot still requires measurements.
 3. World-streaming and physics paths may move earlier if benchmarks reveal they block rendering scenarios.
 4. The optional ECS bridge should not dictate general-purpose engine architecture.
 5. No promise of parity with specific proprietary features without independent tests.
@@ -84,5 +95,5 @@ Parallel research tracks:
 1. Finish documentation set and verify repo links.
 2. Review fork renderer entry points and exact baseline version.
 3. Produce an audit worksheet and benchmark definitions for SceneTree/RenderingServer/MultiMesh/culling.
-4. Decide which single measured bottleneck is worth a first prototype.
-5. Only then make an engine code plan.
+4. Design the first frontier prototype (GPU cluster visibility/indirect rendering) alongside benchmarks; no assumption it will win.
+5. Decide which measured optimization or experimental renderer prototype deserves implementation after hardware and regression constraints are clear.

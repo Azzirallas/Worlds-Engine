@@ -26,6 +26,12 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 - [Worlds-ECS and external simulation integration](09-ecs-and-simulation-bridge.md)
 - [Editor, developer experience and backward compatibility](10-editor-and-workflows.md)
 
+## Frontier research (beyond baseline)
+
+- [Beyond contemporary engine limits: rendering research strategy](21-frontier-rendering-research.md)
+- [Experimental renderer lab and prototype charter](22-experimental-renderer-lab.md)
+- [Frontier research evidence and source register](23-frontier-evidence-register.md)
+
 ## Execution and governance
 
 - [Performance metrics, benchmark methodology](11-performance-and-benchmarks.md)
