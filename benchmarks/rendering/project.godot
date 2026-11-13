@@ -1,0 +1,14 @@
+; Worlds Engine Stage 1 source-baseline benchmark project.
+; Open or run in a graphics-capable Godot 4.8 editor/build.
+
+config_version=5
+
+[application]
+
+config/name="Worlds Engine Rendering Baseline"
+run/main_scene="res://main.tscn"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
