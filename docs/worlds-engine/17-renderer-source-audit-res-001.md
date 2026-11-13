@@ -1,6 +1,6 @@
 # 17 — RES-001: Initial rendering source audit
 
-**Status:** first-pass source tracing completed; benchmark and deeper call-graph analysis pending. **Date:** 2026-11-13. **Source:** Worlds-Engine master at initial audit commit `c6711d9bc72e2e7f5c111492d70954b30a21a8c9` (Godot 4.8 beta lineage). All findings are from inspected source, not a runtime profile.
+**Status:** source tracing expanded; benchmark and further edge-path analysis pending. See [verified call graph](20-renderer-call-graph.md) and [MultiMesh audit](18-res-002-multimesh-and-visibility.md). **Date:** 2026-11-13. **Source:** Worlds-Engine master at initial audit commit `c6711d9bc72e2e7f5c111492d70954b30a21a8c9` (Godot 4.8 beta lineage). All findings are from inspected source, not a runtime profile.
 
 ## Confirmed source entry points
 
@@ -51,6 +51,19 @@ This is a navigation sketch, not a verified exhaustive call graph; different ren
 5. Draw preparation, material/state sorting and command submission overhead.
 6. Shadow-pass duplication and visibility processing cost.
 7. GPU overdraw, foliage shader cost, skinning and memory bandwidth.
+
+## Phase 1 follow-up: more precise findings (2026-11-13)
+
+The first pass above is retained for historical traceability. More detailed inspection confirmed:
+
+- Camera culling scans `scenario->instance_data` (`renderer_scene_cull.cpp:3444-3480`) and parallelizes above a default 200-instance threshold; DynamicBVH indexes exist but are used in other paths, including pairing and shadow scene queries.
+- Per-instance RD MultiMesh writes **already use 512-instance dirty upload regions**, optionally switching to a contiguous upload if more than 32 regions or more than half are dirty (`mesh_storage.cpp:1743, 2305-2350`). This is distinct from the full-buffer `set_buffer` path. Do not implement redundant generic dirty tracking.
+- Individual writes may initialize a CPU cache, with potential GPU readback after an earlier full-buffer write (`mesh_storage.cpp:1745-1780`). Test transition stalls separately.
+- When no custom AABB is provided, dirty MultiMesh bounds can be rebuilt across every visible instance (`mesh_storage.cpp:1860-1903, 2305-2350`).
+- RD indirect MultiMesh draw paths already exist in Forward+ and Mobile (`render_forward_clustered.cpp:608-625`, `render_forward_mobile.cpp:2731-2748`). This does not establish GPU-generated visibility selection.
+- The RenderingDevice source contains feature-checked BLAS/TLAS and ray tracing APIs. This is infrastructure, **not proof of a high-end GI feature**.
+
+For the detailed verified steps, constraints and test hypotheses consult [RES-002](18-res-002-multimesh-and-visibility.md) and [Phase 1 plan](19-phase-1-rendering-execution-plan.md). No performance measurements have been run.
 
 ## Next source-reading checklist
 

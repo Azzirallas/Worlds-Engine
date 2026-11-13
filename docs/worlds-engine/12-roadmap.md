@@ -16,7 +16,9 @@ High-quality graphics and scalable environments are central to the project. Howe
 
 **Exit gate:** documentation links resolve, design choices are labeled provisional or decided, current Godot features are not misrepresented.
 
-## Stage 1 — Rendering and geometry baseline audit (FIRST TECHNICAL MILESTONE)
+## Stage 1 — Rendering and geometry baseline audit (CURRENT TECHNICAL MILESTONE)
+
+Active source findings are in [RES-001](17-renderer-source-audit-res-001.md), [RES-002](18-res-002-multimesh-and-visibility.md) and the [renderer call graph](20-renderer-call-graph.md). Follow the [Phase 1 execution plan](19-phase-1-rendering-execution-plan.md); benchmarks are still pending.
 
 - Trace SceneTree -> RenderingServer -> renderer/backend -> GPU.
 - Map culling, MultiMesh, geometry LOD, material dispatch and GPU resource residency.

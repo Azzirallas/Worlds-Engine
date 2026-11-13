@@ -55,4 +55,6 @@ Decisions are policies or proposals, not evidence that a subsystem already exist
 - RES-009 Worlds-ECS delta sync and identity handling.
 - RES-010 Godot editor/scene/GDExtension compatibility coverage.
 
-**First ticket:** RES-001, followed by RES-002. These map directly to the Stage 1 technical milestone.
+**Current:** RES-001 and RES-002 source-level audits have progressed; no runtime performance benchmark or optimization prototype has run. See the [Phase 1 plan](19-phase-1-rendering-execution-plan.md). 
+
+**First practical follow-up:** benchmark coarse vs region-bounded MultiMesh visibility; compare CPU scene scan cost, update costs and computed vs conservative AABBs. Selecting a code change is deferred until evidence is available.
