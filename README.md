@@ -1,3 +1,15 @@
+# Worlds Engine (Godot fork)
+
+Worlds Engine is an independent Godot-based engine project. Our guiding aim is to preserve the familiar Godot editor, scenes, scripting and workflow while researching optional improvements in rendering, world streaming, physics and scalability.
+
+**Planning status:** engine improvement plans are documented but not yet implemented. The source baseline was identified as Godot 4.8 beta on 2026-11-13. This is not an official Godot release or an Epic Games project.
+
+**[Read the Worlds Engine project plan](docs/worlds-engine/README.md)** — vision, existing Godot capabilities, architecture, subsystem proposals, benchmarks, roadmap, legal review and decisions.
+
+---
+
+## Upstream Godot information
+
 # Godot Engine
 
 <p align="center">
