@@ -36,7 +36,7 @@ First command imports/compiles `visibility.comp.glsl` in the editor; the second 
 
 1. Compile/import the shader using the exact Godot fork build; fix any shader, descriptor or GDScript error.
 2. Compare all nine scenarios with CPU truth and confirm overflow is *reported*, not silently used.
-3. Add graphics capture, GPU producer→indirect-consumer barrier tests, and a **separate opt-in draw fixture** using real meshes; preserve normal `MultiMeshInstance3D` controls.
+3. Add a **separate opt-in draw fixture** using real meshes and GPU producer→indirect-consumer barrier tests; preserve normal `MultiMeshInstance3D` controls. Godot's local RenderingDevices generally cannot be captured by RenderDoc, so migrate instrumentation/capture to a suitable main-device path *only once* the isolated compute parity experiment passes.
 4. Benchmark total scene frame costs and synchronization; avoid CPU readback in actual rendering.
 5. Only consider adding an opt-in native path after measurable wins and correct shading and compatibility.
 
