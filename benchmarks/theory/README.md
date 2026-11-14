@@ -2,6 +2,15 @@
 
 This directory contains **CPU-only analytical models and invariants** for Worlds Engine research. These are not engine prototypes, actual GPU timing measurements, render quality tests or a substitute for the graphics benchmarks in [../rendering/](../rendering/).
 
+## 2D edge ownership and integrated camera streaming (23 new passing CPU tests)
+
+[56](../../docs/worlds-engine/56-2d-cluster-edges-and-synthetic-camera-traces.md) adds `cluster_2d_reference.py` (**13 passing tests**) and `geometry_camera_trace.py` (**10 passing tests**). The first verifies rectangular tiling, resident parent dependencies, ordered multi-edge profile overlap, missing split-vertex T-junctions and exact resident stitch certificates. The second combines page streaming, LOD pixel-error targets and 2D seam-safe selection in a reproducible 21-page camera lab. Synthetic trace telemetry reports deficit/excess detail cell-depth units separately, issued read/upload bytes, in-flight references, safe evictions and cancellation. **96/96 available local tests passed**, including earlier exploratory async tests not present in GitHub; 23 new committed tests passed. No Godot GPU execution or performance measurement.
+
+```sh
+python -m unittest discover -s benchmarks/theory -p 'test_cluster_2d_reference.py' -v
+python -m unittest discover -s benchmarks/theory -p 'test_geometry_camera_trace.py' -v
+```
+
 ## Cluster coverage audit and seam-safe refinements (21 passing tests)
 
 The previously unexecuted [54](../../docs/worlds-engine/54-cluster-coverage-cpu-contract.md) suite was run; 10/10 original tests passed. One actual missing-intermediate-parent bug was fixed and covered by a new regression, giving **11/11 current coverage tests**. [55](../../docs/worlds-engine/55-cluster-seam-correctness-and-dependency-audit.md) adds `cluster_seam_reference.py` and 10/10 passing tests for ordered integer border profiles, optional resident stitch validation, conservative coarsening and irreparable-root fallback. Both include seeded 2,000-case randomized coverage tests. **73/73 available local CPU tests pass**, but this includes older exploratory tests not committed to the repository and is not a complete checkout CI run. No GPU performance or real 3D crack-free geometry was tested.
