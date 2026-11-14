@@ -128,6 +128,8 @@ func _test_cases() -> Array[Dictionary]:
 			"layers": 1, "capacity": 257, "regions": true})
 	cases.append({"name": "invalid_candidate_diagnostic", "records": edge, "planes": _box_planes(10.0),
 			"layers": 1, "capacity": 8, "regions": false, "inject_bad_candidate": true})
+	cases.append({"name": "stale_generation_diagnostic", "records": edge, "planes": _box_planes(10.0),
+			"layers": 1, "capacity": 8, "regions": true, "inject_stale_candidate": true})
 	return cases
 
 
@@ -243,11 +245,16 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 	var candidate_data := PackedInt32Array()
 	for slot in candidates:
 		candidate_data.append(slot)
+		candidate_data.append(int(records[slot]["generation"]) if slot < records.size() else 0)
+	if scenario.get("inject_stale_candidate", false):
+		candidate_data.append(0)
+		candidate_data.append(int(records[0]["generation"]) + 1)
+	var candidate_count := int(candidate_data.size() / 2)
 
 	var buffers: Array[RID] = [
 		_make_buffer(rd, sphere_data.to_byte_array(), 16),
 		_make_buffer(rd, meta_data.to_byte_array(), 8),
-		_make_buffer(rd, candidate_data.to_byte_array(), 4),
+		_make_buffer(rd, candidate_data.to_byte_array(), 8),
 		_make_buffer(rd, plane_data.to_byte_array(), 16),
 		_make_buffer(rd, PackedByteArray(), maxi(1, capacity) * 8),
 		_make_buffer(rd, PackedInt32Array([0, 0]).to_byte_array(), 8)
@@ -276,7 +283,7 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 	var commands := rd.compute_list_begin()
 	rd.compute_list_bind_compute_pipeline(commands, pipeline)
 	rd.compute_list_bind_uniform_set(commands, uniform_set, 0)
-	var push_data := PackedInt32Array([candidates.size(), planes.size(), view_mask,
+	var push_data := PackedInt32Array([candidate_count, planes.size(), view_mask,
 			capacity, records.size(), 0, 0, 0]).to_byte_array()
 	rd.compute_list_set_push_constant(commands, push_data, push_data.size())
 	rd.compute_list_dispatch(commands, maxi(1, ceili(float(candidates.size()) / WORKGROUP_SIZE)), 1, 1)
@@ -291,6 +298,8 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 	var expected_flags := (1 if expected.size() > capacity else 0)
 	if scenario.get("inject_bad_candidate", false):
 		expected_flags |= 2
+	if scenario.get("inject_stale_candidate", false):
+		expected_flags |= 4
 
 	var actual: Array[int] = []
 	for i in range(mini(actual_count, capacity)):
@@ -325,5 +334,5 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 		return false
 	passed_cases += 1
 	print("WORLDS_GPU_CASE_PASS %s candidates=%d visible=%d flags=%d" %
-			[name, candidates.size(), expected.size(), flags])
+			[name, candidate_count, expected.size(), flags])
 	return true
