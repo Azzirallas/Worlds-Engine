@@ -152,6 +152,10 @@ Private files inspected:
 
 **Not performed:** build Unreal; run any rendering benchmarks; analyze all shader branches; inspect entire import/compression pipeline, full skeletal animation system, texture streaming, PSO compilation or full cross-platform RHI; prove cache/LOD correctness; establish legal clearance for derived implementations. Source file presence and top-level entrypoints are not enough to assert algorithmic performance.
 
+## Follow-on audits
+
+The [texture streaming baseline audit](36-texture-streaming-baseline-audit.md) and [pipeline-stutter/PSO research](37-pipeline-stutter-and-pso-research.md) cover two previously under-specified domains. Both use licensed Unreal paths only as source-review waypoints and anchor public engineering concepts in published references. Godot's existing texture-streaming module and shader precaching must be profiled before proposing replacements.
+
 ## What this changes
 
 Use the [Godot gap matrix](25-godot-renderer-gap-matrix.md), [experiment specifications](26-phase-1-prototype-priority-and-measurements.md) and [independent implementation protocol](27-license-and-independent-implementation-protocol.md). Strongest initial candidates: **incremental GPU instance state + culling**, **streaming and fallback budgeting**, and **update-driven rendering caches**. Original scene representation switching remains the frontier research hypothesis.
