@@ -2,6 +2,10 @@
 
 **Status:** original architecture proposal; no code or data format implemented. Research context: public virtualized geometry, sparse virtual memory, texture/mesh streaming and Godot resource management. Not a translation of Unreal streaming manager.
 
+## Existing baseline correction (2026-11-13)
+
+The audited 4.8 beta fork already has `modules/texture_streaming/`: project settings, material feedback, asynchronous GPU readback, mip-quality requests and optional budgeting. It is disabled by default, and its runtime efficacy is unmeasured. **This document's proposed resource scheduler is not a replacement for that existing texture module.** First validate/instrument the module and only build complementary geometry/chunk management or new texture paging when measured gaps justify them. See [36](36-texture-streaming-baseline-audit.md).
+
 ## The problem
 
 An efficient visibility system is insufficient if an object requires data not currently on the GPU. Scenes containing huge quantities of detail need predictable choices about *what stays resident*, *what is requested*, *how much can upload this frame*, and *what is drawn while data is missing*. High apparent throughput with frame spikes, blinking geometry or cache thrashing is a failure.
