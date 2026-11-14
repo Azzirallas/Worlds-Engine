@@ -8,6 +8,10 @@
 
 The user explicitly chose **stability and conventional mesh rendering as the default**. Next focus is normal Godot renderer baseline/correctness, GPU-driven instance visibility, clustered/virtualized geometry, and shared streaming/residency, with benchmark/feature-flag/fallback gates. Gaussian splatting is **optional and deferred**, not a dependency or replacement; [44](44-splat-asset-foundation-implementation-plan.md) is a research-ready splat plan only. No GPU benchmark exists to justify preferring splats for general-purpose scenes. See [DEC-012](15-decisions-and-open-questions.md) and [35](35-phase-1-validation-and-next-actions.md).
 
+## Hardware-unavailable continuation (2026-11-14)
+
+**Hardware testing is unavailable; it is a future acceptance gate, not the next actionable work item.** Continue deep public source audit and CPU-only correctness/performance-theory models. [48 — frame-safe rendering lifetimes](48-inflight-presentation-lifetimes-and-hardware-free-validation.md) now contains a **committed CPU reference** for generation-safe slot recycling, deletion tombstones, deferred upload packets, multiple in-flight camera frames and explicit fallback eligibility. **14 new CPU tests passed; 41 tests passed in a local rerun across the three visibility/indirect/lifetime suites.** A tombstone publication revision bug was found and fixed. GPU shaders, Godot parser, renderer integration and measured performance still have **no hardware validation**. Next hardware-free research: per-slot reference counts and GPU-safe 32-bit packet/fence ABI; then geometry-cluster and residency theoretical tests. Do not keep suggesting GPU benchmarks as the immediate task while hardware remains unavailable.
+
 ## Project identity and non-negotiables
 
 - Product: **Worlds Engine**, a public Godot fork and general-purpose engine, not solely a renderer for our simulation.
