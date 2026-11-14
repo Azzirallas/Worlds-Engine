@@ -18,7 +18,7 @@
 
 Decisions are policies or proposals, not evidence that a subsystem already exists.
 
-**New audited fact:** Godot 4.8 beta already contains `RenderingDeviceGraph` and indirect render commands; new generic render graph proposals require a specific missing capability and a benchmark. See [gap matrix](25-godot-renderer-gap-matrix.md).
+**New audited facts:** Godot 4.8 beta already contains `RenderingDeviceGraph` and indirect render commands; new generic render graph proposals require a specific missing capability and a benchmark. The audited MultiMesh transport groups dirty transforms in 512-instance regions and can upload the complete visible buffer above an update threshold. [39](39-sparse-instance-update-cost-and-gpu-selection.md) gives the precise source audit and a **theoretical, not measured**, scattered-edit model. Godot also vendors MIT meshoptimizer 1.3; [40](40-representation-continuity-and-2026-rendering-research.md) studies representation/temporal continuity. See [gap matrix](25-godot-renderer-gap-matrix.md).
 
 **Research compliance rule:** restricted Unreal source is for licensed review only; any Worlds Engine implementation must be independently designed and traceable to public references. See [protocol](27-license-and-independent-implementation-protocol.md).
 
