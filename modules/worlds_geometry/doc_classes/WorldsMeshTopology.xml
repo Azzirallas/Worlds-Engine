@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="WorldsMeshTopology" inherits="RefCounted" api_type="core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+    <brief_description>
+        Optional CPU topology validation for indexed triangle mesh surfaces.
+    </brief_description>
+    <description>
+        WorldsMeshTopology inspects index-level connectivity, winding and degeneracy without changing an existing mesh. It does not weld vertices at UV seams, build LOD clusters or prove watertight rasterization. The worlds_geometry module must be enabled at engine build time.
+    </description>
+    <methods>
+        <method name="analyze_indexed_surface">
+            <return type="Dictionary" />
+            <param index="0" name="vertices" type="PackedVector3Array" />
+            <param index="1" name="indices" type="PackedInt32Array" />
+            <description>
+                Returns vertex/triangle counts and counts for invalid indices, incomplete triangles, zero-area faces, duplicate faces, open edges, nonmanifold edges and orientation conflicts. [code]closed_oriented_2manifold[/code] is a topological proxy, not a proof of a physically sealed imported 3D surface.
+            </description>
+        </method>
+    </methods>
+</class>
