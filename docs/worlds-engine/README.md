@@ -56,6 +56,8 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 - [Frame-safe rendering lifetimes: CPU implementation, 14 new tests and 41-test combined pass without GPU hardware](48-inflight-presentation-lifetimes-and-hardware-free-validation.md)
 - [Refcounted render slots and 32-byte versioned upload packet: 17 additional CPU tests, no GPU hardware required](49-refcounted-slots-and-u32-upload-packet-contract.md)
 - [Scene epoch reset and CPU instance identity raster: 24 additional deterministic tests with no GPU](50-scene-epoch-reset-and-cpu-instance-identity-oracle.md)
+- [Bounded immutable instance-table staging uploads and completion protocol: 19 CPU tests](51-bounded-immutable-staging-upload-reference.md)
+- [Geometry-page residency, pinned fallback and safe eviction: 14 CPU tests](52-geometry-page-residency-cpu-contract.md)
 
 ## Unreal rendering architecture audit (licensed-source research)
 
