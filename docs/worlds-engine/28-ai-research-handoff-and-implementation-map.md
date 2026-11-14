@@ -4,6 +4,10 @@
 
 **State as of 2026-11-13:** Phase 1 research, not an implemented renderer upgrade. This file is the **first file to read in a fresh AI session** after the [documentation index](README.md). The intent is to preserve *decisions, rationale, implementation proposals, dependencies, and unknowns* rather than rely on memory.
 
+## Latest priority decision (2026-11-13)
+
+The user explicitly chose **stability and conventional mesh rendering as the default**. Next focus is normal Godot renderer baseline/correctness, GPU-driven instance visibility, clustered/virtualized geometry, and shared streaming/residency, with benchmark/feature-flag/fallback gates. Gaussian splatting is **optional and deferred**, not a dependency or replacement; [44](44-splat-asset-foundation-implementation-plan.md) is a research-ready splat plan only. No GPU benchmark exists to justify preferring splats for general-purpose scenes. See [DEC-012](15-decisions-and-open-questions.md) and [35](35-phase-1-validation-and-next-actions.md).
+
 ## Project identity and non-negotiables
 
 - Product: **Worlds Engine**, a public Godot fork and general-purpose engine, not solely a renderer for our simulation.
