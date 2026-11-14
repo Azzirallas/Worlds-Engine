@@ -1,6 +1,6 @@
 # 44 — Splat asset foundation: first implementation milestone
 
-**Status:** implementation-ready plan; no runtime renderer changes or GPU performance claims. Companion to [43](43-splat-source-audit-and-implementation-lessons.md). Keep ordinary Godot mesh rendering unchanged.
+**Status:** **DEFERRED OPTIONAL EXPERIMENT**, not the main Phase 1 implementation task. Conventional mesh rendering, GPU visibility, clustered geometry and shared residency take priority under the confirmed [Phase 1 ranking](35-phase-1-validation-and-next-actions.md) and [DEC-012](15-decisions-and-open-questions.md). This is a technically specified future splat experiment, **not** authorization to replace the normal renderer. No runtime renderer changes or GPU performance claims. Companion to [43](43-splat-source-audit-and-implementation-lessons.md).
 
 ## Goal
 
