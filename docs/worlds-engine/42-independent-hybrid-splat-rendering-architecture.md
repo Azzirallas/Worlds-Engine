@@ -91,6 +91,12 @@ R2/R3/R4 are **not approved runtime patches**, not expected to outperform R0/R1 
 - **Scene validity:** independent view/layer behavior, editor vs runtime, multiview, texture import/reimport, hot shader reload, malformed assets and buffer-capacity exhaustion.
 - **Small-scene fallback:** no expensive GPU sort/raster infrastructure for a tiny object if conventional impostor/mesh is better.
 
+## Mesh-derived Gaussian splats: important additional asset path
+
+[EA SEED Mesh2Splat](https://github.com/electronicarts/mesh2splat) provides a published example of converting `.glb` meshes directly to Gaussian surfaces using existing triangles/material/texture data and exporting splat `.ply`. This suggests an additional opt-in importer path: `Godot mesh/GLB → geometry/material-aware splat derivative → independent shader/sorting/backend`, **always preserving the original polygon mesh**. A renderer capable of per-splat PBR channels/normal/shadows could relight mesh-derived Gaussian surfaces more plausibly than ordinary photographically baked Gaussian radiance. The conversion cannot improve source geometric truth and does not necessarily improve render throughput or peak memory. Tightly curved triangles, UV seams, skeletal deformation, dense alpha foliage, collision, motion vectors, transparency and per-splat sorting must remain independent correctness gates.
+
+**Licensing caveat:** Mesh2Splat's actual `LICENSE.txt` differs from the MIT label in `CITATION.cff`; do not include its code until the applicable redistribution terms/marks and dependency licenses are resolved. Its authors' sub-ms conversion report is hardware/workload-specific. [41](41-gaussian-splatting-project-survey-2026.md) includes the source-level finding.
+
 ## Formats and import architecture
 
 **Initial neutral interchange:** binary PLY with documented properties; external conversion via permissively licensed [splat-transform](https://github.com/playcanvas/splat-transform) or [SPZ](https://github.com/nianticlabs/spz). Avoid implementing every codec at once.
