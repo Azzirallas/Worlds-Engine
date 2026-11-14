@@ -15,6 +15,7 @@
 | R-006 Shadow invalidation experiment | shadow baseline + telemetry | quantified cache reuse / artifacts | design in [33](33-lighting-shadow-and-temporal-cache-design.md), code pending |
 | R-007 Material and temporal integration | experimental win from R-003/R-004 | true shader/light/motion compatibility | designs in [34](34-materials-graph-and-temporal-reconstruction.md) and [40](40-representation-continuity-and-2026-rendering-research.md), code pending |
 | R-008 Extend engine behind feature flag | measured win + legal review | safe optional Godot improvement | not approved yet |
+| R-009 Optional Gaussian splats — source/format/backend study | public MIT/Apache projects and Godot integration APIs | hybrid rendering, LOD streaming, temporal/light correctness; no simulation coupling | [41 project survey](41-gaussian-splatting-project-survey-2026.md) and [42 original architecture](42-independent-hybrid-splat-rendering-architecture.md) committed; hardware/format tests pending |
 
 ## Hardware-unavailable research mode (active 2026-11-13)
 
