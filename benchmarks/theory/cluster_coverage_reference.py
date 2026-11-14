@@ -62,12 +62,14 @@ class ClusterCoverage:
             raise ValueError("Missing permanent coarse root")
 
         def visit(key):
+            if key not in resident:
+                return None  # All draw descendants require the resident parent chain.
             kids = self.children[key]
             if kids and key in requested:
                 refined = [visit(child) for child in kids]
                 if all(part is not None for part in refined):
                     return tuple(k for part in refined for k in part)
-            return (key,) if key in resident else None
+            return (key,)
 
         result = []
         for root in self.roots:
