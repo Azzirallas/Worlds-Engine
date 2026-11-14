@@ -89,6 +89,10 @@ Score total GPU/CPU ms, import/build time, resident bytes, disk bytes, visible a
 - Geometry residency thrashing can consume all gains from fine-grained clustering.
 - A scene with few triangles but expensive pixels is shading-bound; a geometry path might have little effect.
 
+## New temporal-quality dependency
+
+Even mathematically bounded LOD geometry can compromise temporal lighting, TAA and shadows when topology/representation changes. [40](40-representation-continuity-and-2026-rendering-research.md) records current Godot temporal integration and public SIGGRAPH 2026 research on maintaining sample validity through LOD transitions. Start with conservative history invalidation and per-effect correctness, not an unverified cross-topology reuse algorithm.
+
 ## First development ticket
 
 Build G1 as a single opt-in benchmark with a documented imported mesh set, a meshoptimizer-based meshlet derivative, conservative GPU frustum visibility and standard shading baseline. Publish geometry overlay and 100%-visible cost before implementing hierarchy, streaming or exotic rasterization. If the project lacks supported GPU functionality, prepare source-only feasibility notes and wait for actual hardware benchmark data.
