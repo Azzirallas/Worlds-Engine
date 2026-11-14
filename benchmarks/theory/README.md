@@ -2,7 +2,16 @@
 
 This directory contains **CPU-only analytical models and invariants** for Worlds Engine research. These are not engine prototypes, actual GPU timing measurements, render quality tests or a substitute for the graphics benchmarks in [../rendering/](../rendering/).
 
-## Frame-safe GPU presentation lifetimes (14 new tests passed)
+## Refcounted slot lifetimes and versioned update ABI (17 new tests passed)
+
+The follow-on [49 specification](../../docs/worlds-engine/49-refcounted-slots-and-u32-upload-packet-contract.md) adds per-slot outstanding-frame counters (O(1) reference lookup), 32-bit generation/revision fail-closed exhaustion, and a versioned **32-byte little-endian** GPU upload descriptor with scene epoch and 16-byte payload-offset alignment. [test_frame_refcount_wrap.py](test_frame_refcount_wrap.py) validates 1,500 seeded interleavings and independent count parity (8 tests). [test_gpu_slot_packet_abi.py](test_gpu_slot_packet_abi.py) validates byte layout, malformed data, stale epoch and 1,000 binary roundtrips (9 tests). **17/17 tests passed locally on 2026-11-14**; exact committed files match the tested local copies by length and checksum. No GPU shader or Godot build was executed.
+
+```sh
+python -m unittest discover -s benchmarks/theory -p 'test_frame_refcount_wrap.py' -v
+python -m unittest discover -s benchmarks/theory -p 'test_gpu_slot_packet_abi.py' -v
+```
+
+## Frame-safe GPU presentation lifetimes (14 prior tests passed)
 
 [`inflight_slot_reference.py`](inflight_slot_reference.py) and [`test_inflight_slot_reference.py`](test_inflight_slot_reference.py) model CPU authoritative slots, generation-tagged publication packets, pending GPU-frame references, deferred updates, tombstone publication and safe recycling. Multiple frame/view tickets protect the same slot until *all* retire; stale or out-of-order updates never overwrite a newer generation. A full or not-yet-published table rejects experimental submission rather than dropping instances.
 
