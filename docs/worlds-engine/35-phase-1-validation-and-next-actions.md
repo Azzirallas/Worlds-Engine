@@ -14,6 +14,10 @@ Graphics hardware is still unavailable, so **do not block development on GPU tes
 
 [50](50-scene-epoch-reset-and-cpu-instance-identity-oracle.md) adds a two-phase scene-reset contract with stale-epoch handle/packet rejection, 12 new CPU lifecycle tests and a per-instance full-frame image-identity oracle with 12 further tests (**24/24 new tests passed**). This addresses scene-reset ABA risk and the earlier single-green-pixel oracle's inability to detect missing instances. **No GPU availability or performance claims.** The next actionable research tasks remain CPU-only: simulate versioned staging/upload residency budgets and prototype geometry cluster correctness. GPU validation is a later gate.
 
+## CPU staging and geometry residency milestones (2026-11-14)
+
+[51](51-bounded-immutable-staging-upload-reference.md) adds safe versioned staging-upload packets, byte limits, per-slot busy/published gating, acknowledged completion and reset draining (**19 new CPU tests passed**). [52](52-geometry-page-residency-cpu-contract.md) implements a geometry-only parent/child page scheduler with pinned coarse fallbacks, multi-camera demand coalescing, hard resident/upload budgets and transactional eviction (**14 new CPU tests passed**). The CPU research directory reran **57 tests**, all passing, but the older full repository suite was not cloned in this environment. The page scheduler is *synthetic*; it does not load actual meshes or replace Godot's texture-streaming module. **Next tasks remain CPU-only:** model asynchronous page state/IO completion and per-page generation validity, then LOD error/transition correctness. Actual graphics testing stays deferred.
+
 ## High-level ranking
 
 | Task | Dependency | Outcome | Status |
