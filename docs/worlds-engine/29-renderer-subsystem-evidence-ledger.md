@@ -36,7 +36,7 @@
 
 ## Additional baseline findings (2026-11-13)
 
-9. `modules/texture_streaming/` is present in the Godot 4.8 beta fork. Source inspection confirms optional GPU/material feedback, mip-level decisions, readback/reload workers and a configurable (default-off) memory budget. **Do not mark texture streaming as wholly missing.** This is not proof of sparse virtual texture paging or a production-ready feature. See [36](36-texture-streaming-baseline-audit.md).
+9. `modules/texture_streaming/` is present in the Godot 4.8 beta fork. Source inspection confirms optional GPU/material feedback, mip-level decisions, readback/reload workers and a configurable (default-off) memory budget. **Do not mark texture streaming as wholly missing.** Shader feedback is wired through **Forward+ and Mobile**, not Compatibility. This is not proof of sparse virtual texture paging or a production-ready feature. See [36](36-texture-streaming-baseline-audit.md) and full source trace [38](38-texture-streaming-end-to-end-trace-and-validation.md).
 10. `renderer_rd/pipeline_cache_rd.cpp` and `shader_rd.cpp` implement existing pipeline/shader variant machinery. Public Godot docs describe ubershader and precompilation paths; **do not mark PSO precompilation as absent without measurement.** See [37](37-pipeline-stutter-and-pso-research.md).
 
 ## Important public cross-engine lessons
