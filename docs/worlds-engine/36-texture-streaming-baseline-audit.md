@@ -62,6 +62,6 @@ Do **not** equate the module's estimated memory counter with driver-allocated by
 
 **First validate and instrument the existing module**. Only implement a virtual-tile layer if a reproducible workload demonstrates material memory or streaming shortcomings that simpler Godot improvements cannot solve. Keep geometry and texture residency budgets conceptually coordinated, but do not build a central manager before the existing paths are understood.
 
-**Next static audit:** trace `texture_configure_streaming`, material registration, shader feedback writes and `reload_callable` to the backend upload/lifetime path. The input and output paths must be source-verified before optimizing; no source-level reachability claim is made here.
+**Source trace completed in follow-on audit:** [38 — streamed texture input-to-GPU call chain and failure tests](38-texture-streaming-end-to-end-trace-and-validation.md) verifies importer, resource loader, streaming state, material feedback, shader paths in both Forward+ **and Mobile**, asynchronous feedback, mip policy, reloading and compatible GPU texture replacement. Runtime operation, correctness under failure and performance remain unverified.
 
 Related: [32 — proposed residency contract](32-residency-streaming-contract.md), [35 — validation](35-phase-1-validation-and-next-actions.md), [29 — architecture evidence](29-renderer-subsystem-evidence-ledger.md).
