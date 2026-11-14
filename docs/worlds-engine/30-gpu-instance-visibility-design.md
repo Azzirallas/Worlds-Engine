@@ -1,6 +1,6 @@
 # 30 — Original GPU instance state and visibility system: design specification
 
-**Status:** proposed Worlds Engine design; no source or compiled prototype. Built using standard GPU-driven rendering concepts and public Godot interfaces. Not a translation of Unreal GPUScene or instance-culling source. Motivated by [29](29-renderer-subsystem-evidence-ledger.md) and [25](25-godot-renderer-gap-matrix.md).
+**Status:** **source-level specification plus a CPU-only reference implementation; still no GPU/engine prototype.** [45](45-visibility-reference-milestone-and-gpu-gates.md) records the implementation, 14 passing CPU tests and exact Godot RD API verification. Built using standard GPU-driven rendering concepts and public Godot interfaces, not a translation of Unreal GPUScene or instance-culling code. Motivated by [29](29-renderer-subsystem-evidence-ledger.md) and [25](25-godot-renderer-gap-matrix.md).
 
 ## Precise goal
 
