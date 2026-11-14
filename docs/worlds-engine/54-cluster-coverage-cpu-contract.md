@@ -1,6 +1,6 @@
 # 54 — Exact cluster coverage and all-or-nothing refinement (CPU reference)
 
-**2026-11-14. Status:** two new source files committed; **not executed in Godot or on GPU**. The Python test suite is supplied for reproduction but has **not been executed in this turn**. Native renderer remains unchanged.
+**2026-11-14 review update:** original 10 committed CPU tests **have now been run and passed**. Review found and fixed a missing-intermediate-parent dependency bug; the amended coverage suite now passes **11/11**. [55 — seam-aware refinement audit](55-cluster-seam-correctness-and-dependency-audit.md) adds 10 passing CPU seam tests. No Godot or GPU execution; native renderer remains unchanged.
 
 ## Why this is the next constraint
 
