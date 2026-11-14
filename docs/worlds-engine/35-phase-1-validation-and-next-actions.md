@@ -103,7 +103,7 @@ For every ticket record:
 
 Target: `benchmarks/rendering/`.
 
-Definition of done: benchmark runs on a graphics-capable Godot 4.8 build; all three existing modes produce interpretable CSVs; dynamic movement is deterministic; camera can run static/orbit/cut paths; measurement scripts report per-frame CPU/GPU values and P95/P99; missing counters are explicitly marked; README records exact commands for Windows and Fedora.
+Definition of done: benchmark runs on a graphics-capable Godot 4.8 build; all three modes produce valid summary **and raw sample** CSVs; movement and camera cases run without visual/culling losses; `validate_results.py` checks sample counts/timing percentiles; per-frame CPU/GPU times and P95/P99 are credible; missing counters are explicitly marked; README commands work on Windows and Fedora. Script and parser are committed, but **GPU/engine run is pending**.
 
 If no graphics environment is available, inspect script against `RenderingDevice` and `Performance` APIs and write an explicit *unverified* code review; **do not claim benchmark correctness from static reading**.
 
