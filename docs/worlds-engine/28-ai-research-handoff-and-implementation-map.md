@@ -93,6 +93,7 @@ No module is approved to merge merely because it appears here.
 5. **Parallel architectural research:** explicit resource residency and scene-change epochs to budget costly work.
 6. **Lighting later:** one cached effect experiment, with correctness/quality gates. Avoid rebuilding full Lumen/MegaLights.
 7. **Feature flags and fallback** from day one. No surprising change to ordinary Godot projects.
+8. **Optional splat representation research:** GDGS as the Godot baseline, PlayCanvas streaming and Spark dynamics as public-permissive references, NVIDIA Vulkan for advanced graphics, no default-engine integration yet; see [41](41-gaussian-splatting-project-survey-2026.md)–[42](42-independent-hybrid-splat-rendering-architecture.md).
 
 ## Implementation contracts that must survive context loss
 
