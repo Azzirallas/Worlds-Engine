@@ -45,7 +45,7 @@ Do not assume either branch has remained unchanged. Recheck HEAD and engine vers
 4. **Deep subsystem specs:** [29 audit ledger](29-renderer-subsystem-evidence-ledger.md), [30 GPU scene](30-gpu-instance-visibility-design.md), [31 virtual geometry](31-independent-virtual-geometry-design.md), [32 residency](32-residency-streaming-contract.md), [33 shadows/GI](33-lighting-shadow-and-temporal-cache-design.md), [34 shading/compositor](34-materials-graph-and-temporal-reconstruction.md).
 5. [39 sparse update/source cost model](39-sparse-instance-update-cost-and-gpu-selection.md) and [40 cross-LOD/temporal continuity research](40-representation-continuity-and-2026-rendering-research.md).
 6. [35 validation and implementation sequence](35-phase-1-validation-and-next-actions.md).
-6. [Research references](23-frontier-evidence-register.md) and primary public technical documents in each spec.
+7. [Research references](23-frontier-evidence-register.md) and primary public technical documents in each spec.
 
 ## Status definitions; no implicit promotions
 
