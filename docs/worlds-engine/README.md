@@ -54,6 +54,7 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 - [First isolated GPU compute visibility feasibility fixture: generation-safe selection and guarded command, awaiting hardware smoke test](46-isolated-gpu-visibility-feasibility-fixture.md)
 - [Guarded indirect draw and opt-in offscreen raster probe: 13 passing CPU tests, full compute→draw path awaiting Godot/GPU execution](47-guarded-indirect-and-offscreen-raster-probe.md)
 - [Frame-safe rendering lifetimes: CPU implementation, 14 new tests and 41-test combined pass without GPU hardware](48-inflight-presentation-lifetimes-and-hardware-free-validation.md)
+- [Refcounted render slots and 32-byte versioned upload packet: 17 additional CPU tests, no GPU hardware required](49-refcounted-slots-and-u32-upload-packet-contract.md)
 
 ## Unreal rendering architecture audit (licensed-source research)
 
