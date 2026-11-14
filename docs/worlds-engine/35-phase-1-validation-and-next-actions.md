@@ -22,6 +22,10 @@ Graphics hardware is still unavailable, so **do not block development on GPU tes
 
 [53](53-async-geometry-lifecycle-and-lod-error-cpu-milestone.md) adds two independently authored Python models: a generation-safe simulated async page lifecycle and a conservative pixel-error LOD selector with resident-parent and hysteresis checks. **27 committed tests passed locally** (13 streaming, 14 LOD); the streaming module also passed a separate 25-test local exploratory suite (not committed). 1,200 randomized streaming operations and 700 projected-error monotonicity cases were run. None of this proves real IO/GPU throughput, image quality, meshlet crack freedom or Godot runtime compatibility. Next **hardware-free** work: deterministic stream demand/churn traces and conservative region/cluster coverage constraints; existing Godot texture streaming remains unchanged.
 
+## Coverage review and seam guard (2026-11-14)
+
+[55](55-cluster-seam-correctness-and-dependency-audit.md) records actual execution of the earlier 10 cluster tests, an identified/fixed missing-intermediate-parent bug, and 10 new passing seam-profile/stitch/fallback tests (current coverage suite **11/11**, seam suite **10/10**). The available local Python directory passes **73/73** tests, including exploratory uncommitted async cases; this is not a full repository CI pass. Next CPU-only gates: multi-edge 2D cluster adjacency with real border ownership invariants, then workload traces combining async streaming + LOD + safe refinement. Do not infer 3D crack freedom or rendering performance.
+
 ## High-level ranking
 
 | Task | Dependency | Outcome | Status |
