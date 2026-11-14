@@ -120,4 +120,6 @@ A second, slower approach is to render a conventional model from many calibrated
 
 A renderer's published popularity or FPS is **not** a comparative measurement under shared conditions. We will make a final implementation decision only when the target hardware and backend have been tested.
 
+**Deeper implementation reading:** [43 — code-level audit](43-splat-source-audit-and-implementation-lessons.md) establishes that Mesh2Splat exports extra PBR PLY fields that GDGS currently discards; PlayCanvas's newer `src/scene/gsplat-unified/` implementation has persistent allocations, spatial LOD and a *splat-count* target that is not a hard VRAM cap; Spark includes paging and skeletal skinning. It also identifies a pinned-source/documentation disagreement about the removed PlayCanvas `lodMode` error-selection control. Read this before translating the table into development work.
+
 **Source separation:** public permissive projects may permit implementation reuse with notices and dependency review. Unreal's authorized private fork remains reference-only and must not be copied into public Worlds-Engine. See [27](27-license-and-independent-implementation-protocol.md).
