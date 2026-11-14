@@ -50,6 +50,7 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 - [Gaussian-splat open-source project survey, comparative licenses and 2026 priorities](41-gaussian-splatting-project-survey-2026.md)
 - [Original optional hybrid splat asset, streaming, rendering and quality architecture](42-independent-hybrid-splat-rendering-architecture.md)
 - [Public splat-code deep audit: Mesh2Splat → GDGS material gap, PlayCanvas unified streaming, Spark paging and NVIDIA rendering](43-splat-source-audit-and-implementation-lessons.md)
+- [CPU visibility correctness milestone: 14 passing tests, Godot RD integration requirements and GPU validation gates](45-visibility-reference-milestone-and-gpu-gates.md)
 
 ## Unreal rendering architecture audit (licensed-source research)
 
