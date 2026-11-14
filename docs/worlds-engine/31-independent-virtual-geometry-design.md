@@ -1,6 +1,6 @@
 # 31 — Independent virtualized geometry experiment and geometry research
 
-**Status:** proposed; no geometry format, shader or importer code committed. **Not a Nanite reverse-source port.** The specification uses published cluster/meshlet/LOD concepts, existing MIT meshoptimizer and our independent requirements.
+**Status:** geometry format, shader and importer remain proposed. **New CPU-only reference models** for async geometry page residency and error-based whole-asset LOD selection are implemented in [53](53-async-geometry-lifecycle-and-lod-error-cpu-milestone.md). These do not constitute a native virtual-geometry renderer, meshlet pipeline, or proof of performance. **Not a Nanite reverse-source port.** The specification uses published cluster/meshlet/LOD concepts, existing MIT meshoptimizer and our independent requirements.
 
 ## Research question
 
