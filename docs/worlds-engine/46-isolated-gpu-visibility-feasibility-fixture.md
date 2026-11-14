@@ -23,7 +23,7 @@ Read [45 CPU reference](45-visibility-reference-milestone-and-gpu-gates.md), [30
 | 2 | `uvec2[]` | candidate (slot,generation) from CPU region filtering, 8 bytes/candidate |
 | 3 | `vec4[]` | frustum planes: inward normal xyz, offset w |
 | 4 | `uvec2[]` | compacted (slot,generation) output, 8 bytes/hit |
-| 5 | two `uint` values | atomic count and flags (overflow bit0, invalid slot/bounds bit1) |
+| 5 | two `uint` values | atomic count and flags (overflow bit0, invalid slot/bounds bit1, stale generation bit2) |
 
 Push constant block has **eight 32-bit words (32 bytes)**, five active params (candidate count, plane count, view layer mask, output capacity, total slot count) plus three reserved/padding words. This was deliberately padded after review of Godot push constant size/alignment discussions. The Godot runner submits the same 32-byte payload. All storage-buffer binding numbers were checked for completeness (0..5). No assumption that shader reflection or every driver has accepted the ABI yet.
 
