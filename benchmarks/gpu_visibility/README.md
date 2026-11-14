@@ -11,7 +11,7 @@
 
 ## Important configuration
 
-`project.godot` sets **Compatibility** for the empty main viewport deliberately, because a *local* Vulkan RenderingDevice can be created separately from the viewport's renderer on supported hardware. **However, this behavior is not guaranteed across Godot backends/platforms.** If `create_local_rendering_device()` returns null, the fixture fails with `WORLDS_GPU_VISIBILITY_UNAVAILABLE` and exit code 2; this does not constitute a GPU PASS. To test with the production Forward+ backend, change the project renderer to Forward+ explicitly **as a separate recorded experiment**. The fixture never uses a headless/dummy device for performance claims.
+`project.godot` **does not force Compatibility/OpenGL**. Use a graphics-capable Godot build with **Forward+ (RenderingDevice)** enabled for this test. The experiment uses a local RD for compute; if `create_local_rendering_device()` returns null, the fixture fails with `WORLDS_GPU_VISIBILITY_UNAVAILABLE` (exit code 2), **not** a GPU PASS. Do not run with a dummy/headless backend for performance claims.
 
 ## How to run on supported graphics hardware
 
