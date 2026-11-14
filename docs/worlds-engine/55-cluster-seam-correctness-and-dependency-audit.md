@@ -57,6 +57,8 @@ python -m unittest discover -s benchmarks/theory -p 'test_*.py' -v
 - Coarsening is deterministic and safety-first, **not globally quality-optimal**. A later candidate-cost or dynamic-programming selector may retain more fine detail under the same constraints.
 - Nothing establishes actual GPU throughput, memory footprint or runtime image quality.
 
+**Follow-on implementation completed (2026-11-14):** [56 — 2D patch coverage and camera traces](56-2d-cluster-edges-and-synthetic-camera-traces.md) replaces the 1D ownership proxy with rectangular region tiling and horizontal/vertical shared edge checks, plus deterministic integrated async page/LOD/seam workload tests (**23 new passing CPU tests**). The original 1D model remains a separate independent correctness oracle; real 3D triangulation and runtime graphics validation are still pending.
+
 ## Next hardware-free steps
 
 1. Add a **2D patch/edge adjacency reference**, with explicit edge ownership and deterministic shared-vertex compatibility, before implementing a native cluster renderer.
