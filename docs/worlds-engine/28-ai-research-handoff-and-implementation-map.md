@@ -116,4 +116,4 @@ No module is approved to merge merely because it appears here.
 
 ## Next action
 
-[35](35-phase-1-validation-and-next-actions.md) is the execution queue. First validate baseline and build a small proof-of-concept that supplies **independently generated** GPU-visible instance IDs. Do not write a new production renderer, clone proprietary passes, or claim success until tests exist.
+**Hardware temporarily unavailable.** Continue exact source call-path audits, small CPU-only correctness models for dirty updates and visibility, license/provenance review and design specifications [39](39-sparse-instance-update-cost-and-gpu-selection.md)–[40](40-representation-continuity-and-2026-rendering-research.md). Those can validate logical properties, *not* graphics speed or pixel quality. Keep the existing native benchmark ready but marked **not run**. When suitable graphics hardware becomes available, resume [35](35-phase-1-validation-and-next-actions.md): baseline first, then an independently designed GPU instance visibility proof. Do not rewrite the production renderer, translate proprietary Unreal internals, or claim superiority without actual measurements.
