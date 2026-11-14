@@ -11,5 +11,5 @@ void initialize_worlds_geometry_module(ModuleInitializationLevel p_level) {
 }
 
 void uninitialize_worlds_geometry_module(ModuleInitializationLevel p_level) {
-    // There is no singleton or global allocation to dispose.
+    (void)p_level; // There is no singleton or global allocation to dispose.
 }
