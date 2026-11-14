@@ -52,7 +52,7 @@ The second command also runs other existing tests; its total may exceed 41. **Th
 
 A GPU shader's generation comparison alone is **insufficient** to guarantee old frame draws are safe. If a scene slot's storage is reused before the GPU consumes an earlier frame, shader-side generation data may have changed too. A physical slot must remain alive, its consumed data must remain stable, and its generation must not be recycled until the correct synchronization condition is met. Safe alternatives to waiting for all readers (copy-on-write buffers / multi-frame replicas) require **separate measured implementation and accounting**.
 
-This reference deliberately chooses the simple conservative policy: **defer mutation of any slot referenced by a submitted frame**. It is easy to reason about, but may cause unnecessary stalls/fallback under heavy motion. A production design should compare deferred writes to per-frame buffer versioning, multi-buffering and scoped fence-based retirement once hardware becomes available.
+This reference deliberately chooses the simple conservative policy: **defer mutation of any slot referenced by a submitted frame**. [49](49-refcounted-slots-and-u32-upload-packet-contract.md) improves the referenced-slot check to an O(1) counter without changing that conservative policy. It is easy to reason about, but may cause unnecessary stalls/fallback under heavy motion. A production design should compare deferred writes to per-frame buffer versioning, multi-buffering and scoped fence-based retirement once hardware becomes available.
 
 ## Important limitations (do not overclaim)
 
