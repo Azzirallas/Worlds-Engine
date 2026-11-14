@@ -12,7 +12,7 @@ layout(set = 0, binding = 1, std430) readonly buffer MetadataBuffer {
     uvec2 metadata[]; // x = layer mask (zero when disabled), y = slot generation
 };
 layout(set = 0, binding = 2, std430) readonly buffer CandidateBuffer {
-    uint candidate_slots[];
+    uvec2 candidate_handles[]; // slot, generation; generation guards stale in-flight work
 };
 layout(set = 0, binding = 3, std430) readonly buffer FrustumBuffer {
     vec4 planes[]; // xyz = inward normal, w = half-space offset
@@ -22,7 +22,7 @@ layout(set = 0, binding = 4, std430) writeonly buffer OutputBuffer {
 };
 layout(set = 0, binding = 5, std430) buffer CounterBuffer {
     uint visible_count;
-    uint overflow_flags; // bit 0: output overflow; bit 1: invalid candidate slot
+    uint overflow_flags; // bit 0: output overflow; bit 1: bad data; bit 2: stale generation
 };
 
 layout(push_constant, std430) uniform Settings {
@@ -43,13 +43,18 @@ void main() {
         return;
     }
 
-    uint slot = candidate_slots[candidate_index];
+    uvec2 candidate = candidate_handles[candidate_index];
+    uint slot = candidate.x;
     if (slot >= settings.slot_count) {
         atomicOr(overflow_flags, 2u);
         return;
     }
 
     uvec2 entry = metadata[slot];
+    if (entry.y != candidate.y) {
+        atomicOr(overflow_flags, 4u); // Never reinterpret a recycled slot as an old candidate.
+        return;
+    }
     if ((entry.x & settings.view_layer_mask) == 0u) {
         return;
     }
