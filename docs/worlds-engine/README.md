@@ -58,7 +58,8 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 ## Execution and governance
 
 - [Performance metrics, benchmark methodology](11-performance-and-benchmarks.md)
-- [Phase 1 runnable rendering benchmark (not yet executed)](../../benchmarks/rendering/README.md)
+- [Phase 1 graphics rendering benchmark (not yet executed)](../../benchmarks/rendering/README.md)
+- [CPU-only theoretical rendering models (no GPU hardware required)](../../benchmarks/theory/README.md)
 - [Roadmap and stage gates](12-roadmap.md)
 - [Research, sources and intellectual property](13-research-and-legal.md)
 - [Upstream synchronization and release strategy](14-upstream-and-releases.md)
