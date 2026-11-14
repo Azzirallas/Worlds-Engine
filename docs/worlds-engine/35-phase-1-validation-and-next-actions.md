@@ -10,7 +10,8 @@
 | R-002 Measure normal nodes / one MultiMesh / regional MultiMesh | R-001 | strong baseline under visibility and motion | pending |
 | R-003 Explore GPU instance visibility feasibility | RD API + R-002 | no-missing-geometry compute proof | design in [30](30-gpu-instance-visibility-design.md), code pending |
 | R-004 Explore static opaque mesh clusters | R-002 / MIT meshoptimizer | minimal isolated high-detail comparison | design in [31](31-independent-virtual-geometry-design.md), code pending |
-| R-005 Implement streaming budget *test harness* | resource state model | measure fallback/teleport stalls | design in [32](32-residency-streaming-contract.md), code pending |
+| R-005 Validate existing texture streaming; then streaming budget *test harness* | module audit + resource state model | measure existing behavior, fallback/teleport stalls before adding a new manager | baseline in [36](36-texture-streaming-baseline-audit.md), design in [32](32-residency-streaming-contract.md); tests pending |
+| R-005e Cold pipeline/PSO stutter fixture | baseline + material fixture | detect shader first-use hitch and variant regression under scene loading | source audit in [37](37-pipeline-stutter-and-pso-research.md); tests pending |
 | R-006 Shadow invalidation experiment | shadow baseline + telemetry | quantified cache reuse / artifacts | design in [33](33-lighting-shadow-and-temporal-cache-design.md), code pending |
 | R-007 Material and temporal integration | experimental win from R-003/R-004 | true shader/light/motion compatibility | design in [34](34-materials-graph-and-temporal-reconstruction.md), code pending |
 | R-008 Extend engine behind feature flag | measured win + legal review | safe optional Godot improvement | not approved yet |
