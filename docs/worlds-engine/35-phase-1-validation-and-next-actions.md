@@ -10,6 +10,10 @@
 
 Graphics hardware is still unavailable, so **do not block development on GPU tests or position them as the immediate next action**. The optional GPU visibility/raster fixtures remain unexecuted for later. Meanwhile, [48](48-inflight-presentation-lifetimes-and-hardware-free-validation.md) implements the frame-safe presentation-slot reference model and documents a full **41-test local pass** across the visibility, guarded indirect-command and lifetime suites. The newest **14 tests** cover stale/out-of-order upload packets, multi-camera in-flight frames, deferred updates, quarantined slot reuse, buffer exhaustion and explicit fallback eligibility. No production renderer C++ edits have been made. **Those first two tasks are now implemented and tested** in [49](49-refcounted-slots-and-u32-upload-packet-contract.md): O(1) per-slot reference checks, 32-bit generation/revision exhaustion safeguards, a versioned 32-byte upload descriptor and **17 new passing CPU tests**. Next CPU/source tasks: world-reset scene epochs, CPU identity-raster oracle, and residency/virtual geometry contracts. GPU validation remains deferred.
 
+## Epoch reset and identity image oracle (2026-11-14)
+
+[50](50-scene-epoch-reset-and-cpu-instance-identity-oracle.md) adds a two-phase scene-reset contract with stale-epoch handle/packet rejection, 12 new CPU lifecycle tests and a per-instance full-frame image-identity oracle with 12 further tests (**24/24 new tests passed**). This addresses scene-reset ABA risk and the earlier single-green-pixel oracle's inability to detect missing instances. **No GPU availability or performance claims.** The next actionable research tasks remain CPU-only: simulate versioned staging/upload residency budgets and prototype geometry cluster correctness. GPU validation is a later gate.
+
 ## High-level ranking
 
 | Task | Dependency | Outcome | Status |
