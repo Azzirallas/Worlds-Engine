@@ -2,6 +2,8 @@
 
 **Status (2026-11-14): committed source; not parsed by Godot, shader-compiled or executed on a GPU.** The normal Godot renderer remains unchanged. The prior CPU reference was executed in the research environment **14/14 PASS**. A connector-based source ABI consistency audit of the initial fixture returned **8/8 PASS**; this is **not** an executable shader test. The generation-tagged version and its ten scenarios have now passed **10/10 source-level shader/runner consistency checks**, including descriptor bindings, 32-byte push constants, generation diagnostics and complete dispatch range. These checks do **not** compile or execute the compute shader.
 
+**Follow-on milestone:** [47 — guarded indirect command + optional offscreen raster probe](47-guarded-indirect-and-offscreen-raster-probe.md) expands this fixture to 12 cases and adds a CPU-tested packet ABI. The initial 10-case audit below remains useful historically; current live test source is documented in [47].
+
 Read [45 CPU reference](45-visibility-reference-milestone-and-gpu-gates.md), [30 original visibility design](30-gpu-instance-visibility-design.md), [35 phase-1 gates](35-phase-1-validation-and-next-actions.md), and [DEC-012 mesh-first policy](15-decisions-and-open-questions.md).
 
 ## New source files
