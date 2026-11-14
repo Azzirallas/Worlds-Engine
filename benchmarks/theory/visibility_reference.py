@@ -26,6 +26,7 @@ class Sphere:
         if (len(self.center) != 3 or not all(isfinite(v) for v in self.center)
                 or not isfinite(self.radius) or self.radius < 0):
             raise ValueError("Invalid bounding sphere")
+        object.__setattr__(self, "center", tuple(self.center))
 
     def transformed(self, basis, translation):
         """Apply an affine transform with a safe nonuniform/shear radius bound."""
@@ -53,6 +54,7 @@ class Plane:
         if (len(self.normal) != 3 or not all(isfinite(v) for v in self.normal)
                 or not isfinite(self.offset) or not any(self.normal)):
             raise ValueError("Invalid frustum plane")
+        object.__setattr__(self, "normal", tuple(self.normal))
 
     def signed(self, point):
         """Return signed half-space distance scaled by normal length."""
@@ -69,6 +71,7 @@ class View:
         """Validate the immutable view description."""
         if not 0 <= self.layers <= 0xFFFFFFFF or not all(isinstance(p, Plane) for p in self.planes):
             raise ValueError("Invalid view")
+        object.__setattr__(self, "planes", tuple(self.planes))
 
 
 @dataclass(frozen=True)
@@ -166,7 +169,9 @@ class Scene:
         if not members:
             del self.regions[key]
             self.bounds_cache.pop(key, None)
-        self._invalidate(key)
+            self.invalid_regions.discard(key)
+        else:
+            self._invalidate(key)
 
     def _read(self, handle):
         """Reject stale generations and empty slots."""
