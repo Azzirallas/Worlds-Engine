@@ -17,6 +17,14 @@ Identify both (A) valuable near-term improvements to the existing renderer and (
 - MultiMesh has full-buffer and partial dirty-region upload paths, computed/custom bounds, motion-vector paths and indirect draw support.
 - Source also includes BLAS/TLAS/ray-tracing APIs, **not a completed high-end GI solution**. Hardware availability and rendering integration remain unknown.
 
+## New: comparative Unreal Engine 5.8.4 source audit (2026-11-13)
+
+- Direct, licensed access to `Azzirallas/UnrealEngine` at pinned `release` revision confirmed; build manifest is 5.8.4.
+- Completed a **representative source-level audit** of GPU scene/instance culling, Nanite geometry + streaming, Lumen cache/probes, virtual shadows, MegaLights, RDG, World Partition and Godot counterparts. **Not an exhaustive line-by-line review, build or benchmark.**
+- [Architecture findings](24-unreal-5-8-rendering-architecture-audit.md), [Godot gap matrix](25-godot-renderer-gap-matrix.md), [prioritized experiments](26-phase-1-prototype-priority-and-measurements.md), and [independent implementation policy](27-license-and-independent-implementation-protocol.md).
+- Corrected a critical planning assumption: **Godot 4.8 already has `RenderingDeviceGraph`**, as well as indirect draw/dispatch. Improve high-level work generation rather than inventing another generic frame graph.
+- Public docs contain no Unreal source, code translations, shader details or private data layouts. The source license is **not** an open-source implementation license.
+
 ## Parallel frontier research lane
 
 Do not interpret source audits as the full ambition of Phase 1. See [frontier strategy](21-frontier-rendering-research.md), [lab experiments](22-experimental-renderer-lab.md) and [primary-source evidence](23-frontier-evidence-register.md).
@@ -103,10 +111,10 @@ Review visual correctness, CPU/GPU P50/P95/P99, memory, platform support and sou
 
 ## Immediate next work
 
-1. Finalize RES-001 path/source map, RES-002 detailed data/visibility analysis.
+1. Apply [source-audit conclusions](24-unreal-5-8-rendering-architecture-audit.md) and [gap matrix](25-godot-renderer-gap-matrix.md) to the existing RES-001/002 baseline. Investigate GPU scene/instance visibility and dynamic update throughput.
 2. **Created, not yet executed:** a minimal reproducible Godot benchmark project at [benchmarks/rendering](../../benchmarks/rendering/). Smoke-test it on a graphics-capable Godot build before collecting results.
 3. Run Phase 1 tests on a graphics-capable machine with known GPU/driver.
-4. Choose first prototype from the results; update docs before code.
+4. Draft independent minimal GPU-visible-instance prototype and a static cluster lab in parallel, based on public technical concepts; choose integration only after hardware comparisons.
 
 ## Handoff notes
 

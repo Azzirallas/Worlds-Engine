@@ -2,6 +2,8 @@
 
 **Status:** proposed experiment framework, not implemented. Design date: 2026-11-13.
 
+Read the [updated P0-P3 experiment specifications](26-phase-1-prototype-priority-and-measurements.md) and [licensing rules](27-license-and-independent-implementation-protocol.md) before starting code.
+
 ## Why the lab exists
 
 We want an ambitious renderer while protecting existing Godot games and the fork's ability to track upstream. A dedicated lab enables high-risk experiments without destabilizing scenes, importers, 2D and standard rendering.

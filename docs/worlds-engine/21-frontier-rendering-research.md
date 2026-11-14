@@ -2,6 +2,8 @@
 
 > **Status:** research strategy / speculative architecture. No claims of implementation, scientific novelty, or outperformance. Date: 2026-11-13. Complements [Phase 1 plan](19-phase-1-rendering-execution-plan.md), not a replacement for honest benchmarking.
 
+A new source-level comparison is available: [Unreal architecture audit](24-unreal-5-8-rendering-architecture-audit.md), [Godot gap matrix](25-godot-renderer-gap-matrix.md), [Phase 1 prototype priorities](26-phase-1-prototype-priority-and-measurements.md). Any implementation must follow the [source separation policy](27-license-and-independent-implementation-protocol.md).
+
 ## The actual ambition
 
 Worlds Engine is not only an attempt to make Godot faster. We want to research rendering architectures that *may surpass contemporary engines on relevant, measurable workloads*: dense living worlds, effectively unlimited detail under bounded resources, large amounts of individually moving content, high quality lighting, fast streaming, and minimal content-authoring overhead.

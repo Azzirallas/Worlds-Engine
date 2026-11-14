@@ -29,6 +29,8 @@ Active source findings are in [RES-001](17-renderer-source-audit-res-001.md), [R
 
 **Exit gate:** a documented list of problems ranked by severity, reproduction cases, upstream baseline data and at least two possible solutions per major bottleneck.
 
+**Research update (2026-11-13):** completed a representative Unreal 5.8.4 rendering source audit, checked matching Godot code, and defined original prototype gates. See [24](24-unreal-5-8-rendering-architecture-audit.md), [25](25-godot-renderer-gap-matrix.md), [26](26-phase-1-prototype-priority-and-measurements.md) and [27](27-license-and-independent-implementation-protocol.md). No new renderer prototype has been implemented or benchmarked; current benchmark harness remains untested.
+
 ## Stage 1B — Frontier renderer research (STARTS IN PARALLEL)
 
 Phase 1 is **not limited to optimizing Godot**. Alongside Stage 1 baseline/source audits, maintain a frontier-research workstream to examine techniques that could outperform modern production engines in *specific* measured situations. See the [frontier strategy](21-frontier-rendering-research.md), [experimental lab](22-experimental-renderer-lab.md) and [evidence register](23-frontier-evidence-register.md).
@@ -95,5 +97,5 @@ Parallel research tracks:
 1. Finish documentation set and verify repo links.
 2. Review fork renderer entry points and exact baseline version.
 3. Produce an audit worksheet and benchmark definitions for SceneTree/RenderingServer/MultiMesh/culling.
-4. Design the first frontier prototype (GPU cluster visibility/indirect rendering) alongside benchmarks; no assumption it will win.
+4. Design *two* P0 research experiments: persistent GPU instance visibility/update (ordinary meshes) and minimal static cluster visibility/indirect (dense geometry); compare against tuned Godot controls.
 5. Decide which measured optimization or experimental renderer prototype deserves implementation after hardware and regression constraints are clear.

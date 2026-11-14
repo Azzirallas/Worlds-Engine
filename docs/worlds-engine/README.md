@@ -1,6 +1,6 @@
 # Worlds Engine — engineering plan
 
-> Status: planning only. This directory describes intentions, hypotheses, evaluation criteria and future work. It does not claim these features have been implemented.
+> Status: research and planning, with source-level audits and an untested benchmark scaffold. No new rendering features are claimed implemented or measured.
 
 Worlds Engine is a Godot-based, general-purpose game engine project aimed at substantially better scalability and modern 3D capabilities without sacrificing Godot's familiar user experience. This documentation is the durable project reference for development, review and handoff.
 
@@ -31,6 +31,13 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 - [Beyond contemporary engine limits: rendering research strategy](21-frontier-rendering-research.md)
 - [Experimental renderer lab and prototype charter](22-experimental-renderer-lab.md)
 - [Frontier research evidence and source register](23-frontier-evidence-register.md)
+
+## Unreal rendering architecture audit (licensed-source research)
+
+- [UE 5.8.4 rendering architecture audit](24-unreal-5-8-rendering-architecture-audit.md)
+- [Godot-to-Unreal renderer gap matrix](25-godot-renderer-gap-matrix.md)
+- [Phase 1 prioritized prototype specifications](26-phase-1-prototype-priority-and-measurements.md)
+- [License and independent implementation protocol](27-license-and-independent-implementation-protocol.md)
 
 ## Execution and governance
 

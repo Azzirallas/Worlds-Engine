@@ -17,6 +17,10 @@
 
 Decisions are policies or proposals, not evidence that a subsystem already exists.
 
+**New audited fact:** Godot 4.8 beta already contains `RenderingDeviceGraph` and indirect render commands; new generic render graph proposals require a specific missing capability and a benchmark. See [gap matrix](25-godot-renderer-gap-matrix.md).
+
+**Research compliance rule:** restricted Unreal source is for licensed review only; any Worlds Engine implementation must be independently designed and traceable to public references. See [protocol](27-license-and-independent-implementation-protocol.md).
+
 ## Important questions to answer
 
 **Renderer:** Does current Godot bottleneck on main-thread submission, GPU fragments, culling granularity, bandwidth or shader variants in our representative scenes? What GPU APIs/driver features can we rely on? Can robust virtualized geometry coexist with standard meshes?
@@ -62,3 +66,13 @@ Decisions are policies or proposals, not evidence that a subsystem already exist
 **Frontier research next:** evaluate [frontier candidate set](21-frontier-rendering-research.md) and the [experimental lab](22-experimental-renderer-lab.md), starting with E-01a GPU cluster visibility and E-02 baseline update costs. E-01 is not yet implemented or validated.
 
 **First practical follow-up:** benchmark coarse vs region-bounded MultiMesh visibility; compare CPU scene scan cost, update costs and computed vs conservative AABBs. Selecting a code change is deferred until evidence is available.
+
+## New source audit tickets
+
+- RES-011 Godot RenderingDeviceGraph performance/limitations, including recorded resource barriers and driver-specific threading behavior.
+- RES-012 Stable GPU resident instance state, dirty uploads and GPU visibility/compaction experiment.
+- RES-013 Original virtualized geometry cluster prototype with fair classic LOD baseline.
+- RES-014 GPU resource residency, demand feedback and teleport/thrashing benchmark.
+- RES-015 Shadow/GI change invalidation experiment under moving persistent worlds.
+
+Status: conceptual research only. Start with [26](26-phase-1-prototype-priority-and-measurements.md).
