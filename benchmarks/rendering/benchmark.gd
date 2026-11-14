@@ -217,7 +217,7 @@ func _process(delta: float) -> void:
 		var phase := float(frame_index % 720) * TAU / 720.0
 		camera.position = Vector3(cos(phase) * 150.0, 50.0, sin(phase) * 150.0)
 	elif camera_path == "cut":
-		camera.position = Vector3(150.0 if (frame_index / 120) % 2 == 0 else -150.0, 50.0, 0.0)
+		camera.position = Vector3(150.0 if int(frame_index / 120) % 2 == 0 else -150.0, 50.0, 0.0)
 	else:
 		camera.position = Vector3(150.0, 50.0, 0.0)
 	camera.look_at(Vector3.ZERO, Vector3.UP)
