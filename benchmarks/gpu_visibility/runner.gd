@@ -233,7 +233,8 @@ func _storage_uniform(binding_index: int, buffer: RID) -> RDUniform:
 
 ## Dispatch once, read back only for test verification, then release all buffers.
 func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID,
-		guard_shader: RID, guard_pipeline: RID, scenario: Dictionary) -> bool:
+		guard_shader: RID, guard_pipeline: RID, scenario: Dictionary,
+		probe: Dictionary = {}) -> bool:
 	var name: String = scenario["name"]
 	var records: Array = scenario["records"]
 	var planes: Array = scenario["planes"]
@@ -327,6 +328,29 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID,
 	rd.compute_list_set_push_constant(commands, guard_push, guard_push.size())
 	rd.compute_list_dispatch(commands, 1, 1, 1)
 	rd.compute_list_end()
+
+	# Optional separate experiment: consume the GPU command with a raster draw.
+	var probe_set := RID()
+	if not probe.is_empty():
+		var probe_uniforms: Array[RDUniform] = [
+			_storage_uniform(0, buffers[4]),
+			_storage_uniform(1, buffers[0])
+		]
+		probe_set = rd.uniform_set_create(probe_uniforms, probe["shader"], 0)
+		if not probe_set.is_valid():
+			push_error(name + ": probe descriptor set failed")
+			rd.free_rid(guard_set)
+			rd.free_rid(uniform_set)
+			for buf in buffers:
+				rd.free_rid(buf)
+			return false
+		var draw_list := rd.draw_list_begin(probe["framebuffer"],
+				RenderingDevice.DRAW_CLEAR_COLOR_ALL, PackedColorArray([Color(0, 0, 0, 1)]))
+		rd.draw_list_bind_render_pipeline(draw_list, probe["pipeline"])
+		rd.draw_list_bind_uniform_set(draw_list, probe_set, 0)
+		rd.draw_list_draw_indirect(draw_list, false, buffers[6], 0, 1, 0)
+		rd.draw_list_end()
+
 	rd.submit()
 	rd.sync()
 
@@ -364,6 +388,18 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID,
 			or int(indirect_data.decode_u32(12)) != 0):
 		valid = false
 
+	# A true graphics probe must show green where a valid draw is expected, black otherwise.
+	if not probe.is_empty():
+		var pixels: PackedByteArray = rd.texture_get_data(probe["texture"], 0)
+		if pixels.size() != 32 * 32 * 4:
+			valid = false
+		else:
+			var center: int = (16 * 32 + 16) * 4
+			var green: bool = pixels[center] < 80 and pixels[center + 1] > 180 and pixels[center + 2] < 80
+			var black: bool = pixels[center] < 30 and pixels[center + 1] < 30 and pixels[center + 2] < 30
+			if (expected_draw_count > 0 and not green) or (expected_draw_count == 0 and not black):
+				valid = false
+
 	if expected_flags & 1:
 		# Atomic output order is undefined when the buffer deliberately overflows.
 		for slot in actual:
@@ -373,6 +409,8 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID,
 		if actual != expected:
 			valid = false
 
+	if probe_set.is_valid():
+		rd.free_rid(probe_set)
 	rd.free_rid(guard_set)
 	rd.free_rid(uniform_set)
 	for buf in buffers:
@@ -384,4 +422,7 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID,
 	passed_cases += 1
 	print("WORLDS_GPU_CASE_PASS %s candidates=%d visible=%d flags=%d draw_instances=%d" %
 			[name, candidate_count, expected.size(), flags, expected_draw_count])
+	if not probe.is_empty():
+		print("WORLDS_OFFSCREEN_CASE_PASS %s expected_indirect_instances=%d" %
+				[name, expected_draw_count])
 	return true
