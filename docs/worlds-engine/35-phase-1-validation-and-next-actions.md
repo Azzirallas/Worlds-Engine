@@ -13,7 +13,7 @@
 | R-005 Validate existing texture streaming; then streaming budget *test harness* | module audit + resource state model | measure existing behavior, fallback/teleport stalls before adding a new manager | source trace completed in [38](38-texture-streaming-end-to-end-trace-and-validation.md), baseline in [36](36-texture-streaming-baseline-audit.md); GPU tests pending |
 | R-005e Cold pipeline/PSO stutter fixture | baseline + material fixture | detect shader first-use hitch and variant regression under scene loading | source audit in [37](37-pipeline-stutter-and-pso-research.md); tests pending |
 | R-006 Shadow invalidation experiment | shadow baseline + telemetry | quantified cache reuse / artifacts | design in [33](33-lighting-shadow-and-temporal-cache-design.md), code pending |
-| R-007 Material and temporal integration | experimental win from R-003/R-004 | true shader/light/motion compatibility | design in [34](34-materials-graph-and-temporal-reconstruction.md), code pending |
+| R-007 Material and temporal integration | experimental win from R-003/R-004 | true shader/light/motion compatibility | designs in [34](34-materials-graph-and-temporal-reconstruction.md) and [40](40-representation-continuity-and-2026-rendering-research.md), code pending |
 | R-008 Extend engine behind feature flag | measured win + legal review | safe optional Godot improvement | not approved yet |
 
 ## Native benchmark must be validated first
