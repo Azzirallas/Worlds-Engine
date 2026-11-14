@@ -18,6 +18,10 @@ Graphics hardware is still unavailable, so **do not block development on GPU tes
 
 [51](51-bounded-immutable-staging-upload-reference.md) adds safe versioned staging-upload packets, byte limits, per-slot busy/published gating, acknowledged completion and reset draining (**19 new CPU tests passed**). [52](52-geometry-page-residency-cpu-contract.md) implements a geometry-only parent/child page scheduler with pinned coarse fallbacks, multi-camera demand coalescing, hard resident/upload budgets and transactional eviction (**14 new CPU tests passed**). The CPU research directory reran **57 tests**, all passing, but the older full repository suite was not cloned in this environment. The page scheduler is *synthetic*; it does not load actual meshes or replace Godot's texture-streaming module. **Next tasks remain CPU-only:** model asynchronous page state/IO completion and per-page generation validity, then LOD error/transition correctness. Actual graphics testing stays deferred.
 
+## Async geometry and LOD CPU milestone (2026-11-14)
+
+[53](53-async-geometry-lifecycle-and-lod-error-cpu-milestone.md) adds two independently authored Python models: a generation-safe simulated async page lifecycle and a conservative pixel-error LOD selector with resident-parent and hysteresis checks. **27 committed tests passed locally** (13 streaming, 14 LOD); the streaming module also passed a separate 25-test local exploratory suite (not committed). 1,200 randomized streaming operations and 700 projected-error monotonicity cases were run. None of this proves real IO/GPU throughput, image quality, meshlet crack freedom or Godot runtime compatibility. Next **hardware-free** work: deterministic stream demand/churn traces and conservative region/cluster coverage constraints; existing Godot texture streaming remains unchanged.
+
 ## High-level ranking
 
 | Task | Dependency | Outcome | Status |
