@@ -24,6 +24,12 @@ The user explicitly chose **stability and conventional mesh rendering as the def
 
 **Immediate hardware-free continuation:** add asynchronous page lifecycle with cancellation, failures and stale generation/scene completion guards; then experiment with LOD screen-space error and stable transitions. Preserve standard Godot meshes and the already-existing texture-streaming module. GPU tests are a later validation gate, not a blocker.
 
+## Latest experimental milestone — async geometry and LOD (2026-11-14)
+
+[53 — async geometry and screen-error LOD CPU models](53-async-geometry-lifecycle-and-lod-error-cpu-milestone.md) adds independent reference code to `benchmarks/theory/`. Simulated read/decoded/upload/resident stages have independent byte budgets; immutable generation/scene-epoch tickets reject stale IO/upload completions, and page reload invalidates derived descendants only after draw frames retire. Camera cuts cancel outdated demand but preserve requests from other cameras. Permanent coarse roots and transactional evictions ensure missing detail does not silently hide objects. A new LOD chain selector estimates conservative perspective/orthographic pixel error, handles near-plane crossing, enforces resident-parent prerequisites and uses hysteresis for stable transitions. **13 committed async tests + 14 committed LOD tests passed locally (27 total); a separate broader 25-test local async exploratory suite also passed but is not committed.** Exact committed source/test bytes match the locally executed versions. A hard-impossible-budget gate prevents futile read/retry loops. Godot/GPU hardware tests remain unavailable; no renderer C++ changes or speed claims.
+
+**Next useful CPU work:** page streaming workload traces (fallback quality, fairness and eviction churn) and region/cluster LOD coverage and seam invariants. Do not ask for hardware as the next step.
+
 ## Project identity and non-negotiables
 
 - Product: **Worlds Engine**, a public Godot fork and general-purpose engine, not solely a renderer for our simulation.
