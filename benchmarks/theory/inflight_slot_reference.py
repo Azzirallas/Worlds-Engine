@@ -19,6 +19,7 @@ class Handle:
     """Transient render slot and generation, distinct from persistent world identity."""
     slot: int
     generation: int
+    scene_epoch: int = 1
 
 
 @dataclass(frozen=True)
@@ -40,17 +41,23 @@ class Submission:
 class FrameSlots:
     """Reference-model table with generation checks and deferred unsafe mutations."""
 
-    def __init__(self, max_slots=None, max_inflight=3, max_generation=UINT32_MAX, max_revision=UINT32_MAX):
+    def __init__(self, max_slots=None, max_inflight=3, max_generation=UINT32_MAX,
+                 max_revision=UINT32_MAX, scene_epoch=1, max_scene_epoch=UINT32_MAX):
         """Bound slot and outstanding-frame counts without silently dropping objects."""
         if (max_slots is not None and (type(max_slots) is not int or not 0 <= max_slots <= UINT32_MAX + 1)
                 or type(max_inflight) is not int or max_inflight < 1
                 or type(max_generation) is not int or not 2 <= max_generation <= UINT32_MAX
-                or type(max_revision) is not int or not 1 <= max_revision <= UINT32_MAX):
+                or type(max_revision) is not int or not 1 <= max_revision <= UINT32_MAX
+                or type(scene_epoch) is not int or type(max_scene_epoch) is not int
+                or not 1 <= scene_epoch <= max_scene_epoch <= UINT32_MAX):
             raise ValueError("Invalid frame table limits")
         self.max_slots = max_slots
         self.max_inflight = max_inflight
         self.max_generation = max_generation
         self.max_revision = max_revision
+        self.max_scene_epoch = max_scene_epoch
+        self.scene_epoch = scene_epoch
+        self.reset_pending = False
         self.cpu = []
         self.gpu = []
         self.generation = []
@@ -61,11 +68,17 @@ class FrameSlots:
         self.retiring = set()
         self.inflight = {}
         self.deferred = {}
-        self.next_frame = 1
+        self.next_frame = 1  # Never recycle tickets across a reset.
+
+    def _active(self):
+        """Refuse scene mutations while an old scene is draining."""
+        if self.reset_pending:
+            raise RuntimeError("Scene reset pending; conventional rendering required")
 
     def _slot(self, handle):
         """Validate the live CPU identity, never trusting only a recycled slot index."""
-        if (not isinstance(handle, Handle) or handle.slot < 0
+        if (not isinstance(handle, Handle) or handle.scene_epoch != self.scene_epoch
+                or handle.slot < 0
                 or handle.slot >= len(self.cpu)
                 or self.generation[handle.slot] != handle.generation
                 or self.cpu[handle.slot] is None):
@@ -74,6 +87,7 @@ class FrameSlots:
 
     def create(self, value):
         """Allocate a live slot and return an initial packet; caller must publish it."""
+        self._active()
         if value is None:
             raise ValueError("Use delete to represent a tombstone")
         if self.free:
@@ -95,10 +109,11 @@ class FrameSlots:
         self.revision[slot] = 1
         self.published[slot] = 0
         self.gpu[slot] = None
-        return Packet(Handle(slot, self.generation[slot]), 1, deepcopy(value))
+        return Packet(Handle(slot, self.generation[slot], self.scene_epoch), 1, deepcopy(value))
 
     def update(self, handle, value):
         """Issue a latest-state packet, leaving existing in-flight GPU data untouched."""
+        self._active()
         if value is None:
             raise ValueError("Use delete for tombstones")
         slot = self._slot(handle)
@@ -110,6 +125,7 @@ class FrameSlots:
 
     def delete(self, handle):
         """Invalidate CPU identity immediately; defer the GPU tombstone until safe."""
+        self._active()
         slot = self._slot(handle)
         self.cpu[slot] = None
         # The last generation is a terminal tombstone, never a reusable identity.
@@ -121,7 +137,7 @@ class FrameSlots:
         self.published[slot] = 0
         self.retiring.add(slot)
         # A deleted slot is deliberately not free until its tombstone is published.
-        return Packet(Handle(slot, self.generation[slot]), 1, None)
+        return Packet(Handle(slot, self.generation[slot], self.scene_epoch), 1, None)
 
     def _referenced(self, slot):
         """Track every outstanding frame that may still read the physical slot."""
@@ -140,8 +156,11 @@ class FrameSlots:
         """Validate generation/revision and defer writes referenced by GPU frames."""
         if not isinstance(packet, Packet):
             raise ValueError("Expected a versioned upload packet")
+        if self.reset_pending:
+            return "RESET_PENDING"
         slot = packet.handle.slot
-        if (slot < 0 or slot >= len(self.cpu)
+        if (packet.handle.scene_epoch != self.scene_epoch or slot < 0
+                or slot >= len(self.cpu)
                 or self.generation[slot] != packet.handle.generation
                 or self.revision[slot] != packet.revision
                 or packet.value != self.cpu[slot]):
@@ -159,6 +178,8 @@ class FrameSlots:
 
     def submit(self, handles):
         """Admit a frame only when each handle's GPU state matches the CPU revision."""
+        if self.reset_pending:
+            return Submission(False, None, "reset_pending")
         handles = tuple(handles)
         if len(self.inflight) >= self.max_inflight:
             return Submission(False, None, "inflight_budget")
@@ -188,13 +209,42 @@ class FrameSlots:
             if self.slot_refs[slot] <= 0:
                 raise AssertionError("Frame reference counter underflow")
             self.slot_refs[slot] -= 1
-            if self._referenced(slot):
+            if self.reset_pending or self._referenced(slot):
                 continue
             pending = self.deferred.pop(slot, None)
             if pending is not None:
                 self.publish(pending)
             self._recycle(slot)
 
+    def begin_reset(self):
+        """Freeze old-scene uploads/submits while existing GPU frames drain."""
+        if self.reset_pending:
+            raise RuntimeError("Reset already pending")
+        if self.scene_epoch >= self.max_scene_epoch:
+            raise CapacityError("Scene epoch would wrap; rebuild device identity")
+        self.reset_pending = True
+        self.deferred.clear()  # Old packets must never publish after scene reset.
+
+    def complete_reset(self):
+        """Replace table only after all old GPU frame references have retired."""
+        if not self.reset_pending:
+            raise RuntimeError("No scene reset pending")
+        if self.inflight or any(self.slot_refs):
+            raise RuntimeError("Old scene remains in flight")
+        self.scene_epoch += 1
+        self.cpu.clear()
+        self.gpu.clear()
+        self.generation.clear()
+        self.revision.clear()
+        self.published.clear()
+        self.slot_refs.clear()
+        self.free.clear()
+        self.retiring.clear()
+        self.deferred.clear()
+        self.reset_pending = False
+        # next_frame deliberately stays monotonic to reject late old completions.
+
     def quiescent(self):
-        """Signal whether all old GPU references and deferred writes are retired."""
-        return not self.inflight and not self.deferred and not self.retiring and not any(self.slot_refs)
+        """Signal whether no old work, deferred writes or pending reset remain."""
+        return (not self.reset_pending and not self.inflight and not self.deferred
+                and not self.retiring and not any(self.slot_refs))
