@@ -4,6 +4,8 @@
 
 Read [30 — GPU visibility design](30-gpu-instance-visibility-design.md), [45 — generation-safe CPU visibility model](45-visibility-reference-milestone-and-gpu-gates.md), [46 — first compute visibility fixture](46-isolated-gpu-visibility-feasibility-fixture.md), and [DEC-012](15-decisions-and-open-questions.md). This extends [46] without replacing its tests.
 
+**Hardware-free follow-on (2026-11-14):** [48](48-inflight-presentation-lifetimes-and-hardware-free-validation.md) adds a CPU-validated in-flight presentation-slot lifecycle and retirement model. It addresses slot reuse hazards that a shader-side generation test cannot resolve on its own. The GPU shader/draw fixtures in this document remain intentionally unexecuted until hardware is available.
+
 ## What was added
 
 ### A — Host-side, testable indirect draw ABI
