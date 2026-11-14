@@ -15,6 +15,7 @@
 | DEC-009 | Chosen | Run frontier rendering research in parallel with Godot baseline optimization | The goal includes surpassing existing engines in scoped workloads, not just catching up | Experiments prove unmaintainable or offer no benefit |
 | DEC-010 | Proposed | Explore representation-adaptive rendering and change/relevance budgets | Can exploit different geometry content types and persistent world state | Image quality, hardware portability or frame-time results do not justify complexity |
 | DEC-011 | Chosen | While reliable graphics hardware is unavailable, prioritize exact code audits, independent public literature and CPU-only correctness specifications | Keeps Phase 1 advancing without fabricated GPU evidence | Hardware or remote reproducible GPU runner becomes available |
+| DEC-012 | Proposed | Treat Gaussian splatting as an **optional hybrid visual representation** with conventional mesh fallback, initially benchmarked via GDGS | Scanned/static imagery may improve visual richness, while dynamic physics, lighting, sorting, streaming and formats need separate correct behavior | Hardware results, asset interoperability or maintenance costs justify integration, narrowing or rejection |
 
 Decisions are policies or proposals, not evidence that a subsystem already exists.
 
