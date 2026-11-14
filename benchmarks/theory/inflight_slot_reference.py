@@ -100,6 +100,8 @@ class FrameSlots:
         self.cpu[slot] = None
         self.generation[slot] += 1
         self.revision[slot] = 1
+        # A new generation has no published revision, even if the previous had 1.
+        self.published[slot] = 0
         self.retiring.add(slot)
         # A deleted slot is deliberately not free until its tombstone is published.
         return Packet(Handle(slot, self.generation[slot]), 1, None)
