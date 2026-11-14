@@ -91,6 +91,8 @@ scons platform=linuxbsd target=editor module_worlds_geometry_enabled=yes
 
 This is **a native engine source addition**, but not a claim that the Godot engine is currently able to compile or execute it.
 
+**Follow-on milestone completed (2026-11-14):** [58 — hybrid root policy and exact-position native border checks](58-hybrid-root-proxy-and-3d-mesh-border-audit.md) adds a lazily streamable aggregate far proxy over independently streamable regions and a portable C++ seam analyzer that compares exact-position-welded connectivity plus real 3D border polylines. The new policy passed 12 CPU tests; native border routines passed 13 compiled C++ fixture scenarios and an undefined-behavior sanitizer run. Godot wrapper integration still needs a full engine build.
+
 ## C. Next actionable engineering tasks
 
 1. **Native build gate:** compile the opt-in module in Godot when a suitable build environment is available; fix ClassDB signatures, module registration, XML validity and platform variants if needed. The regular disabled-by-default build should remain unaffected.
