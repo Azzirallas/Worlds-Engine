@@ -14,6 +14,16 @@ python -m unittest discover -s benchmarks/theory -p 'test_visibility_reference.p
 
 **Result (2026-11-13, Python 3.13.5 in the research environment): 14/14 tests passed.** The randomized parity test compares region-pruned results against a full per-instance scan for 4 views across 180 mutation steps. This checks CPU algorithmic invariants only: **no Godot, GPU, driver, measured speedup or visual validation**. Read [45 — validated scope, RD APIs and next hardware gates](../../docs/worlds-engine/45-visibility-reference-milestone-and-gpu-gates.md).
 
+## Guarded GPU indirect command ABI (13 tests passed)
+
+[`indirect_draw_reference.py`](indirect_draw_reference.py) and [`test_indirect_draw_reference.py`](test_indirect_draw_reference.py) specify the **16-byte non-indexed indirect packet** (`vertex_count, instance_count, first_vertex, first_instance`) and a **fail-closed** guard. Nonzero visibility errors, exceeded append/draw capacity or an invalid mesh force **zero instances**; actual conventional draw fallback is a separate required responsibility. **13/13 tests passed** with Python 3.13.5 in the research container on 2026-11-14, including 2,500 reproducible random decisions, little-endian serialization, missing overflow flags, stale generations and unknown-future fault bits.
+
+```sh
+python -m unittest discover -s benchmarks/theory -p 'test_indirect_draw_reference.py' -v
+```
+
+This is an ABI/correctness model, **not a GPU test**. Its separate compute/raster experiments are in [`../gpu_visibility/`](../gpu_visibility/), documented by [47](../../docs/worlds-engine/47-guarded-indirect-and-offscreen-raster-probe.md). The earlier 14-test regional visibility reference was not rerun as part of this new CPU test execution.
+
 ## Current model: MultiMesh scattered-instance updates
 
 Run from the repository root with Python 3 (standard library only):
