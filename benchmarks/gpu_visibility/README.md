@@ -41,4 +41,4 @@ First command imports/compiles `visibility.comp.glsl` in the editor; the second 
 4. Benchmark total scene frame costs and synchronization on the target GPU(s); avoid CPU readback in actual rendering. Record actual shader compilation errors and GDScript/parser failures separately from mismatched GPU results.
 5. Only consider adding an opt-in native path after measurable wins and correct shading and compatibility.
 
-Reference: [GPU visibility source spec](../../docs/worlds-engine/30-gpu-instance-visibility-design.md), [CPU reference milestone](../../docs/worlds-engine/45-visibility-reference-milestone-and-gpu-gates.md).
+Reference: [GPU visibility source spec](../../docs/worlds-engine/30-gpu-instance-visibility-design.md), [CPU reference milestone](../../docs/worlds-engine/45-visibility-reference-milestone-and-gpu-gates.md), [47 guarded draw and raster probe](../../docs/worlds-engine/47-guarded-indirect-and-offscreen-raster-probe.md).
