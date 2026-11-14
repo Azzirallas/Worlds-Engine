@@ -9,7 +9,7 @@ The previous [53](53-async-geometry-lifecycle-and-lod-error-cpu-milestone.md) mo
 ## New files
 
 - [`benchmarks/theory/cluster_coverage_reference.py`](../../benchmarks/theory/cluster_coverage_reference.py): `Cluster(key, parent, start, end)` and `ClusterCoverage`.
-- [`benchmarks/theory/test_cluster_coverage_reference.py`](../../benchmarks/theory/test_cluster_coverage_reference.py): ten deterministic unit tests including **2,000 seeded random resident/requested sets**. These tests are **committed, not yet run**.
+- [`benchmarks/theory/test_cluster_coverage_reference.py`](../../benchmarks/theory/test_cluster_coverage_reference.py): ten deterministic unit tests including **2,000 seeded random resident/requested sets**. The original ten tests are **now executed and passing**; a new intermediate-parent regression increases the current suite to **11 tests**, as documented in [55](55-cluster-seam-correctness-and-dependency-audit.md).
 
 This is an original synthetic interval model, not a meshlet builder, mesh simplifier or Godot implementation. Integer half-open intervals are an exact **proxy for region ownership**, not geometric triangle edges. Actual 2D/3D geometry requires validated coverage IDs or an equivalent spatial ownership proof.
 
