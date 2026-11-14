@@ -29,7 +29,7 @@ Push constant block has **eight 32-bit words (32 bytes)**, five active params (c
 
 ## Test contract
 
-Nine scenarios currently described in runner source: `empty`, `boundary_and_disabled`, `many_region_pruned`, `many_full_candidates`, `different_camera`, `nonunit_plane`, `overflow`, `all_visible`, `invalid_candidate_diagnostic`.
+Ten scenarios currently described in runner source: `empty`, `boundary_and_disabled`, `many_region_pruned`, `many_full_candidates`, `different_camera`, `nonunit_plane`, `overflow`, `all_visible`, `invalid_candidate_diagnostic`.
 
 - A deterministic 4,097-record scene checks candidate filtering with multiple viewing/layer conditions.
 - Each scenario computes **expected visibility using a complete slot scan independent of region pruning**, and verifies the region candidate set includes all expected IDs before dispatch.
