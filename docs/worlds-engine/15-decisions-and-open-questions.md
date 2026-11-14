@@ -75,7 +75,7 @@ Decisions are policies or proposals, not evidence that a subsystem already exist
 - RES-013 Original virtualized geometry cluster prototype with fair classic LOD baseline.
 - RES-014 GPU resource residency, demand feedback and teleport/thrashing benchmark.
 - RES-015 Shadow/GI change invalidation experiment under moving persistent worlds.
-- RES-016 Source-audited sparse-transform transport model and deterministic CPU correctness proof; see [39](39-sparse-instance-update-cost-and-gpu-selection.md).
+- RES-016 Source-audited sparse-transform transport model and deterministic CPU correctness proof; see [39](39-sparse-instance-update-cost-and-gpu-selection.md). **Initial model and six deterministic tests committed** to [benchmarks/theory](../../benchmarks/theory/README.md); future hardware verification pending.
 - RES-017 Cross-representation temporal validity and quality contracts for LOD, foliage and shadow/GI history; see [40](40-representation-continuity-and-2026-rendering-research.md).
 
 Status: conceptual research only. Start with [26](26-phase-1-prototype-priority-and-measurements.md).
