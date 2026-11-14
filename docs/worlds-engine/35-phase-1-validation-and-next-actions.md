@@ -26,6 +26,10 @@ Graphics hardware is still unavailable, so **do not block development on GPU tes
 
 [55](55-cluster-seam-correctness-and-dependency-audit.md) records actual execution of the earlier 10 cluster tests, an identified/fixed missing-intermediate-parent bug, and 10 new passing seam-profile/stitch/fallback tests (current coverage suite **11/11**, seam suite **10/10**). The available local Python directory passes **73/73** tests, including exploratory uncommitted async cases; this is not a full repository CI pass. Next CPU-only gates: multi-edge 2D cluster adjacency with real border ownership invariants, then workload traces combining async streaming + LOD + safe refinement. Do not infer 3D crack freedom or rendering performance.
 
+## 2D patch and integrated camera-trace milestone (2026-11-14)
+
+[56](56-2d-cluster-edges-and-synthetic-camera-traces.md) extends earlier integer-interval coverage to rectangle ownership, four-direction shared-edge profiles and explicit stitch/canonical vertex validation. A deterministic CPU trace now joins async page residency, LOD projection/hysteresis, conservative seam coarsening and camera frame retirement; its telemetry reports quality shortfall, structurally required extra detail, synthetic read/upload bytes and residency churn. **13 new 2D tests and 10 new integrated workload tests passed**; all **96 available local CPU tests passed** (including old exploratory tests not committed). A stable near view reaches target detail after page loads; damaged seam coarsens instead of authorizing cracks; rapid cuts cause safe evictions and cancellations. **No renderer/GPU work or speedup claim.** Next: compare global-root against independent regional-root topology and audit actual 3D shared-border geometry.
+
 ## High-level ranking
 
 | Task | Dependency | Outcome | Status |
