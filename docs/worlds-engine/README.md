@@ -42,6 +42,8 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 - [Lighting, shadows, and temporal invalidation](33-lighting-shadow-and-temporal-cache-design.md)
 - [Materials, frame graph, and temporal reconstruction](34-materials-graph-and-temporal-reconstruction.md)
 - [Phase 1 validation queue and AI continuation procedure](35-phase-1-validation-and-next-actions.md)
+- [Existing Godot texture streaming audit and Unreal virtual-texturing comparison](36-texture-streaming-baseline-audit.md)
+- [Shader pipeline, first-frame stutter and PSO readiness research](37-pipeline-stutter-and-pso-research.md)
 
 ## Unreal rendering architecture audit (licensed-source research)
 
