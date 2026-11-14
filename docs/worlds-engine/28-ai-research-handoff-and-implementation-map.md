@@ -29,6 +29,8 @@ The user explicitly chose **stability and conventional mesh rendering as the def
 
 Do not assume either branch has remained unchanged. Recheck HEAD and engine version before every code change. Treat the private fork as legally controlled source, not a public dependency.
 
+**Executable Phase 1 update:** [45 — generation-safe regional visibility reference](45-visibility-reference-milestone-and-gpu-gates.md) and [Python implementation/tests](../../benchmarks/theory/) added on 2026-11-13. **14 standard-library CPU tests passed** in a research container; includes multiview correctness, conservative bounds, coalesced writes, stale handle prevention, and non-lossy overflow fallback. This does **not** mean GPU-driven rendering is implemented or faster. The source check identified existing Godot `storage_buffer_create`, `buffer_update`, compute dispatch, indirect draw and graph resource usage APIs; their correct integration needs a Godot GPU smoke test. Keep ordinary mesh renderer default and do not route standard scenes through this model.
+
 ## What was actually established
 
 - Godot has `RenderingDeviceGraph`, indirect draw/dispatch, multi-renderer pipelines (Forward+, Mobile, Compatibility) and existing meshoptimizer mesh LOD generation; rewriting these systems in Phase 1 is unmotivated.
