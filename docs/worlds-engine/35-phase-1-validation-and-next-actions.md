@@ -16,6 +16,10 @@
 | R-007 Material and temporal integration | experimental win from R-003/R-004 | true shader/light/motion compatibility | designs in [34](34-materials-graph-and-temporal-reconstruction.md) and [40](40-representation-continuity-and-2026-rendering-research.md), code pending |
 | R-008 Extend engine behind feature flag | measured win + legal review | safe optional Godot improvement | not approved yet |
 
+## Hardware-unavailable research mode (active 2026-11-13)
+
+No local GPU runtime or reliable graphics benchmarking setup is currently available. **Continue meaningful source-level research**, but do not report hardware speedups or 'Godot test passes'. Prioritize: (1) source-verified camera culling, MultiMesh upload policy and immutable renderer interfaces; (2) deterministic CPU-only reference models for handle generations, bounds/culling conservative coverage, page residency and update-locality occupancy; (3) public independently licensed meshoptimizer clustered LOD and 2026 temporal/foliage literature; (4) precise original algorithm contracts and adverse-case tests. See [39](39-sparse-instance-update-cost-and-gpu-selection.md) and [40](40-representation-continuity-and-2026-rendering-research.md). CPU model results can test algorithmic logic **only**; they cannot predict actual GPU cost, render quality or hardware portability. Resume native work in this file once hardware is available.
+
 ## Native benchmark must be validated first
 
 `benchmarks/rendering` has a Godot project with `nodes`, `one_multimesh`, and `regional_multimesh` modes plus deterministic `--move` (0–100%) and `--camera` (fixed/orbit/cut) controls, raw per-frame CSV exports, and a Python CSV validator. Four synthetic Python validator tests passed locally. **The GDScript benchmark has not been executed with Godot or shader/GPU hardware** and may contain API, syntax or profiling issues. Actual graphics validity remains pending.
