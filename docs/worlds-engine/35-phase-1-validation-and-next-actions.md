@@ -18,7 +18,7 @@
 
 ## Native benchmark must be validated first
 
-`benchmarks/rendering` currently has a Godot project and GDScript baseline with `nodes`, `one_multimesh`, and `regional_multimesh` modes. **Its code has not yet been executed with Godot** and may contain API, GDScript syntax or profiling issues.
+`benchmarks/rendering` has a Godot project with `nodes`, `one_multimesh`, and `regional_multimesh` modes plus deterministic `--move` (0–100%) and `--camera` (fixed/orbit/cut) controls, raw per-frame CSV exports, and a Python CSV validator. Four synthetic Python validator tests passed locally. **The GDScript benchmark has not been executed with Godot or shader/GPU hardware** and may contain API, syntax or profiling issues. Actual graphics validity remains pending.
 
 Before treating any output as evidence:
 1. Check the fork HEAD, `version.py`, debug/release build and render backend.
