@@ -83,6 +83,14 @@ Research cases: a distant walking crowd, waving bushes, animated environmental o
 
 Maintainer-reported RTX 4060 Laptop numbers for 1080p benchmark scenes (e.g., compute tiles with tight bounds significantly faster than baseline quads) are **self-reported and not replicated**. This is a good *algorithmic sandbox*, not automatically the fastest renderer, and a tiny/new repo should be manually audited for correctness and dependency provenance.
 
+## Standard mesh → Gaussian conversion (source verified, 2026-11-13)
+
+**[Electronic Arts SEED Mesh2Splat](https://github.com/electronicarts/mesh2splat)** directly converts textured `.glb` triangle meshes into Gaussian-splat `.ply`, using surface geometry/normal/UV and material maps instead of image-capture optimization. Its converter supports diffuse, metallic-roughness and normal maps; its demonstration renderer includes PBR lighting, shadows and depth visualization. Authors report sub-millisecond conversion averages in their tested workloads; **these are not verified for Godot or our hardware**. This is especially relevant to an optional import-time representation chooser: *mesh source → conventional mesh fallback + Gaussian derivative*. The conversion does not manufacture extra original geometric detail and does not imply lower frame cost or VRAM.
+
+**License caution:** repository `LICENSE.txt` contains an EA permissive-style redistribution license with extra trademark/mark clauses; `CITATION.cff` separately declares MIT. **Treat the discrepancy as unresolved** and confirm applicable terms and third-party asset licenses before incorporating any code. Concepts can be independently implemented without importing code. The project has a restriction/limitation note for nontriangle volumetric/hair/grass/foliage content. Source/version and outputs must be independently reviewed before adapting it to Godot's renderer.
+
+A second, slower approach is to render a conventional model from many calibrated views and optimize Gaussians photometrically; this can fit a view-dependent baked appearance at a substantial offline computation cost. Compare these workflows against simple geometric surface splatting, and do not confuse a baked appearance capture with fully relightable material splats. Blender 5.3's initial native splat support is import/render-centric, not a general native mesh-to-3DGS converter. [Blender developer status](https://code.blender.org/2026/10/splatting-the-gaussians-into-blender/).
+
 ## Other useful components
 
 - [Niantic SPZ](https://github.com/nianticlabs/spz): compact format, **v4 independently compressed attribute streams** with ZSTD and extension records. Compressing a file more does not necessarily reduce runtime sort buffers or make it incrementally renderable.
