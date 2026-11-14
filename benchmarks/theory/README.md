@@ -2,6 +2,14 @@
 
 This directory contains **CPU-only analytical models and invariants** for Worlds Engine research. These are not engine prototypes, actual GPU timing measurements, render quality tests or a substitute for the graphics benchmarks in [../rendering/](../rendering/).
 
+## Hybrid independently streamed regions and distant aggregate proxy (12 passing CPU tests)
+
+[58](../../docs/worlds-engine/58-hybrid-root-proxy-and-3d-mesh-border-audit.md) adds `hybrid_topology_reference.py` and `test_hybrid_topology_reference.py`: regional pinned roots stay drawable while an optional aggregate far proxy, charged against the same resident and upload budgets, can restore one coarse submission for the complete group. An in-flight frame reference prevents premature proxy eviction. Tests cover missing proxy fallback, transfer cancellation, transactional eviction, memory caps and 1,200 seeded camera changes. **12/12 new tests passed locally; 23/23 with the prior global/regional root tests.** Simulated upload bytes and submission counts are not GPU timings, draws or image-quality measurements.
+
+```sh
+python -m unittest discover -s benchmarks/theory -p 'test_hybrid_topology_reference.py' -v
+```
+
 ## Global versus regional coarse root policy (11 new CPU tests)
 
 [57](../../docs/worlds-engine/57-regional-geometry-roots-and-native-mesh-edge-audit.md) adds `root_topology_reference.py` and `test_root_topology_reference.py`: both topologies start with the same 32 model bytes of 4×4 coarse geometry, but the global parent requires sibling-region loads before refinement while independently resident regional roots do not. Synthetic traces report upload cost, temporary detail deficit, structural coarse submissions, protected frame references and safe evictions. **11/11 tests passed locally**, including 1,200 randomized camera requests. **No actual Godot draw timings or mesh compression claims.** A native opt-in edge audit is documented in [benchmarks/native_geometry/](../native_geometry/README.md); its C++ core compiled locally but the Godot wrapper has not been built.
