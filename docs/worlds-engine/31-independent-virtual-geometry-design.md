@@ -10,7 +10,7 @@ This does not mean arbitrary polygon count becomes free. It reallocates work and
 
 ## Public and permissive starting points
 
-- Godot already vendors `thirdparty/meshoptimizer` and uses meshoptimizer for imported mesh LOD. Review `thirdparty/README.md` and provenance before modifying it.
+- Godot already vendors `thirdparty/meshoptimizer` **version 1.3** (confirmed in bundled `meshoptimizer.h`, and `thirdparty/README.md` records MIT license and 2026 upstream revision). APIs include meshlet builders, flexible/spatial variants and cluster bounds. Upstream's `demo/clusterlod.h` is a **separate example**, not automatically part of the Godot vendor tree. Review original provenance/license before integrating an external file.
 - Open meshoptimizer project (MIT): https://github.com/zeux/meshoptimizer . Public APIs cover meshlets, bounds, simplification and `clusterlod.h` clustered LOD experiments. **Prefer reuse with attribution to independently recreating mature meshlet algorithms.**
 - Khronos Vulkan `VK_EXT_mesh_shader`: https://www.khronos.org/blog/mesh-shading-for-vulkan . Optional hardware path only; portable compute+indirect must be first-class.
 - Epic's *public* Nanite overview: https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-virtualized-geometry-in-unreal-engine . It demonstrates a use case, not a source license or mandatory implementation structure.
