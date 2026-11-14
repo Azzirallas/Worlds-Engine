@@ -2,6 +2,18 @@
 
 This directory contains **CPU-only analytical models and invariants** for Worlds Engine research. These are not engine prototypes, actual GPU timing measurements, render quality tests or a substitute for the graphics benchmarks in [../rendering/](../rendering/).
 
+## Bounded upload scheduling and geometry residency (33 new CPU tests passed)
+
+[51](../../docs/worlds-engine/51-bounded-immutable-staging-upload-reference.md) documents `staging_upload_reference.py` (19 passing CPU tests), combining `FrameSlots` epoch/generation identity and `WSP1` packet descriptors into an immutable, byte-budgeted staging queue with simulated transfer acknowledgements, stale-update coalescing, draw-frame hazard checks, and conservative scene reset. [52](../../docs/worlds-engine/52-geometry-page-residency-cpu-contract.md) adds `geometry_residency_reference.py` (14 passing tests): pinned coarse roots, parent-first detail loading, per-camera epoch demands, resident/upload byte caps, transactional evictions and in-flight page holds. The local research directory ran **57/57 tests** with Python 3.13.5; it is a *partial local copy*, not a full repository CI run. The two new modules and tests are checksum-matched with GitHub.
+
+```sh
+python -m unittest discover -s benchmarks/theory -p 'test_staging_upload_reference.py' -v
+python -m unittest discover -s benchmarks/theory -p 'test_geometry_residency_reference.py' -v
+python -m unittest discover -s benchmarks/theory -p 'test_*.py' -v
+```
+
+None of these tests uses a GPU or proves a rendering speedup. The geometry model is **not** a replacement for Godot's pre-existing texture-streaming implementation.
+
 ## Scene epochs and full-frame CPU instance identity (24 new tests passed)
 
 [50](../../docs/worlds-engine/50-scene-epoch-reset-and-cpu-instance-identity-oracle.md) records the two-phase CPU scene reset that drains submitted frame tickets before recycling old scene buffers. `Handle(slot, generation, scene_epoch)` prevents ABA after whole-scene replacement, including when identical slots and generations reappear. `test_scene_epoch_reset.py` passes **12 tests**, including 24 repeated resets and 1,300 randomized operations. `identity_raster_reference.py` produces a deterministic RGBA8 per-slot triangle ID image, and `test_identity_raster_reference.py` passes **12 tests**, detecting missing, swapped, duplicate and overflowing instances across *all* pixels. **24/24 new CPU tests passed** locally; no GPU implementation or performance has been validated.
