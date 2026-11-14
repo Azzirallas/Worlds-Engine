@@ -16,6 +16,14 @@ The user explicitly chose **stability and conventional mesh rendering as the def
 
 [50 — scene-epoch safe reset and full RGBA8 instance-ID oracle](50-scene-epoch-reset-and-cpu-instance-identity-oracle.md) extends `FrameSlots` to tag **slot+generation handles with a scene epoch** and use **begin_reset → drain prior frame tickets → complete_reset**. It refuses new experimental draws/uploads and late old-scene packets, preserves in-flight data, prevents epoch ABA, and retains monotonic frame ticket IDs. A second CPU-only model draws uniquely coloured triangles per slot in nonoverlapping tiles and compares **all pixels + exact missing/unexpected IDs** rather than a single green center pixel. **24 new CPU tests passed locally**; their three newly committed files match the tested local files, while the edited `FrameSlots` was source-patched from a locally tested equivalent. No Godot/GPU execution or renderer changes. **Next hardware-free work:** CPU-owned staging/upload budget with epoch+revision validation, then geometry clusters/residency. Hardware tests remain deferred.
 
+## Latest CPU-only rendering prototypes (2026-11-14)
+
+**[51 — immutable upload staging](51-bounded-immutable-staging-upload-reference.md)** implements a bounded queue of versioned, 16-byte-aligned payloads with 32-byte `WSP1` descriptors. It coalesces superseded writes, refuses unsafe in-flight slot mutations, retries failed simulated transfers, and holds staging allocations through a two-phase scene reset. **19/19 new CPU tests passed**, including 800 seeded interleavings. 
+
+**[52 — geometry-page residency](52-geometry-page-residency-cpu-contract.md)** adds an independent synthetic page hierarchy with permanent coarse roots, per-view demand/epoch tracking, parent-first whole-page loading, strict resident/upload byte limits, transactional eviction planning and per-frame dependency holds. **14/14 new CPU tests passed**, including 500 seeded camera changes. The first draft failed dependency and unnecessary-eviction stress cases, which were fixed before commit. The local research directory ran **57/57 tests** across scene reset, image ID, staging and geometry suites; **this is not a complete repo-wide checkout/CI result**. Both new models' committed source is verified identical to locally tested bytes. Godot/GPU runtime and throughput are unmeasured; the normal renderer remains unchanged.
+
+**Immediate hardware-free continuation:** add asynchronous page lifecycle with cancellation, failures and stale generation/scene completion guards; then experiment with LOD screen-space error and stable transitions. Preserve standard Godot meshes and the already-existing texture-streaming module. GPU tests are a later validation gate, not a blocker.
+
 ## Project identity and non-negotiables
 
 - Product: **Worlds Engine**, a public Godot fork and general-purpose engine, not solely a renderer for our simulation.
