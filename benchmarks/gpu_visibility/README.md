@@ -36,7 +36,7 @@ First command imports/compiles `visibility.comp.glsl` in the editor; the second 
 ## Next gates
 
 1. Compile/import the shader using the exact Godot fork build; fix any shader, descriptor or GDScript error.
-2. Compare all ten scenarios with CPU truth and confirm overflow, stale-generation work and invalid IDs are *reported*, not silently used.
+2. Compare all twelve scenarios with CPU truth, verify the guarded command suppresses invalid draws, then run the **separate offscreen scene** and check all twelve center pixels.
 3. Add a **separate opt-in draw fixture** using real meshes and GPU producer→indirect-consumer barrier tests; preserve normal `MultiMeshInstance3D` controls. Godot's local RenderingDevices generally cannot be captured by RenderDoc, so migrate instrumentation/capture to a suitable main-device path *only once* the isolated compute parity experiment passes.
 4. Benchmark total scene frame costs and synchronization on the target GPU(s); avoid CPU readback in actual rendering. Record actual shader compilation errors and GDScript/parser failures separately from mismatched GPU results.
 5. Only consider adding an opt-in native path after measurable wins and correct shading and compatibility.
