@@ -7,6 +7,9 @@ from copy import deepcopy
 from dataclasses import dataclass
 
 
+UINT32_MAX = 0xFFFFFFFF
+
+
 class CapacityError(RuntimeError):
     """The experimental table cannot safely accept another presentation slot."""
 
@@ -37,18 +40,23 @@ class Submission:
 class FrameSlots:
     """Reference-model table with generation checks and deferred unsafe mutations."""
 
-    def __init__(self, max_slots=None, max_inflight=3):
+    def __init__(self, max_slots=None, max_inflight=3, max_generation=UINT32_MAX, max_revision=UINT32_MAX):
         """Bound slot and outstanding-frame counts without silently dropping objects."""
-        if (max_slots is not None and (type(max_slots) is not int or max_slots < 0)
-                or type(max_inflight) is not int or max_inflight < 1):
+        if (max_slots is not None and (type(max_slots) is not int or not 0 <= max_slots <= UINT32_MAX + 1)
+                or type(max_inflight) is not int or max_inflight < 1
+                or type(max_generation) is not int or not 2 <= max_generation <= UINT32_MAX
+                or type(max_revision) is not int or not 1 <= max_revision <= UINT32_MAX):
             raise ValueError("Invalid frame table limits")
         self.max_slots = max_slots
         self.max_inflight = max_inflight
+        self.max_generation = max_generation
+        self.max_revision = max_revision
         self.cpu = []
         self.gpu = []
         self.generation = []
         self.revision = []
         self.published = []
+        self.slot_refs = []  # Incremented per admitted frame; O(1) referenced test.
         self.free = []
         self.retiring = set()
         self.inflight = {}
@@ -71,7 +79,8 @@ class FrameSlots:
         if self.free:
             slot = self.free.pop()
         else:
-            if self.max_slots is not None and len(self.cpu) >= self.max_slots:
+            if (len(self.cpu) >= UINT32_MAX + 1
+                    or self.max_slots is not None and len(self.cpu) >= self.max_slots):
                 raise CapacityError("Presentation table full; use conventional rendering")
             slot = len(self.cpu)
             self.cpu.append(None)
@@ -79,6 +88,9 @@ class FrameSlots:
             self.generation.append(1)
             self.revision.append(0)
             self.published.append(0)
+            self.slot_refs.append(0)
+        if self.generation[slot] >= self.max_generation:
+            raise CapacityError("Retired generation is not reusable")
         self.cpu[slot] = deepcopy(value)
         self.revision[slot] = 1
         self.published[slot] = 0
@@ -90,6 +102,8 @@ class FrameSlots:
         if value is None:
             raise ValueError("Use delete for tombstones")
         slot = self._slot(handle)
+        if self.revision[slot] >= self.max_revision:
+            raise CapacityError("Revision would wrap; retire/recreate or use conventional rendering")
         self.cpu[slot] = deepcopy(value)
         self.revision[slot] += 1
         return Packet(handle, self.revision[slot], deepcopy(value))
@@ -98,6 +112,9 @@ class FrameSlots:
         """Invalidate CPU identity immediately; defer the GPU tombstone until safe."""
         slot = self._slot(handle)
         self.cpu[slot] = None
+        # The last generation is a terminal tombstone, never a reusable identity.
+        if self.generation[slot] >= self.max_generation:
+            raise ValueError("A live slot cannot have terminal generation")
         self.generation[slot] += 1
         self.revision[slot] = 1
         # A new generation has no published revision, even if the previous had 1.
@@ -108,8 +125,7 @@ class FrameSlots:
 
     def _referenced(self, slot):
         """Track every outstanding frame that may still read the physical slot."""
-        return any(any(h.slot == slot for h in handles)
-                   for handles in self.inflight.values())
+        return self.slot_refs[slot] != 0
 
     def _recycle(self, slot):
         """Reuse only after final frame completion AND published deletion tombstone."""
@@ -117,7 +133,8 @@ class FrameSlots:
                 and self.published[slot] == self.revision[slot]
                 and self.gpu[slot] is None):
             self.retiring.remove(slot)
-            self.free.append(slot)
+            if self.generation[slot] < self.max_generation:
+                self.free.append(slot)  # Terminal tombstones never recycle.
 
     def publish(self, packet):
         """Validate generation/revision and defer writes referenced by GPU frames."""
@@ -158,6 +175,8 @@ class FrameSlots:
         frame = self.next_frame
         self.next_frame += 1
         self.inflight[frame] = handles
+        for h in handles:
+            self.slot_refs[h.slot] += 1
         return Submission(True, frame, "ready")
 
     def retire(self, frame):
@@ -166,6 +185,9 @@ class FrameSlots:
             raise ValueError("Unknown or already completed frame")
         handles = self.inflight.pop(frame)
         for slot in sorted(set(h.slot for h in handles)):
+            if self.slot_refs[slot] <= 0:
+                raise AssertionError("Frame reference counter underflow")
+            self.slot_refs[slot] -= 1
             if self._referenced(slot):
                 continue
             pending = self.deferred.pop(slot, None)
@@ -175,4 +197,4 @@ class FrameSlots:
 
     def quiescent(self):
         """Signal whether all old GPU references and deferred writes are retired."""
-        return not self.inflight and not self.deferred and not self.retiring
+        return not self.inflight and not self.deferred and not self.retiring and not any(self.slot_refs)
