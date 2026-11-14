@@ -1,6 +1,6 @@
 # 28 — AI engineering handoff: durable rendering research record
 
-**State as of 2026-11-13:** Phase 1 research, not an implemented renderer upgrade. This file is the **first file to read in a fresh AI session** after the [documentation index](README.md). The intent is to preserve *decisions, rationale, implementation proposals, dependencies, and unknowns* rather than rely on memory.
+**Research note:** implementation contracts [30](30-gpu-instance-visibility-design.md)–[34](34-materials-graph-and-temporal-reconstruction.md), benchmark queue [35](35-phase-1-validation-and-next-actions.md). No private Unreal code was used as a public implementation specification.\n\n**State as of 2026-11-13:** Phase 1 research, not an implemented renderer upgrade. This file is the **first file to read in a fresh AI session** after the [documentation index](README.md). The intent is to preserve *decisions, rationale, implementation proposals, dependencies, and unknowns* rather than rely on memory.
 
 ## Project identity and non-negotiables
 

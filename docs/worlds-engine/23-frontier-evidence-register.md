@@ -44,3 +44,19 @@ For each new reference log: date checked, paper authors, URL, venue and year, or
 - Can light reuse remain correct through mesh-to-impostor transitions at minimal memory cost?
 
 All are unproven research questions.
+
+## Additional independently usable primary references (2026-11-13 audit)
+
+- meshoptimizer source and meshlet/cluster LOD experimental APIs: https://github.com/zeux/meshoptimizer (MIT; verify bundled Godot version/attribution and stability of experimental APIs).
+- Khronos Vulkan mesh shader design and portability: https://www.khronos.org/blog/mesh-shading-for-vulkan and https://github.com/KhronosGroup/Vulkan-Docs/blob/main/appendices/VK_EXT_mesh_shader.adoc.
+- Godot 4.7 internal rendering architecture: https://docs.godotengine.org/en/4.7/engine_details/architecture/internal_rendering_architecture.html . Note versions differ from 4.8 beta code audited.
+- Godot mesh LOD and MultiMesh LOD caveats: https://docs.godotengine.org/en/4.7/tutorials/3d/mesh_lod.html .
+- Godot CPU occlusion culling: https://docs.godotengine.org/en/4.5/tutorials/3d/occlusion_culling.html .
+- Godot SDFGI dynamic participation limitations: https://docs.godotengine.org/en/latest/tutorials/3d/global_illumination/using_sdfgi.html (unstable docs; confirm in code).
+- Epic Nanite aggregate geometry/overdraw limitation: https://dev.epicgames.com/documentation/unreal-engine/working-with-naniteenabled-content .
+- Epic detailed streaming-pool and candidate-buffer caveats: https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-technical-details .
+- Epic virtual shadow-map cache invalidation and separate static caching: https://dev.epicgames.com/documentation/en-us/unreal-engine/virtual-shadow-maps-in-unreal-engine .
+- Epic MegaLights sampling budget and temporal drawbacks: https://dev.epicgames.com/documentation/unreal-engine/megalights-in-unreal-engine .
+- Epic source learning and restrictions (read both): https://www.unrealengine.com/ue-on-github/ and https://www.unrealengine.com/eula/unreal .
+
+A public source may cover newer Unreal versions than the restricted source fork. Record date/version differences and do not infer matching implementation. See [AI handoff](28-ai-research-handoff-and-implementation-map.md).

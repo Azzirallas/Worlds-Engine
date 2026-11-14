@@ -25,6 +25,12 @@ Identify both (A) valuable near-term improvements to the existing renderer and (
 - Corrected a critical planning assumption: **Godot 4.8 already has `RenderingDeviceGraph`**, as well as indirect draw/dispatch. Improve high-level work generation rather than inventing another generic frame graph.
 - Public docs contain no Unreal source, code translations, shader details or private data layouts. The source license is **not** an open-source implementation license.
 
+## Durable implementation handoff and subsystem specifications
+
+For future AI continuation, start with [28 — persistent handoff](28-ai-research-handoff-and-implementation-map.md) and [35 — execution/validation queue](35-phase-1-validation-and-next-actions.md). Detailed independently implementable designs are [GPU scene/visibility](30-gpu-instance-visibility-design.md), [cluster geometry](31-independent-virtual-geometry-design.md), [residency](32-residency-streaming-contract.md), [lighting and cache invalidation](33-lighting-shadow-and-temporal-cache-design.md), and [materials/temporal image quality](34-materials-graph-and-temporal-reconstruction.md).
+
+**Research finding:** Godot already includes meshoptimizer for automatic mesh LOD, so the advanced geometry lab should reuse/review it rather than replace it for branding; large MultiMesh groups have aggregate spatial visibility/LOD limitations. The new engineering specs preserve conventional rendering as the baseline/fallback.
+
 ## Parallel frontier research lane
 
 Do not interpret source audits as the full ambition of Phase 1. See [frontier strategy](21-frontier-rendering-research.md), [lab experiments](22-experimental-renderer-lab.md) and [primary-source evidence](23-frontier-evidence-register.md).

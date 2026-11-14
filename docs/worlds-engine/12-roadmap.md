@@ -31,6 +31,8 @@ Active source findings are in [RES-001](17-renderer-source-audit-res-001.md), [R
 
 **Research update (2026-11-13):** completed a representative Unreal 5.8.4 rendering source audit, checked matching Godot code, and defined original prototype gates. See [24](24-unreal-5-8-rendering-architecture-audit.md), [25](25-godot-renderer-gap-matrix.md), [26](26-phase-1-prototype-priority-and-measurements.md) and [27](27-license-and-independent-implementation-protocol.md). No new renderer prototype has been implemented or benchmarked; current benchmark harness remains untested.
 
+The detailed Phase 1 AI handoff now starts at [28](28-ai-research-handoff-and-implementation-map.md), with independent design specs [30](30-gpu-instance-visibility-design.md)–[34](34-materials-graph-and-temporal-reconstruction.md) and execution queue [35](35-phase-1-validation-and-next-actions.md). These are **research specifications, not implemented features**.
+
 ## Stage 1B — Frontier renderer research (STARTS IN PARALLEL)
 
 Phase 1 is **not limited to optimizing Godot**. Alongside Stage 1 baseline/source audits, maintain a frontier-research workstream to examine techniques that could outperform modern production engines in *specific* measured situations. See the [frontier strategy](21-frontier-rendering-research.md), [experimental lab](22-experimental-renderer-lab.md) and [evidence register](23-frontier-evidence-register.md).

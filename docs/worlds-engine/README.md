@@ -32,6 +32,17 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 - [Experimental renderer lab and prototype charter](22-experimental-renderer-lab.md)
 - [Frontier research evidence and source register](23-frontier-evidence-register.md)
 
+## AI implementation handoff and detailed original module contracts
+
+- [AI engineering handoff: source baselines, decisions, next actions](28-ai-research-handoff-and-implementation-map.md)
+- [Renderer subsystem evidence ledger](29-renderer-subsystem-evidence-ledger.md)
+- [Original GPU instance and visibility design](30-gpu-instance-visibility-design.md)
+- [Independent adaptive/virtual geometry design](31-independent-virtual-geometry-design.md)
+- [Resource residency and streaming contract](32-residency-streaming-contract.md)
+- [Lighting, shadows, and temporal invalidation](33-lighting-shadow-and-temporal-cache-design.md)
+- [Materials, frame graph, and temporal reconstruction](34-materials-graph-and-temporal-reconstruction.md)
+- [Phase 1 validation queue and AI continuation procedure](35-phase-1-validation-and-next-actions.md)
+
 ## Unreal rendering architecture audit (licensed-source research)
 
 - [UE 5.8.4 rendering architecture audit](24-unreal-5-8-rendering-architecture-audit.md)
