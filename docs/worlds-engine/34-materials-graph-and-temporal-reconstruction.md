@@ -8,6 +8,10 @@ A custom renderer that draws only untextured opaque cubes may greatly improve dr
 
 Unreal has separate source subsystems for rendering scene data, material binning, raster, temporal reconstruction and cache management. We can study this separation **as an architectural lesson** using publicly described concepts; not reuse restricted shader code.
 
+## Shader pipeline baseline correction
+
+Godot already has shader/pipeline caching and documented ubershader/precompilation paths. A new geometry path must measure *cold first-use* compilation, hot reload and pipeline variant growth, rather than assuming a new PSO cache is needed. [37](37-pipeline-stutter-and-pso-research.md) defines the specific test matrix.
+
 ## M1: standard Godot material contract
 
 The standard `MeshInstance3D` and surface/material resource workflow must continue to work. New optional geometry/visibility modes require:
