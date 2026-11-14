@@ -2,6 +2,14 @@
 
 This directory contains **CPU-only analytical models and invariants** for Worlds Engine research. These are not engine prototypes, actual GPU timing measurements, render quality tests or a substitute for the graphics benchmarks in [../rendering/](../rendering/).
 
+## Global versus regional coarse root policy (11 new CPU tests)
+
+[57](../../docs/worlds-engine/57-regional-geometry-roots-and-native-mesh-edge-audit.md) adds `root_topology_reference.py` and `test_root_topology_reference.py`: both topologies start with the same 32 model bytes of 4×4 coarse geometry, but the global parent requires sibling-region loads before refinement while independently resident regional roots do not. Synthetic traces report upload cost, temporary detail deficit, structural coarse submissions, protected frame references and safe evictions. **11/11 tests passed locally**, including 1,200 randomized camera requests. **No actual Godot draw timings or mesh compression claims.** A native opt-in edge audit is documented in [benchmarks/native_geometry/](../native_geometry/README.md); its C++ core compiled locally but the Godot wrapper has not been built.
+
+```sh
+python -m unittest discover -s benchmarks/theory -p 'test_root_topology_reference.py' -v
+```
+
 ## 2D edge ownership and integrated camera streaming (23 new passing CPU tests)
 
 [56](../../docs/worlds-engine/56-2d-cluster-edges-and-synthetic-camera-traces.md) adds `cluster_2d_reference.py` (**13 passing tests**) and `geometry_camera_trace.py` (**10 passing tests**). The first verifies rectangular tiling, resident parent dependencies, ordered multi-edge profile overlap, missing split-vertex T-junctions and exact resident stitch certificates. The second combines page streaming, LOD pixel-error targets and 2D seam-safe selection in a reproducible 21-page camera lab. Synthetic trace telemetry reports deficit/excess detail cell-depth units separately, issued read/upload bytes, in-flight references, safe evictions and cancellation. **96/96 available local tests passed**, including earlier exploratory async tests not present in GitHub; 23 new committed tests passed. No Godot GPU execution or performance measurement.
