@@ -1,6 +1,6 @@
 # 32 — Independent resource residency, streaming and fallback contract
 
-**Status:** original architecture proposal; no code or data format implemented. Research context: public virtualized geometry, sparse virtual memory, texture/mesh streaming and Godot resource management. Not a translation of Unreal streaming manager.
+**Status:** original architecture proposal; **a limited CPU-only geometry-page residency reference has now been implemented in [52](52-geometry-page-residency-cpu-contract.md)**. No native GPU page residency, geometry codec, real IO or production integration has been implemented. Research context: public virtualized geometry, sparse virtual memory, texture/mesh streaming and Godot resource management. Not a translation of Unreal streaming manager.
 
 ## Existing baseline correction (2026-11-13)
 
