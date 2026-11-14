@@ -22,6 +22,20 @@
 - SealLOD: https://github.com/panthuncia/SealLOD — experimental DX12 virtualized geometry/work graph renderer. **Demonstration/research reference; not a cross-platform product or automatically suitable for adoption.**
 - CuRast reference repository (linked by authors): https://github.com/m-schuetz/CuRast — CUDA research implementation; license must be checked before any code adoption.
 
+## Additional Gaussian-splatting project and research references (reviewed 2026-11-13)
+
+- [GDGS Godot plugin, MIT](https://github.com/ReconWorldLab/godot-gaussian-splatting): compute and raster paths, depth/mesh interop, proxy relighting, import/scene tests. Runtime 4.8 fork untested.
+- [NVIDIA Vulkan Gaussian Splatting, Apache-2.0](https://github.com/nvpro-samples/vk_gaussian_splatting): raster/ray/hybrid, stochastic transparency, PBR/lighting and tool-side benchmarks. Hardware feature restrictions.
+- [PlayCanvas Engine MIT](https://github.com/playcanvas/engine), [SplatTransform MIT](https://github.com/playcanvas/splat-transform), [SuperSplat MIT](https://github.com/playcanvas/supersplat): GPU sorting, spatial Streamed SOG LOD, asset conversion and editing. JS/WebGPU architecture not directly portable.
+- [Spark MIT](https://github.com/sparkjsdev/spark): procedural/dynamic splats, skeletal and shader-graph animation in Three.js. Cost/quality unmeasured on target hardware.
+- [Niantic SPZ MIT](https://github.com/nianticlabs/spz): versioned compressed splat interchange; format compression not equivalent to GPU residency.
+- [Brush Apache-2.0](https://github.com/ArthurBrussee/brush), [gsplat Apache-2.0](https://github.com/nerfstudio-project/gsplat): portable and CUDA-focused reconstruction research respectively; offline capture separate from runtime.
+- [Independent MIT Vulkan/WebGPU renderer](https://github.com/netolcc06/gaussian-splat-renderer): selectable sort/tile paths, CPU reference and validation; self-reported benchmarks require independent replication.
+- [StochasticSplats ICCV 2025](https://openaccess.thecvf.com/content/ICCV2025/html/Kheradmand_StochasticSplats_Stochastic_Rasterization_for_Sorting-Free_3D_Gaussian_Splatting_ICCV_2025_paper.html) and [Mip-Splatting CVPR 2024](https://openaccess.thecvf.com/content/CVPR2024/html/Yu_Mip-Splatting_Alias-free_3D_Gaussian_Splatting_CVPR_2024_paper.html): public research on sorting-free rendering and aliasing; neither grants blanket permission to copy arbitrary associated software or assets.
+- **Restriction:** [official INRIA implementation](https://github.com/graphdeco-inria/gaussian-splatting/blob/main/LICENSE.md) is research/noncommercial under its own terms; [OpenSplat](https://github.com/WebODM/OpenSplat) is AGPL-3.0. Avoid direct incorporation into the MIT fork without appropriate permission/legal review.
+
+Full source/license matrix and priority rationale: [41](41-gaussian-splatting-project-survey-2026.md); independent architecture and tests: [42](42-independent-hybrid-splat-rendering-architecture.md).
+
 ## Findings we should *not* overstate
 
 1. Billion-triangle claims often concern scenes chosen to favor a technique and powerful GPUs; count alone is not a usable metric.
