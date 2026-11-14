@@ -27,7 +27,7 @@ First command imports/compiles `visibility.comp.glsl` in the editor; the second 
 
 ## What this does NOT establish
 
-- No actual GPU instance **drawing** or indirect draw command generation; only compute selection and CPU verification.
+- The default scene has GPU **indirect command generation** but no raster; the optional offscreen scene issues a **real indirect draw** to a 32×32 texture. Neither is a full Godot mesh/material renderer. The offscreen center-pixel check proves only whether the indirect command resulted in *some* triangle pixels, not correct rendering of every selected instance.
 - No engine/RenderingServer integration, no camera projection extraction from the engine, no shadow/GI, occlusion/HZB, motion vectors, skinned bounds, editor picking or multiview compute scheduling.
 - No GPU timing/throughput/VRAM or FPS claims. `rd.sync()` and `buffer_get_data()` deliberately stall for deterministic validation and **must not** appear in a production frame path.
 - No use of proprietary Unreal reference code; the shader and GDScript are original, built against public Godot RenderingDevice APIs.
