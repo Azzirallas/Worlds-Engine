@@ -15,6 +15,10 @@ Relevant terms to review:
 - Restrictions on combining Unreal technology with non-compatible licensed code (Section 6).
 - Ownership, third-party technology, patents and other rights can be separate issues.
 
+## Repository access policy — user directive (2026-11-13)
+
+`Azzirallas/UnrealEngine` is a **read-only licensed reference**. Do not create or modify files, branches, issues, pull requests, commits, workflows or settings in that repository during Worlds Engine development. All original research notes, cross-engine comparisons, experiments and code belong in `Azzirallas/Worlds-Engine`. Source access is not publication permission. See [24](24-unreal-5-8-rendering-architecture-audit.md), [36](36-texture-streaming-baseline-audit.md) and [37](37-pipeline-stutter-and-pso-research.md) for concept-level audits.
+
 ## Mandatory separation
 
 **RESEARCH SOURCES**
