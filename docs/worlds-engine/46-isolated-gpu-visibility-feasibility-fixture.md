@@ -57,7 +57,7 @@ godot --path benchmarks/gpu_visibility --editor --quit
 godot --path benchmarks/gpu_visibility
 ```
 
-Acceptance: all nine lines `WORLDS_GPU_CASE_PASS` and one final `WORLDS_GPU_VISIBILITY_PASS`. Record Godot SHA/build, backend, GPU, driver, operating system and shader compiler output. Nonzero exit or missing/unsupported GPU means **no pass**. Fix parser/shader/ABI problems first, then test pixel correctness with a follow-on opt-in draw fixture and a standard `MultiMeshInstance3D` control before claiming a performance benefit.
+Acceptance: all ten lines `WORLDS_GPU_CASE_PASS` and one final `WORLDS_GPU_VISIBILITY_PASS`. Record Godot SHA/build, backend, GPU, driver, operating system and shader compiler output. Nonzero exit or missing/unsupported GPU means **no pass**. Fix parser/shader/ABI problems first, then test pixel correctness with a follow-on opt-in draw fixture and a standard `MultiMeshInstance3D` control before claiming a performance benefit.
 
 **Recommended continuation without GPU:** review the CPU→GPU scene-record ABI and possible Godot compiler edge cases, then strengthen adversarial CPU models for stale generation/pending upload packets, buffer overflow and highly scattered edits. Do not merge the experimental algorithm into the normal renderer before hardware validation.
 
