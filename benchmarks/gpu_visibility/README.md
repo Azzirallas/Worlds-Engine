@@ -20,6 +20,7 @@ With a built Godot 4.8-compatible executable:
 ```sh
 godot --path benchmarks/gpu_visibility --editor --quit
 godot --path benchmarks/gpu_visibility
+godot --path benchmarks/gpu_visibility res://offscreen_draw.tscn
 ```
 
 First command imports/compiles `visibility.comp.glsl` in the editor; the second runs the fixture. On a supported device with a successful import, inspect stdout for `WORLDS_GPU_CASE_PASS` and the final `WORLDS_GPU_VISIBILITY_PASS`. A `FAIL` or `UNAVAILABLE` result is **not** a passing experiment. Graphics drivers/shader compilers, hardware, and this project have not been exercised together in this research environment; fix any Godot syntax/API issues before interpreting results.
