@@ -2,6 +2,10 @@
 
 **Status:** execution specification, **not a claim that tests or render prototypes have run**. Written 2026-11-13. Read [AI handoff](28-ai-research-handoff-and-implementation-map.md) first.
 
+## Confirmed implementation priority (2026-11-13)
+
+**Decision:** retain Godot's standard mesh renderer as the stable default. Prioritize **R-001/R-002 baseline and correctness**, then **R-003 GPU instance visibility**, **R-004 virtualized/cluster geometry**, and **R-005 shared residency / existing texture streaming verification**. R-009 Gaussian splats remain **optional, isolated research** and must not block or replace these core tasks. A splat asset importer is not the next mandatory coding milestone. Any fast path must be feature-flagged, have an unmodified baseline comparison, and fall back safely to conventional rendering. When GPU hardware is unavailable, work on source-verified renderer contracts and CPU-only correctness models rather than claiming performance wins. This decision supersedes the previous suggested execution order in [44](44-splat-asset-foundation-implementation-plan.md).
+
 ## High-level ranking
 
 | Task | Dependency | Outcome | Status |
