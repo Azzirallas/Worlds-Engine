@@ -35,7 +35,7 @@ Instead of assuming every object must be a traditional mesh draw, consider **a r
 - Coarse impostor / field / billboard for tiny projected objects.
 - Highly dense geometry rendered through a compute/software path where advantageous.
 - Ray-tracing-friendly deformable cage + shared static fine geometry, on supported hardware.
-- Optional specialized point/gaussian representation for suitable background/scanned content; never assumed to replace ordinary game geometry or interaction.
+- Optional specialized point/gaussian representation for suitable background/scanned content; never assumed to replace ordinary game geometry or interaction. A 2026 audit now identifies **GDGS** (Godot-native baseline), **PlayCanvas** (splat LOD/streaming), **NVIDIA Vulkan** (advanced hybrid/ray quality), **Spark** (dynamic splats) and many format/training references: [41 — project survey](41-gaussian-splatting-project-survey-2026.md) and [42 — original hybrid design](42-independent-hybrid-splat-rendering-architecture.md). No Godot integration or benchmark demonstrated.
 
 **Selection inputs:** projected coverage, depth/occlusion, camera speed, motion/deformation, importance, ray/lighting participation, expected draw/compute cost, memory residency, cache state, hardware feature support, required shading correctness and transition stability.
 
