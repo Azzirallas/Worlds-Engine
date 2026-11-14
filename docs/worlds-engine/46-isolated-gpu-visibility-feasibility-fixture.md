@@ -20,7 +20,7 @@ Read [45 CPU reference](45-visibility-reference-milestone-and-gpu-gates.md), [30
 | --- | --- | --- |
 | 0 | `vec4[]` | world center xyz, bounding radius w, 16 bytes/slot |
 | 1 | `uvec2[]` | layer/enable mask, generation, 8 bytes/slot |
-| 2 | `uint[]` | candidate slots from CPU region filtering |
+| 2 | `uvec2[]` | candidate (slot,generation) from CPU region filtering, 8 bytes/candidate |
 | 3 | `vec4[]` | frustum planes: inward normal xyz, offset w |
 | 4 | `uvec2[]` | compacted (slot,generation) output, 8 bytes/hit |
 | 5 | two `uint` values | atomic count and flags (overflow bit0, invalid slot/bounds bit1) |
