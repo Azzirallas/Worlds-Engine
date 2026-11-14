@@ -35,6 +35,7 @@ Do not assume either branch has remained unchanged. Recheck HEAD and engine vers
 - **New baseline discovery:** Godot 4.8 beta in this fork already includes a disabled-by-default texture-streaming module with GPU feedback, mip scheduling and optional memory budget. Do not propose building a texture streamer from zero; read [36](36-texture-streaming-baseline-audit.md) and the completed [38 — end-to-end source trace](38-texture-streaming-end-to-end-trace-and-validation.md); Forward+ **and Mobile** have feedback paths. Their practical correctness/throughput still need GPU testing.
 - Godot already documents ubershader and pipeline precompilation strategies; Unreal's public PSO guidance suggests additional *measurement questions*, not justification to replace these systems. See [37](37-pipeline-stutter-and-pso-research.md).
 - Godot's graph and 3D rendering already have nontrivial backend portability and shader/material constraints. Integrating advanced features is a product problem, not just writing a compute shader.
+- Bundled **meshoptimizer 1.3** already exposes meshlet/cluster utilities; its publicly available external clustered-LOD demonstration is a distinct reference. New 2026 research on LOD-aware temporal reuse and deformable RT is covered in [40](40-representation-continuity-and-2026-rendering-research.md). Neither is a GPU benchmark of our engine.
 
 ## Reading sequence for a new developer/AI
 
