@@ -43,6 +43,12 @@ class CoverageTests(unittest.TestCase):
         self.assertEqual(selected, ('a', 'b', 'right'))
         self.assertTrue(self.tree.verify_cover(selected))
 
+    def test_missing_intermediate_parent_disallows_grandchildren(self):
+        """Page residency must include every required intermediate ancestor."""
+        selected = self.tree.select({'root', 'a', 'b', 'right'}, {'root', 'left'})
+        self.assertEqual(selected, ('root',))
+        self.assertTrue(self.tree.verify_cover(selected))
+
     def test_parent_refinement_not_requested(self):
         """Resident children are not forced into a draw without a quality request."""
         self.assertEqual(self.tree.select(set(self.tree.nodes), set()), ('root',))
