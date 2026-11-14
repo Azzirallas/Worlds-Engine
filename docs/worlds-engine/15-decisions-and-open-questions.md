@@ -78,5 +78,6 @@ Decisions are policies or proposals, not evidence that a subsystem already exist
 - RES-015 Shadow/GI change invalidation experiment under moving persistent worlds.
 - RES-016 Source-audited sparse-transform transport model and deterministic CPU correctness proof; see [39](39-sparse-instance-update-cost-and-gpu-selection.md). **Initial model and six deterministic tests committed** to [benchmarks/theory](../../benchmarks/theory/README.md); future hardware verification pending.
 - RES-017 Cross-representation temporal validity and quality contracts for LOD, foliage and shadow/GI history; see [40](40-representation-continuity-and-2026-rendering-research.md).
+- RES-018 Optional Gaussian splatting: permissive project survey, architecture, format version mapping, GPU/lighting and asset-lifecycle evaluation; see [41](41-gaussian-splatting-project-survey-2026.md) and [42](42-independent-hybrid-splat-rendering-architecture.md). No engine patch or benchmark yet.
 
 Status: conceptual research only. Start with [26](26-phase-1-prototype-priority-and-measurements.md).
