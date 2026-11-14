@@ -2,7 +2,16 @@
 
 This directory contains **CPU-only analytical models and invariants** for Worlds Engine research. These are not engine prototypes, actual GPU timing measurements, render quality tests or a substitute for the graphics benchmarks in [../rendering/](../rendering/).
 
-## Cluster coverage CPU reference (tests committed, execution pending)
+## Cluster coverage audit and seam-safe refinements (21 passing tests)
+
+The previously unexecuted [54](../../docs/worlds-engine/54-cluster-coverage-cpu-contract.md) suite was run; 10/10 original tests passed. One actual missing-intermediate-parent bug was fixed and covered by a new regression, giving **11/11 current coverage tests**. [55](../../docs/worlds-engine/55-cluster-seam-correctness-and-dependency-audit.md) adds `cluster_seam_reference.py` and 10/10 passing tests for ordered integer border profiles, optional resident stitch validation, conservative coarsening and irreparable-root fallback. Both include seeded 2,000-case randomized coverage tests. **73/73 available local CPU tests pass**, but this includes older exploratory tests not committed to the repository and is not a complete checkout CI run. No GPU performance or real 3D crack-free geometry was tested.
+
+```sh
+python -m unittest discover -s benchmarks/theory -p 'test_cluster_coverage_reference.py' -v
+python -m unittest discover -s benchmarks/theory -p 'test_cluster_seam_reference.py' -v
+```
+
+## Cluster coverage CPU reference (historical tests)
 
 [54](../../docs/worlds-engine/54-cluster-coverage-cpu-contract.md) adds `cluster_coverage_reference.py` and ten `test_cluster_coverage_reference.py` cases, including 2,000 seeded resident/requested combinations. All-or-nothing child refinement avoids conceptual coverage holes and parent/child overlap. **The tests have not yet been executed in this turn.** Run `python -m unittest discover -s benchmarks/theory -p 'test_cluster_coverage_reference.py' -v` before treating the new module as validated. This is an integer-interval ownership proxy, not crack-free geometry proof.
 
