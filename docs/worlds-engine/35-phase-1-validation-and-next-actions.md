@@ -6,6 +6,10 @@
 
 **Decision:** retain Godot's standard mesh renderer as the stable default. Prioritize **R-001/R-002 baseline and correctness**, then **R-003 GPU instance visibility**, **R-004 virtualized/cluster geometry**, and **R-005 shared residency / existing texture streaming verification**. R-009 Gaussian splats remain **optional, isolated research** and must not block or replace these core tasks. A splat asset importer is not the next mandatory coding milestone. Any fast path must be feature-flagged, have an unmodified baseline comparison, and fall back safely to conventional rendering. When GPU hardware is unavailable, work on source-verified renderer contracts and CPU-only correctness models rather than claiming performance wins. This decision supersedes the previous suggested execution order in [44](44-splat-asset-foundation-implementation-plan.md).
 
+## CPU-only milestone and research mode (2026-11-14)
+
+Graphics hardware is still unavailable, so **do not block development on GPU tests or position them as the immediate next action**. The optional GPU visibility/raster fixtures remain unexecuted for later. Meanwhile, [48](48-inflight-presentation-lifetimes-and-hardware-free-validation.md) implements the frame-safe presentation-slot reference model and documents a full **41-test local pass** across the visibility, guarded indirect-command and lifetime suites. The newest **14 tests** cover stale/out-of-order upload packets, multi-camera in-flight frames, deferred updates, quarantined slot reuse, buffer exhaustion and explicit fallback eligibility. No production renderer C++ edits have been made. Next CPU/source tasks: reference-counted in-flight slot access, 32-bit ABI/overflow guarantees, rigorous CPU image-identity oracle and residency/virtual geometry contracts.
+
 ## High-level ranking
 
 | Task | Dependency | Outcome | Status |
