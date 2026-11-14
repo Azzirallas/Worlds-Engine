@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="WorldsMeshTopology" inherits="RefCounted" api_type="core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
     <brief_description>
-        Optional CPU topology validation for indexed triangle mesh surfaces.
+        Optional CPU validation of indexed triangle topology and shared geometric borders.
     </brief_description>
     <description>
-        WorldsMeshTopology inspects index-level connectivity, winding and degeneracy without changing an existing mesh. It does not weld vertices at UV seams, build LOD clusters or prove watertight rasterization. The worlds_geometry module must be enabled at engine build time.
+        WorldsMeshTopology inspects indices, coincident 3D positions, and ordered boundary samples without modifying the mesh. Exact-position welding can distinguish duplicated UV/material vertices from genuine open index edges, but does not weld approximately coincident vertices. None of the results certify watertight rasterization, self-intersection freedom or compatible materials. Compile with module_worlds_geometry_enabled=yes to use this experimental class.
     </description>
     <methods>
         <method name="analyze_indexed_surface">
@@ -12,7 +12,24 @@
             <param index="0" name="vertices" type="PackedVector3Array" />
             <param index="1" name="indices" type="PackedInt32Array" />
             <description>
-                Returns vertex/triangle counts and counts for invalid indices, incomplete triangles, zero-area faces, duplicate faces, open edges, nonmanifold edges and orientation conflicts. [code]closed_oriented_2manifold[/code] is a topological proxy, not a proof of a physically sealed imported 3D surface.
+                Counts invalid triangles, duplicate faces, zero-area triangles, open edges, nonmanifold edges, and winding conflicts by index identity. Returns a Dictionary containing [code]valid_input[/code], [code]closed_oriented_2manifold[/code] and per-category counts.
+            </description>
+        </method>
+        <method name="analyze_position_surface">
+            <return type="Dictionary" />
+            <param index="0" name="vertices" type="PackedVector3Array" />
+            <param index="1" name="indices" type="PackedInt32Array" />
+            <description>
+                Returns [code]indexed[/code] and [code]welded[/code] topology Dictionaries, plus [code]unique_positions[/code], [code]coincident_vertex_duplicates[/code] and [code]indexed_open_edges_resolved[/code]. Welding uses exact XYZ equality, not a distance tolerance. Position-based adjacency is diagnostic and does not change mesh vertices.
+            </description>
+        </method>
+        <method name="compare_border_samples">
+            <return type="Dictionary" />
+            <param index="0" name="border_a" type="PackedVector3Array" />
+            <param index="1" name="border_b" type="PackedVector3Array" />
+            <param index="2" name="tolerance" type="float" default="0.0" />
+            <description>
+                Compares two ordered 3D boundary polylines. Requires the same number of nondegenerate samples, with reversed vertex order. Any missing split vertex is flagged as a possible T-junction. A nonnegative [param tolerance] permits coordinate gaps up to that distance; this cannot certify fully crack-free triangles. Returns [code]valid_input[/code], [code]geometry_match[/code], [code]opposite_direction[/code], [code]same_direction[/code], [code]t_junction_risk[/code], [code]samples_a[/code], [code]samples_b[/code] and [code]max_opposing_gap[/code].
             </description>
         </method>
     </methods>
