@@ -32,6 +32,8 @@ Do not assume either branch has remained unchanged. Recheck HEAD and engine vers
 - MultiMesh per-instance setters use cached data and dirty-region uploads; bulk/mixed update behavior needs a benchmark, including possible initial readback transition.
 - Unreal's documented approaches combine GPU scene/instance data, fine geometry visibility, streamed hierarchical detail, material separation, cached GI and shadowing, and per-pixel bounded many-light evaluation. They solve different bottlenecks, with documented artifacts and memory costs.
 - Godot's SDFGI is already a GI solution but has documented limitations with dynamic occluders and emissive surfaces.
+- **New baseline discovery:** Godot 4.8 beta in this fork already includes a disabled-by-default texture-streaming module with GPU feedback, mip scheduling and optional memory budget. Do not propose building a texture streamer from zero; read [36](36-texture-streaming-baseline-audit.md) and test what exists.
+- Godot already documents ubershader and pipeline precompilation strategies; Unreal's public PSO guidance suggests additional *measurement questions*, not justification to replace these systems. See [37](37-pipeline-stutter-and-pso-research.md).
 - Godot's graph and 3D rendering already have nontrivial backend portability and shader/material constraints. Integrating advanced features is a product problem, not just writing a compute shader.
 
 ## Reading sequence for a new developer/AI
