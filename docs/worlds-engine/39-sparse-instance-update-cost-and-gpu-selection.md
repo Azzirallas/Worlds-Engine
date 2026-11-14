@@ -1,6 +1,6 @@
 # 39 — Sparse moving instances: source-audited costs and GPU selection design
 
-**Status:** direct Godot source audit, mathematically derived workload estimates, independently proposed architecture. **No hardware measurements, no engine implementation, no verified speedup.** Inspected 2026-11-13. Godot reference: `Azzirallas/Worlds-Engine` 4.8-beta fork; retain the exact source revision used when implementing. Licensed Unreal source is **read-only reference**, never a source for the implementation. See [27](27-license-and-independent-implementation-protocol.md).
+**Status:** direct Godot source audit, mathematically derived workload estimates, independently proposed architecture. **No hardware measurements, no engine implementation, no verified speedup.** Inspected 2026-11-13. Godot reference: `Azzirallas/Worlds-Engine` 4.8-beta fork; source blob hashes verified unchanged from `master@be1999a0f532124705359e4c3dde0a3b3034a0bd` for camera-cull, MultiMesh storage and meshoptimizer at audit time. Re-pin before implementing. Licensed Unreal source is **read-only reference**, never a source for the implementation. See [27](27-license-and-independent-implementation-protocol.md).
 
 ## Executive conclusion
 
