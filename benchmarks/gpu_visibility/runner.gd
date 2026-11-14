@@ -277,7 +277,7 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 	rd.compute_list_bind_compute_pipeline(commands, pipeline)
 	rd.compute_list_bind_uniform_set(commands, uniform_set, 0)
 	var push_data := PackedInt32Array([candidates.size(), planes.size(), view_mask,
-			capacity, records.size()]).to_byte_array()
+			capacity, records.size(), 0, 0, 0]).to_byte_array()
 	rd.compute_list_set_push_constant(commands, push_data, push_data.size())
 	rd.compute_list_dispatch(commands, maxi(1, ceili(float(candidates.size()) / WORKGROUP_SIZE)), 1, 1)
 	rd.compute_list_end()
