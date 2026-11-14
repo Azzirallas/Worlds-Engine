@@ -2,6 +2,19 @@
 
 This directory contains **CPU-only analytical models and invariants** for Worlds Engine research. These are not engine prototypes, actual GPU timing measurements, render quality tests or a substitute for the graphics benchmarks in [../rendering/](../rendering/).
 
+## Frame-safe GPU presentation lifetimes (14 new tests passed)
+
+[`inflight_slot_reference.py`](inflight_slot_reference.py) and [`test_inflight_slot_reference.py`](test_inflight_slot_reference.py) model CPU authoritative slots, generation-tagged publication packets, pending GPU-frame references, deferred updates, tombstone publication and safe recycling. Multiple frame/view tickets protect the same slot until *all* retire; stale or out-of-order updates never overwrite a newer generation. A full or not-yet-published table rejects experimental submission rather than dropping instances.
+
+**Executed 2026-11-14:** **14/14 new tests passed**, and a combined local rerun of the visibility, indirect-command and lifetime reference suites passed **41/41**. The tested lifetime source and tests were checksum-matched to GitHub after the final test edit. A prior source review also found and fixed a generation-reset/tombstone bug. No Godot renderer, real GPU fences or performance measurements are involved.
+
+```sh
+python -m unittest discover -s benchmarks/theory -p 'test_inflight_slot_reference.py' -v
+python -m unittest discover -s benchmarks/theory -p 'test_*.py' -v
+```
+
+See [48 — frame lifetime invariants and hardware-free development plan](../../docs/worlds-engine/48-inflight-presentation-lifetimes-and-hardware-free-validation.md). This is deliberately a simple correctness model; its per-frame reference scans are not a recommended production complexity target.
+
 ## New CPU visibility correctness reference (14 tests passed)
 
 [visibility_reference.py](visibility_reference.py) and [test_visibility_reference.py](test_visibility_reference.py) implement an **independent reference model**, not Godot's live culler or a GPU renderer. Its region AABBs conservatively enclose all member world-space spheres, including bounds that cross cell lines. It implements generation-safe handles, layer-masked multi-view frustum selection, coalesced contiguous dirty records with deletion tombstones, and an explicit full-result CPU fallback when a future compacted buffer would overflow. Affine nonuniform scaling/shear uses a conservative radius multiplier. Invalid inputs and mutable external lists are handled explicitly.
