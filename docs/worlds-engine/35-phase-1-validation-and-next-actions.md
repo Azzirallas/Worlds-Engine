@@ -99,7 +99,7 @@ For every ticket record:
 
 ## Recommended minimal engineering ticket for next continuation
 
-**Ticket R-001b — benchmark smoke and dynamic update controls.**
+**Ticket R-001b — benchmark graphics smoke and dynamic measurement validation.**
 
 Target: `benchmarks/rendering/`.
 
