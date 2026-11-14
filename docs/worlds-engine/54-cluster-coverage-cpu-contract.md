@@ -38,7 +38,7 @@ python -m unittest discover -s benchmarks/theory -p 'test_cluster_coverage_refer
 
 ## Next work
 
-1. Execute the committed tests in a complete repository checkout and resolve any failures.
+1. **Original tests executed:** ten passed locally; the added missing-parent regression also passes. Full repository CI remains pending.
 2. Add a seam compatibility graph that treats a boundary as safe only if its adjacent regions agree on shared-edge positions or a validated stitch is resident.
 3. Compose residency, screen-error selection and exact coverage into one deterministic camera workload; record fallback frequency, residency churn and simulated bytes.
 4. Keep conventional Godot MeshInstance3D/MultiMesh rendering as the stable default until native/GPU validation is possible.
