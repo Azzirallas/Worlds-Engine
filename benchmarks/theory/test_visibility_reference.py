@@ -157,6 +157,28 @@ class VisibilityReferenceTests(unittest.TestCase):
             if step % 7 == 0:
                 scene.dirty_runs()
 
+
+    def test_mutable_inputs_are_snapshotted_and_empty_regions_do_not_leak(self):
+        """External input-list mutations cannot corrupt cached bounds or dead keys."""
+        source_center = [1, 2, 3]
+        source_normal = [1, 0, 0]
+        source_planes = [Plane(source_normal, 10)]
+        sphere = Sphere(source_center, 1)
+        view = View(source_planes)
+        source_center[0] = 10000
+        source_normal[0] = -1
+        source_planes.clear()
+        self.assertEqual(sphere.center, (1, 2, 3))
+        self.assertEqual(view.planes[0].normal, (1, 0, 0))
+        self.assertEqual(len(view.planes), 1)
+        scene = Scene(region_size=2)
+        h = scene.create(Instance(sphere))
+        scene.cull(view)
+        scene.delete(h)
+        self.assertEqual(scene.regions, {})
+        self.assertEqual(scene.bounds_cache, {})
+        self.assertEqual(scene.invalid_regions, set())
+
     def test_input_validation(self):
         """Bad bounds, zero normals and invalid capacities fail explicitly."""
         for call in (lambda: Scene(0), lambda: Sphere((0, float('nan'), 0), 1),
