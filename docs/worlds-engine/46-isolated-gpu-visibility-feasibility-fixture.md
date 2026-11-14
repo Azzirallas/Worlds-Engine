@@ -8,7 +8,7 @@ Read [45 CPU reference](45-visibility-reference-milestone-and-gpu-gates.md), [30
 
 - [`benchmarks/gpu_visibility/project.godot`](../../benchmarks/gpu_visibility/project.godot): deliberately no explicit Compatibility renderer override; a device with Forward+ / RenderingDevice support is needed.
 - [`benchmarks/gpu_visibility/main.tscn`](../../benchmarks/gpu_visibility/main.tscn): minimal empty `Node` running the fixture script.
-- [`benchmarks/gpu_visibility/visibility.comp.glsl`](../../benchmarks/gpu_visibility/visibility.comp.glsl): original GLSL compute frustum/layer test; 64 local invocations; bounded atomic append with overflow/invalid-data flags.
+- [`benchmarks/gpu_visibility/visibility.comp.glsl`](../../benchmarks/gpu_visibility/visibility.comp.glsl): original GLSL compute frustum/layer test; 64 local invocations; bounded atomic append with overflow/invalid-data/stale-generation flags.
 - [`benchmarks/gpu_visibility/runner.gd`](../../benchmarks/gpu_visibility/runner.gd): builds seeded test cases and conservative CPU-region candidate lists, uploads arrays to a local RenderingDevice, verifies output slot IDs/generations against a full CPU scan; exits 0 on pass, 1 on error, 2 on unavailable RD.
 - [`benchmarks/gpu_visibility/README.md`](../../benchmarks/gpu_visibility/README.md): execution, limitations and smoke-test commands.
 
