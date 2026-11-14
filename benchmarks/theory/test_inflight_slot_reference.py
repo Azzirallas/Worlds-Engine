@@ -69,7 +69,7 @@ class FrameSlotTests(unittest.TestCase):
 
     def test_out_of_order_fence_completion(self):
         """The last in-flight reference, not the first completed ticket, releases it."""
-        state = FrameSlots(max_inflight=3, max_slots=2)
+        state = FrameSlots(max_inflight=3, max_slots=1)
         p = state.create("one")
         state.publish(p)
         first = state.submit([p.handle])
@@ -79,10 +79,10 @@ class FrameSlotTests(unittest.TestCase):
         state.retire(second.frame)
         self.assertNotIn(p.handle.slot, state.free)
         with self.assertRaises(CapacityError):
-            state_two = FrameSlots(max_slots=0)
-            state_two.create("fail")
+            state.create("blocked until final fence")
         state.retire(first.frame)
         self.assertIn(p.handle.slot, state.free)
+        self.assertEqual(state.create("safe reuse").handle.slot, p.handle.slot)
 
     def test_out_of_order_uploads_only_latest_accepted(self):
         """Late packets cannot revert an already newer transform."""
