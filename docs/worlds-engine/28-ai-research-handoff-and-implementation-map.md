@@ -20,7 +20,7 @@
 | --- | --- | --- |
 | Public output | `Azzirallas/Worlds-Engine` `master`, pre-audit baseline `6a8f3e91d98af788bcf7837e785b26b0500989c9` | `version.py`: Godot 4.8 beta |
 | Licensed comparison | private `Azzirallas/UnrealEngine` `release` at `f45729c0b6f097038e72b52d366a62baeca3275b` | `Engine/Build/Build.version`: Unreal Engine 5.8.4 |
-| Native benchmark | `benchmarks/rendering/` | Created; **not executed or smoke tested on graphics hardware** |
+| Native benchmark | `benchmarks/rendering/` | Deterministic static/dynamic scenes, fixed/orbit/cut cameras and raw CSV + Python validator; **not executed or smoke tested on graphics hardware**. Four synthetic validator unit tests passed locally. |
 
 Do not assume either branch has remained unchanged. Recheck HEAD and engine version before every code change. Treat the private fork as legally controlled source, not a public dependency.
 
