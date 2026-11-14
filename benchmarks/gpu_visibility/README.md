@@ -7,7 +7,7 @@
 - `visibility.comp.glsl`: a 64-thread compute kernel receiving world-space sphere records, per-slot layer/generation metadata, generation-tagged candidate handles (`uvec2 slot,generation`), inward-facing frustum planes and a bounded compacted output. The push-constant ABI is **32 bytes** (5 inputs plus 3 reserved words) to avoid tighter-alignment compatibility issues.
 - `runner.gd`: reproducible test scenes, CPU region AABB preselection and a full-instance CPU truth scan; creates a **local RenderingDevice**, uploads `std430` buffers, dispatches the kernel, **synchronously reads back only for validation** and compares exact visible slot/generation sets. Atomic output ordering is not assumed.
 - **Fail-safe behavior:** output overflow sets bit 0 in an explicit diagnostic buffer; malformed candidate IDs set bit 1; candidate handles referencing recycled generations set bit 2. The fixture **rejects truncated output as a successful draw list**. It does *not* implement real fallback draw submission or GPU frame integration yet.
-- Scenarios: empty, boundary and disabled instances, 4,097 spatially distributed entries with region selection vs all-candidate mode, second view/layer, arbitrary non-unit plane, 257-overlap case with a deliberately tiny output capacity, a fully sized control and a bad-ID diagnostics case.
+- Scenarios: empty, boundary and disabled instances, 4,097 spatially distributed entries with region selection vs all-candidate mode, second view/layer, arbitrary non-unit plane, 257-overlap case with a deliberately tiny output capacity, a fully sized control, bad-ID diagnostics and stale-generation diagnostics.
 
 ## Important configuration
 
