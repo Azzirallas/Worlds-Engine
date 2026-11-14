@@ -190,6 +190,48 @@ GPU tests eventually compare sorted quad, tile compute and stochastic/ray altern
 - Do not assume a permissive project license resolves its vendored third-party dependencies and brand/trademark permissions.
 - Private Unreal fork is **read-only**, unrelated to any of these code reviews.
 
+
+## I — Offline capture, tools, and compressed interchange (additional code audit)
+
+The complete asset pipeline is not just runtime rasterization. We also studied the following public-source modules because **asset memory and training/authoring throughput** affect real-world feasibility.
+
+### I1 — Niantic SPZ v4: robust compressed interchange
+
+**Source:** [nianticlabs/spz](https://github.com/nianticlabs/spz) `main@d5abdee9b37c426a0b66b961c3d43b5857a24f4f`, MIT; `src/cc/load-spz.cc` and `src/cc/zstd-batch.cc`.
+
+- The v4 file path uses a fixed-size header and independent, Zstandard-compressed attribute streams; older gzip-based formats retain a separate legacy read path.
+- Source validates packed attribute lengths against the declared point count and SH degree. It also constrains implausibly large declared point counts relative to compressed file size to avoid obvious allocation explosions. These are **useful format-validation requirements**, not proof that every malicious file is harmless.
+- It supports parallel compress/decompress of independent streams, which is useful at import time and can enable selective *attribute* decoding. This does **not** automatically enable view-dependent spatial streaming: the file still needs chunk/index data and renderer-defined residency semantics.
+- **For Worlds:** keep SPZ as optional **offline interchange** initially. If decoding at runtime, use explicit hard maximum points, decompressed bytes, attribute stride, failure states, checksum/provenance and backend-supported SH bands. Do not assume compressed bytes approximate peak VRAM.
+
+### I2 — SuperSplat editor: shared resource lifetime and GPU-side authoring
+
+**Source:** [playcanvas/supersplat](https://github.com/playcanvas/supersplat) `main@b4f3b2557f8761170150f4766fa08c3ddcdfd5c5`, MIT; `src/editor-splat-resource.ts`, `src/import-analysis.ts`, `src/data-processor/`, `src/io/`.
+
+- Editor resources are separate from scene *instances* and can be shared by several editing layers. This is highly relevant to preventing massive duplicate GPU allocations when many objects reuse one splat source.
+- Its source handles independent import components, material-data encoding and staged upload/sorting. Input import analysis recognizes sequences versus multi-file scenes rather than treating every file as one asset.
+- SuperSplat/PlayCanvas's **editor heap usage** and runtime GPU memory are different measurements. Published editor wins are not automatically rendering improvements.
+- **For Worlds:** first support familiar Godot import/editor workflows; a new splat-specific inspector can expose provenance, source/canonical attributes, compression quality, resident vs full count and preview. Build conversion/optimization asynchronously and cache derived assets by content hash.
+
+### I3 — Brush and gsplat: keep reconstruction optional
+
+**Sources:** [ArthurBrussee/brush](https://github.com/ArthurBrussee/brush) `main@1388f74c6fe0236f68ee4915564bf00e9d2e3747` (Apache-2.0), [gsplat](https://github.com/nerfstudio-project/gsplat) `main@512d366b67073d77ca099ede742683c165dfc23b` (Apache-2.0).
+
+- Brush provides reconstruction/training plus visualization using Rust/Burn/portable GPU tooling; its README covers COLMAP/Nerfstudio datasets and image masks, including mobile/browser experiments. Benchmark/realtime claims belong to the author and differ by platform.
+- gsplat contains CUDA/PyTorch differentiable kernels and several raster/compositing configurations. `gsplat/rendering.py` exposes a mixed-batch versus parallel-batch distinction for tile processing. Useful as a published *quality/algorithmic reference*; not a reasonable mandatory production dependency for a Godot multi-vendor engine.
+- **For Worlds:** model importers should accept output from **several independently chosen** reconstruction tools; ordinary game use should not require CUDA, a trained model, PyTorch or downloading a proprietary pretrained dataset.
+
+### I4 — Combined pipeline insight
+
+A scalable import stack has at least **four different roles** that should not be conflated:
+
+1. **Capture or source mesh:** photos/videos/trajectory (offline reconstruction) or GLB/mesh/material (Mesh2Splat-style conversion).
+2. **Art direction/quality:** SuperSplat-style editing, filtered bounds, opacity cleanup, per-material PBR attributes and offline quality estimation.
+3. **Storage/streaming package:** PLY/SPZ interchange, SOG versioned textures or a versioned Worlds regional asset with explicit chunk dependencies.
+4. **Runtime:** Godot-native backend, per-view sorting/depth/compositing, priority residency, shadows and temporal correctness.
+
+Adapting step 3 does not automatically improve step 4, and a physically correct source mesh does not ensure a downstream splat shader is relightable. This separation lets the engine preserve standard scenes, editor imports and independent simulation state.
+
 ## Continuation when no GPU is available
 
 The next independent work that is actually feasible is a **small, testable CPU-only import record + spatial residency model**, not production renderer integration. First compare manifest/field validation and memory caps against the source research above; record PASS/FAIL but **not GPU speedups**. Source-verify the current Godot 4.8 `Image`, `RenderingDevice`, `CompositorEffect`, texture/asset importer contracts once a native experiment is justified.
