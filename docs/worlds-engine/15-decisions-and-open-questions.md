@@ -14,6 +14,7 @@
 | DEC-008 | Chosen | Start technical investigation with rendering/geometry | Graphics are key priority | Critical correctness/performance blockers emerge elsewhere |
 | DEC-009 | Chosen | Run frontier rendering research in parallel with Godot baseline optimization | The goal includes surpassing existing engines in scoped workloads, not just catching up | Experiments prove unmaintainable or offer no benefit |
 | DEC-010 | Proposed | Explore representation-adaptive rendering and change/relevance budgets | Can exploit different geometry content types and persistent world state | Image quality, hardware portability or frame-time results do not justify complexity |
+| DEC-011 | Chosen | While reliable graphics hardware is unavailable, prioritize exact code audits, independent public literature and CPU-only correctness specifications | Keeps Phase 1 advancing without fabricated GPU evidence | Hardware or remote reproducible GPU runner becomes available |
 
 Decisions are policies or proposals, not evidence that a subsystem already exists.
 
