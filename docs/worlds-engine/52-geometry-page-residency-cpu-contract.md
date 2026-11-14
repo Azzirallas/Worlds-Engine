@@ -58,6 +58,8 @@ Adversarial scenarios in the 14-test suite: root fallback always drawable; paren
 - The implementation is deliberately a **Python correctness model** with whole-table scans; it does not establish throughput benefits or optimal eviction choices. Fairness and thrashing avoidance need comparative synthetic traces, then hardware measurement.
 - Eviction refcounts are simulated draw tickets, not actual GPU fences. Conventional Godot meshes must stay available as the default and real fallback until a native implementation proves compatible.
 
+**Follow-on completed (2026-11-14):** [53 — async page lifecycle and LOD selector](53-async-geometry-lifecycle-and-lod-error-cpu-milestone.md) extends the original synchronous page research with separately simulated IO, decoded and upload stages, versioned cancellation/hot reload and conservative screen-error/hysteresis LOD selection (27 committed new CPU tests passed). The synchronous `geometry_residency_reference.py` in this document remains a **separate correctness model**; its older `step()` is not retroactively asynchronous.
+
 ## Next hardware-free implementation priorities
 
 1. **Async page lifecycle simulation:** queued → reading/decoded → upload pending → resident, explicit IO/upload budgets, failed/cancelled loads and stale generation/scene completion rejection. Derive a deterministic set of camera/IO traces to measure simulated churn and fallback quality.
