@@ -31,6 +31,10 @@ layout(push_constant, std430) uniform Settings {
     uint view_layer_mask;
     uint output_capacity;
     uint slot_count;
+    // Pad to a 32-byte push-constant block for stricter driver/engine ABI rules.
+    uint reserved0;
+    uint reserved1;
+    uint reserved2;
 } settings;
 
 void main() {
