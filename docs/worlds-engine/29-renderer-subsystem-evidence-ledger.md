@@ -39,6 +39,9 @@
 9. `modules/texture_streaming/` is present in the Godot 4.8 beta fork. Source inspection confirms optional GPU/material feedback, mip-level decisions, readback/reload workers and a configurable (default-off) memory budget. **Do not mark texture streaming as wholly missing.** Shader feedback is wired through **Forward+ and Mobile**, not Compatibility. This is not proof of sparse virtual texture paging or a production-ready feature. See [36](36-texture-streaming-baseline-audit.md) and full source trace [38](38-texture-streaming-end-to-end-trace-and-validation.md).
 10. `renderer_rd/pipeline_cache_rd.cpp` and `shader_rd.cpp` implement existing pipeline/shader variant machinery. Public Godot docs describe ubershader and precompilation paths; **do not mark PSO precompilation as absent without measurement.** See [37](37-pipeline-stutter-and-pso-research.md).
 
+11. **MultiMesh scatter-update policy:** the 4.8 beta `mesh_storage.cpp` uses 512-instance dirty regions and a bulk upload when dirty-region count exceeds 32 or half of visible regions. It may also rebuild an entire MultiMesh AABB without custom bounds. These source facts motivate the *unmeasured* stochastic occupancy model in [39](39-sparse-instance-update-cost-and-gpu-selection.md); do **not** present the byte ratios as profiling results.
+12. Bundled `thirdparty/meshoptimizer/meshoptimizer.h` is version **1.3** with public meshlet builders and cluster bounds; the standalone upstream `demo/clusterlod.h` is a distinct MIT-source starting point. Temporal continuity under LOD changes is detailed in [40](40-representation-continuity-and-2026-rendering-research.md).
+
 ## Important public cross-engine lessons
 
 - Epic's public Nanite docs discuss fine detail, LOD, streaming, material limitations, foliage overdraw and stress from aggressive streaming/visibility.
