@@ -1,6 +1,6 @@
 # Worlds Engine — engineering plan
 
-> Status: research and planning, with source-level audits and an untested benchmark scaffold. No new rendering features are claimed implemented or measured.
+> Status: source audits, CPU rendering-policy reference models, and an opt-in native mesh-diagnostic module now exist. There is **no validated replacement renderer or measured GPU speedup**; full Godot native integration and rendering benchmarks remain untested.
 
 Worlds Engine is a Godot-based, general-purpose game engine project aimed at substantially better scalability and modern 3D capabilities without sacrificing Godot's familiar user experience. This documentation is the durable project reference for development, review and handoff.
 
