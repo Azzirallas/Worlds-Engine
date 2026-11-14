@@ -55,7 +55,7 @@ A camera/viewport record includes projection, clip planes, output size, camera m
 
 Resource states: `Absent → Requested → Downloaded → Decoded → UploadPending → Resident → Retiring`; unexpected failures transition to `Failed` or fallback. All pages/chunks have dependency reference counts and an identity generation. A resident coarse fallback is preferred whenever fine detail is missing. Actual GPU buffer lifetime and visibility fence integration must use Godot's real RD ownership mechanism, not guessed execution order.
 
-**Budget independently:** compressed disk bytes, CPU decoded bytes, staging upload bytes, persistent GPU splat data, per-view sort/candidate buffers, per-tile duplicate lists, temporary old+new frames and shared lighting/collision proxies. Never report 'splat data size' as total VRAM.
+**Budget independently:** compressed disk bytes, CPU decoded bytes, staging upload bytes, persistent GPU splat data, per-view sort/candidate buffers, per-tile duplicate lists, temporary old+new frames and shared lighting/collision proxies. Never report 'splat data size' as total VRAM. PlayCanvas's **splat-count** budget balances LODs and can exceed its target when even the coarsest level will not fit; a Worlds *hard byte cap* therefore needs explicit failure/proxy behavior, not just the same budget variable (source note [43](43-splat-source-audit-and-implementation-lessons.md)).
 
 ### `WorldsSplatRenderer` — backend adapter interface
 
