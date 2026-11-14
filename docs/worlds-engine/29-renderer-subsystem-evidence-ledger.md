@@ -34,6 +34,11 @@
 7. `servers/rendering/renderer_rd/storage_rd/light_storage.cpp` implements conventional local-light shadow atlas resources. **Action:** compare a sparse-shadow prototype against realistic atlas configurations rather than assuming any virtual shadow design wins.
 8. `servers/rendering/renderer_rd/cluster_builder_rd.cpp` is light clustering infrastructure, **not evidence of an existing virtualized geometry cluster renderer**.
 
+## Additional baseline findings (2026-11-13)
+
+9. `modules/texture_streaming/` is present in the Godot 4.8 beta fork. Source inspection confirms optional GPU/material feedback, mip-level decisions, readback/reload workers and a configurable (default-off) memory budget. **Do not mark texture streaming as wholly missing.** This is not proof of sparse virtual texture paging or a production-ready feature. See [36](36-texture-streaming-baseline-audit.md).
+10. `renderer_rd/pipeline_cache_rd.cpp` and `shader_rd.cpp` implement existing pipeline/shader variant machinery. Public Godot docs describe ubershader and precompilation paths; **do not mark PSO precompilation as absent without measurement.** See [37](37-pipeline-stutter-and-pso-research.md).
+
 ## Important public cross-engine lessons
 
 - Epic's public Nanite docs discuss fine detail, LOD, streaming, material limitations, foliage overdraw and stress from aggressive streaming/visibility.
