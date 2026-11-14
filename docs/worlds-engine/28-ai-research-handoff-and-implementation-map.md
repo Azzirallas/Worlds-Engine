@@ -1,0 +1,113 @@
+# 28 — AI engineering handoff: durable rendering research record
+
+**State as of 2026-11-13:** Phase 1 research, not an implemented renderer upgrade. This file is the **first file to read in a fresh AI session** after the [documentation index](README.md). The intent is to preserve *decisions, rationale, implementation proposals, dependencies, and unknowns* rather than rely on memory.
+
+## Project identity and non-negotiables
+
+- Product: **Worlds Engine**, a public Godot fork and general-purpose engine, not solely a renderer for our simulation.
+- Preserve Godot's editor, Node3D/scene workflow, C#, GDScript, import pipeline, conventional render paths, 2D and normal project compatibility.
+- Aspirational target: scale scenes, animation, streaming and visual fidelity beyond present engines *in measured workloads*. This is not currently achieved.
+- Worlds-ECS / WorldSim remains a separate, optional, engine-agnostic simulation. Renderer must never mistake an invisible visual for a destroyed simulation entity.
+- Engine improvements are optional and backend-appropriate; fallback on standard Godot methods is mandatory.
+- Never copy, transliterate, summarize into executable steps from private Unreal source, reproduce shaders, or infer permission to publish proprietary files. See [27](27-license-and-independent-implementation-protocol.md).
+- Notes are written so a future AI can create an **original engine system based on open/public technical knowledge**, not reconstruct Epic's exact implementation.
+
+## Pinned repositories and baselines
+
+| Role | Repository / revision | Meaning |
+| --- | --- | --- |
+| Public output | `Azzirallas/Worlds-Engine` `master`, pre-audit baseline `6a8f3e91d98af788bcf7837e785b26b0500989c9` | `version.py`: Godot 4.8 beta |
+| Licensed comparison | private `Azzirallas/UnrealEngine` `release` at `f45729c0b6f097038e72b52d366a62baeca3275b` | `Engine/Build/Build.version`: Unreal Engine 5.8.4 |
+| Native benchmark | `benchmarks/rendering/` | Created; **not executed or smoke tested on graphics hardware** |
+
+Do not assume either branch has remained unchanged. Recheck HEAD and engine version before every code change. Treat the private fork as legally controlled source, not a public dependency.
+
+## What was actually established
+
+- Godot has `RenderingDeviceGraph`, indirect draw/dispatch, multi-renderer pipelines (Forward+, Mobile, Compatibility) and existing meshoptimizer mesh LOD generation; rewriting these systems in Phase 1 is unmotivated.
+- Godot's MultiMesh can reduce draw submission, but a MultiMesh is one spatial object and uses an aggregate LOD decision; a vast one can cause wasteful visibility and detail.
+- Godot camera culling includes a parallel scan of scene instances; `DynamicBVH` is already used in other contexts. Both alternatives deserve measurements, not assumptions.
+- MultiMesh per-instance setters use cached data and dirty-region uploads; bulk/mixed update behavior needs a benchmark, including possible initial readback transition.
+- Unreal's documented approaches combine GPU scene/instance data, fine geometry visibility, streamed hierarchical detail, material separation, cached GI and shadowing, and per-pixel bounded many-light evaluation. They solve different bottlenecks, with documented artifacts and memory costs.
+- Godot's SDFGI is already a GI solution but has documented limitations with dynamic occluders and emissive surfaces.
+- Godot's graph and 3D rendering already have nontrivial backend portability and shader/material constraints. Integrating advanced features is a product problem, not just writing a compute shader.
+
+## Reading sequence for a new developer/AI
+
+1. [Vision and compatibility](01-vision-and-scope.md), [compatibility principles](02-principles-and-compatibility.md), [roadmap](12-roadmap.md).
+2. [Phase 1 execution plan](19-phase-1-rendering-execution-plan.md), [Godot source map](20-renderer-call-graph.md), [existing renderer audit](17-renderer-source-audit-res-001.md).
+3. [Unreal concept comparison](24-unreal-5-8-rendering-architecture-audit.md), [gap matrix](25-godot-renderer-gap-matrix.md), [source boundaries](27-license-and-independent-implementation-protocol.md).
+4. **Deep subsystem specs:** [29 audit ledger](29-renderer-subsystem-evidence-ledger.md), [30 GPU scene](30-gpu-instance-visibility-design.md), [31 virtual geometry](31-independent-virtual-geometry-design.md), [32 residency](32-residency-streaming-contract.md), [33 shadows/GI](33-lighting-shadow-and-temporal-cache-design.md), [34 shading/compositor](34-materials-graph-and-temporal-reconstruction.md).
+5. [35 validation and implementation sequence](35-phase-1-validation-and-next-actions.md).
+6. [Research references](23-frontier-evidence-register.md) and primary public technical documents in each spec.
+
+## Status definitions; no implicit promotions
+
+- **Verified Godot source:** confirmed in fork; not necessarily validated on GPU.
+- **Verified public documentation:** independently documented published technique or limitation.
+- **Private source observation:** comparison context only, never a public algorithmic specification.
+- **Proposed:** a Worlds Engine architecture we designed; unimplemented and unmeasured.
+- **Prototype:** code exists, compiles and can run, but need not be production ready.
+- **Measured:** controlled CPU/GPU hardware benchmark with full environment and quality notes.
+- **Integrated:** engine feature landed with tests, fallback, documentation and regression guard.
+
+When work advances, update *the status line and evidence* in this handoff; do not just modify random plan bullets.
+
+## Principle: three orthogonal axes, not one large renderer rewrite
+
+**Scene representation:** persistent render proxies and resources identify what exists (without determining simulation ownership).
+
+**Work selection:** CPU/GPU decide what geometry, effects and detail actually contribute to each view; stream/check validity for missing data.
+
+**Work execution:** Godot's RenderingDevice/graph executes the required draws and compute. Materials, lights, shadows, temporal buffers and platform fallbacks are consumers of this data.
+
+This layering makes it feasible to try new geometry or lighting methods *without* replacing scene nodes or disabling the standard renderer.
+
+## Suggested modules (names are original proposals; none exist)
+
+- `WorldsRenderScene` — optional pool of stable presentation handles; lifecycle events; per-view data access.
+- `WorldsChangeJournal` — coalesced per-frame state changes and epochs for rendering consumers.
+- `WorldsRegionIndex` — coarse spatial grouping and candidate enumeration, separate from Godot's existing BVH until benchmarked.
+- `WorldsVisibilityLab` — GPU-visible IDs, independent culling tests, indirect draw setup.
+- `WorldsGeometryAsset` — experimental hierarchical cluster derivative of an existing mesh with always-available conventional fallback.
+- `WorldsResidencyLab` — request priority, load/upload budgets, safe eviction and telemetry.
+- `WorldsPresentationPolicy` — controlled representation choice with hysteresis and quality error bound.
+- `WorldsLightingLab` — isolated invalidate/refresh prototype for one shadow or GI effect.
+
+No module is approved to merge merely because it appears here.
+
+## Main research decisions
+
+1. **Don't rebuild RenderingDeviceGraph.** First measure missing functionality and command-graph CPU cost.
+2. **First engineering control:** improve/validate `benchmarks/rendering` for high count, visibility fractions, dynamic updates, and shadow/material variants.
+3. **First experimental candidate:** GPU resident instance table and GPU fine visibility, compatible with ordinary mesh rendering.
+4. **Second experimental candidate:** static opaque clustered mesh lab with independent meshlet preprocessing and conventional mesh fallback; use Godot's already-vendored MIT meshoptimizer where appropriate.
+5. **Parallel architectural research:** explicit resource residency and scene-change epochs to budget costly work.
+6. **Lighting later:** one cached effect experiment, with correctness/quality gates. Avoid rebuilding full Lumen/MegaLights.
+7. **Feature flags and fallback** from day one. No surprising change to ordinary Godot projects.
+
+## Implementation contracts that must survive context loss
+
+- **Stable handle:** an implementation-defined handle plus generation; never a durable NPC or simulation identity. Deleting/reusing slots must not resurrect previous visuals.
+- **Bounds:** conservative under transforms, skinning, WPO and motion; uncertainty defaults to visible.
+- **Visibility:** false-positive draw is allowed; false-negative missing geometry is a correctness bug.
+- **LOD:** enforce pixel-error/camera constraints, hysteresis and crack-free seam handling; selected data must be resident.
+- **Residency:** a dependency cannot be evicted while referenced; low-detail fallback must always render.
+- **Temporal data:** caches carry their input epochs and view lineage; camera cuts, material/light changes and dependency changes invalidate relevant history.
+- **Threading:** no Godot SceneTree calls from worker/GPU code unless explicitly allowed; RenderingServer ownership and render-thread requirements are respected.
+- **Platforms:** check features; use conservative compatibility path for unsupported devices.
+- **Metrics:** CPU and GPU timings, P50/P95/P99, upload bytes, VRAM/RAM, output quality, correctness, cold-start and streaming stalls; report *unmeasured*, never invented metrics.
+
+## Explicit unresolved questions
+
+- Does Godot 4.8 RenderingDevice expose the synchronization/indirect/compute capability needed for an isolated proof without changing internal renderer code?
+- Is the bottleneck on our actual low/midrange GPUs CPU scene culling, draw submission, GPU overdraw, memory upload, shading, or some other effect?
+- What practical threshold should switch from plain MultiMesh to GPU selection?
+- Can the experimental meshlet path preserve Godot shader semantics and surface/material variation without multiplying compilation variants?
+- Can scene-change journals reduce shadow/GI work without invalidation bugs?
+- Which Vulkan/Direct3D/Metal graphics features can be relied on in tested hardware?
+- Does the proposed representation portfolio outperform meshoptimizer LOD on foliage and dense static meshes, or does complexity outweigh wins?
+
+## Next action
+
+[35](35-phase-1-validation-and-next-actions.md) is the execution queue. First validate baseline and build a small proof-of-concept that supplies **independently generated** GPU-visible instance IDs. Do not write a new production renderer, clone proprietary passes, or claim success until tests exist.
