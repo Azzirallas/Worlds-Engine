@@ -1,6 +1,6 @@
 # GPU visibility — isolated RenderingDevice feasibility fixture
 
-**Status (2026-11-14): source committed; NOT compiled, parsed by Godot, or GPU-executed.** The Python CPU reference was actually run in the research environment: **14/14 tests passed** on 2026-11-14. This project is an independent **proof-of-feasibility fixture**, not a replacement for Godot's rendering pipeline.
+**Status (2026-11-14): guarded indirect command and optional offscreen raster probe source committed; still NOT compiled, parsed by Godot, or GPU-executed.** The Python CPU reference was actually run in the research environment: **14/14 tests passed** on 2026-11-14. This project is an independent **proof-of-feasibility fixture**, not a replacement for Godot's rendering pipeline.
 
 ## What this implements
 
