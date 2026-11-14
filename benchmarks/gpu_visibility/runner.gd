@@ -3,6 +3,7 @@ extends Node
 ## Uses synchronous readback for testing ONLY. It never modifies Godot's renderer.
 
 const SHADER_PATH := "res://visibility.comp.glsl"
+const GUARD_SHADER_PATH := "res://indirect_guard.comp.glsl"
 const WORKGROUP_SIZE := 64
 const REGION_SIZE := 8.0
 const EPSILON := 0.0001
@@ -19,49 +20,58 @@ func _ready() -> void:
 		get_tree().quit(2)
 		return
 
-	var file := load(SHADER_PATH) as RDShaderFile
-	if file == null:
-		push_error("WORLDS_GPU_VISIBILITY_FAIL: compute shader import unavailable")
+	var visibility := _load_kernel(rd, SHADER_PATH)
+	if visibility.is_empty():
 		get_tree().quit(1)
 		return
-
-	var spirv := file.get_spirv()
-	if spirv == null:
-		push_error("WORLDS_GPU_VISIBILITY_FAIL: missing compiled shader")
-		get_tree().quit(1)
-		return
-
-	var stage_error := spirv.get_stage_compile_error(RenderingDevice.SHADER_STAGE_COMPUTE)
-	if not stage_error.is_empty():
-		push_error("WORLDS_GPU_VISIBILITY_FAIL: " + stage_error)
-		get_tree().quit(1)
-		return
-
-	var shader := rd.shader_create_from_spirv(spirv)
-	if not shader.is_valid():
-		push_error("WORLDS_GPU_VISIBILITY_FAIL: shader_create_from_spirv")
-		get_tree().quit(1)
-		return
-
-	var pipeline := rd.compute_pipeline_create(shader)
-	if not pipeline.is_valid():
-		rd.free_rid(shader)
-		push_error("WORLDS_GPU_VISIBILITY_FAIL: compute_pipeline_create")
+	var guard := _load_kernel(rd, GUARD_SHADER_PATH)
+	if guard.is_empty():
+		rd.free_rid(visibility["pipeline"])
+		rd.free_rid(visibility["shader"])
 		get_tree().quit(1)
 		return
 
 	for scenario in _test_cases():
-		if not _run_case(rd, shader, pipeline, scenario):
+		if not _run_case(rd, visibility["shader"], visibility["pipeline"],
+				guard["shader"], guard["pipeline"], scenario):
 			failed = true
 
-	rd.free_rid(pipeline)
-	rd.free_rid(shader)
+	rd.free_rid(guard["pipeline"])
+	rd.free_rid(guard["shader"])
+	rd.free_rid(visibility["pipeline"])
+	rd.free_rid(visibility["shader"])
 	if failed:
 		push_error("WORLDS_GPU_VISIBILITY_FAIL: %d scenarios passed before failure(s)" % passed_cases)
 		get_tree().quit(1)
 	else:
-		print("WORLDS_GPU_VISIBILITY_PASS: %d scenarios; parity, layers, overflow, regions" % passed_cases)
+		print("WORLDS_GPU_VISIBILITY_PASS: %d scenarios; parity and guarded indirect packets" % passed_cases)
 		get_tree().quit(0)
+
+
+## Import and build one compute pipeline; report shader compiler errors explicitly.
+func _load_kernel(rd: RenderingDevice, path: String) -> Dictionary:
+	var file := load(path) as RDShaderFile
+	if file == null:
+		push_error("GPU visibility shader import unavailable: " + path)
+		return {}
+	var spirv := file.get_spirv()
+	if spirv == null:
+		push_error("GPU visibility shader missing compiled SPIR-V: " + path)
+		return {}
+	var error := spirv.get_stage_compile_error(RenderingDevice.SHADER_STAGE_COMPUTE)
+	if not error.is_empty():
+		push_error("GPU visibility shader compile failure: %s : %s" % [path, error])
+		return {}
+	var shader := rd.shader_create_from_spirv(spirv)
+	if not shader.is_valid():
+		push_error("GPU visibility shader_create_from_spirv failed: " + path)
+		return {}
+	var pipeline := rd.compute_pipeline_create(shader)
+	if not pipeline.is_valid():
+		rd.free_rid(shader)
+		push_error("GPU visibility compute_pipeline_create failed: " + path)
+		return {}
+	return {"shader": shader, "pipeline": pipeline}
 
 
 ## Generate six inward-facing planes of a cube centered on the origin.
@@ -126,6 +136,10 @@ func _test_cases() -> Array[Dictionary]:
 			"layers": 1, "capacity": 13, "regions": true})
 	cases.append({"name": "all_visible", "records": overlap, "planes": _box_planes(4.0),
 			"layers": 1, "capacity": 257, "regions": true})
+	cases.append({"name": "draw_limit_suppressed", "records": overlap, "planes": _box_planes(4.0),
+			"layers": 1, "capacity": 257, "draw_limit": 12, "regions": true})
+	cases.append({"name": "zero_vertex_guard", "records": overlap, "planes": _box_planes(4.0),
+			"layers": 1, "capacity": 257, "vertex_count": 0, "regions": true})
 	cases.append({"name": "invalid_candidate_diagnostic", "records": edge, "planes": _box_planes(10.0),
 			"layers": 1, "capacity": 8, "regions": false, "inject_bad_candidate": true})
 	cases.append({"name": "stale_generation_diagnostic", "records": edge, "planes": _box_planes(10.0),
@@ -199,11 +213,13 @@ func _expected(records: Array, planes: Array, mask: int) -> Array[int]:
 
 
 ## Wrap a storage buffer at a fixed binding, with zero-initialized short buffers.
-func _make_buffer(rd: RenderingDevice, bytes: PackedByteArray, minimum_size: int) -> RID:
+func _make_buffer(rd: RenderingDevice, bytes: PackedByteArray, minimum_size: int,
+		indirect: bool = false) -> RID:
 	var padded := bytes.duplicate()
 	if padded.size() < minimum_size:
 		padded.resize(minimum_size)
-	return rd.storage_buffer_create(padded.size(), padded)
+	var usage := RenderingDevice.STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT if indirect else 0
+	return rd.storage_buffer_create(padded.size(), padded, usage)
 
 
 ## Produce one GDScript RDUniform storage-buffer descriptor.
@@ -216,7 +232,8 @@ func _storage_uniform(binding_index: int, buffer: RID) -> RDUniform:
 
 
 ## Dispatch once, read back only for test verification, then release all buffers.
-func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictionary) -> bool:
+func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID,
+		guard_shader: RID, guard_pipeline: RID, scenario: Dictionary) -> bool:
 	var name: String = scenario["name"]
 	var records: Array = scenario["records"]
 	var planes: Array = scenario["planes"]
@@ -257,7 +274,8 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 		_make_buffer(rd, candidate_data.to_byte_array(), 8),
 		_make_buffer(rd, plane_data.to_byte_array(), 16),
 		_make_buffer(rd, PackedByteArray(), maxi(1, capacity) * 8),
-		_make_buffer(rd, PackedInt32Array([0, 0]).to_byte_array(), 8)
+		_make_buffer(rd, PackedInt32Array([0, 0]).to_byte_array(), 8),
+		_make_buffer(rd, PackedByteArray(), 16, true)
 	]
 	var valid := true
 	for buf in buffers:
@@ -280,6 +298,18 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 			rd.free_rid(buf)
 		return false
 
+	var guard_uniforms: Array[RDUniform] = [
+		_storage_uniform(0, buffers[5]),
+		_storage_uniform(1, buffers[6])
+	]
+	var guard_set := rd.uniform_set_create(guard_uniforms, guard_shader, 0)
+	if not guard_set.is_valid():
+		push_error(name + ": indirect guard descriptor set failed")
+		rd.free_rid(uniform_set)
+		for buf in buffers:
+			rd.free_rid(buf)
+		return false
+
 	var commands := rd.compute_list_begin()
 	rd.compute_list_bind_compute_pipeline(commands, pipeline)
 	rd.compute_list_bind_uniform_set(commands, uniform_set, 0)
@@ -287,12 +317,22 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 			capacity, records.size(), 0, 0, 0]).to_byte_array()
 	rd.compute_list_set_push_constant(commands, push_data, push_data.size())
 	rd.compute_list_dispatch(commands, maxi(1, ceili(float(candidate_count) / WORKGROUP_SIZE)), 1, 1)
+	# Protect the counter read from writes in the visibility dispatch.
+	rd.compute_list_add_barrier(commands)
+	rd.compute_list_bind_compute_pipeline(commands, guard_pipeline)
+	rd.compute_list_bind_uniform_set(commands, guard_set, 0)
+	var max_draw_instances: int = scenario.get("draw_limit", capacity)
+	var mesh_vertex_count: int = scenario.get("vertex_count", 3)
+	var guard_push := PackedInt32Array([capacity, mesh_vertex_count, max_draw_instances, 0]).to_byte_array()
+	rd.compute_list_set_push_constant(commands, guard_push, guard_push.size())
+	rd.compute_list_dispatch(commands, 1, 1, 1)
 	rd.compute_list_end()
 	rd.submit()
 	rd.sync()
 
 	var count_data := rd.buffer_get_data(buffers[5])
 	var result_data := rd.buffer_get_data(buffers[4])
+	var indirect_data := rd.buffer_get_data(buffers[6])
 	var actual_count := int(count_data.decode_u32(0))
 	var flags := int(count_data.decode_u32(4))
 	var expected_flags := (1 if expected.size() > capacity else 0)
@@ -316,6 +356,14 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 		valid = false
 	if actual.size() != mini(expected.size(), capacity):
 		valid = false
+	# Check actual Vulkan non-indexed draw command ABI, including fail-closed cases.
+	var expected_draw_count := expected.size() if expected_flags == 0 and expected.size() <= capacity and expected.size() <= max_draw_instances and mesh_vertex_count > 0 else 0
+	if (indirect_data.size() != 16 or int(indirect_data.decode_u32(0)) != mesh_vertex_count
+			or int(indirect_data.decode_u32(4)) != expected_draw_count
+			or int(indirect_data.decode_u32(8)) != 0
+			or int(indirect_data.decode_u32(12)) != 0):
+		valid = false
+
 	if expected_flags & 1:
 		# Atomic output order is undefined when the buffer deliberately overflows.
 		for slot in actual:
@@ -325,6 +373,7 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 		if actual != expected:
 			valid = false
 
+	rd.free_rid(guard_set)
 	rd.free_rid(uniform_set)
 	for buf in buffers:
 		rd.free_rid(buf)
@@ -333,6 +382,6 @@ func _run_case(rd: RenderingDevice, shader: RID, pipeline: RID, scenario: Dictio
 				[name, expected.size(), actual_count, flags, expected_flags])
 		return false
 	passed_cases += 1
-	print("WORLDS_GPU_CASE_PASS %s candidates=%d visible=%d flags=%d" %
-			[name, candidate_count, expected.size(), flags])
+	print("WORLDS_GPU_CASE_PASS %s candidates=%d visible=%d flags=%d draw_instances=%d" %
+			[name, candidate_count, expected.size(), flags, expected_draw_count])
 	return true
