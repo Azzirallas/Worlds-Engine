@@ -2,6 +2,15 @@
 
 This directory contains **CPU-only analytical models and invariants** for Worlds Engine research. These are not engine prototypes, actual GPU timing measurements, render quality tests or a substitute for the graphics benchmarks in [../rendering/](../rendering/).
 
+## Async geometry lifecycle and projected-error LOD (27 committed tests passed)
+
+[53](../../docs/worlds-engine/53-async-geometry-lifecycle-and-lod-error-cpu-milestone.md) adds `geometry_async_reference.py` (13 committed `test_geometry_async_release.py` cases passed) and `geometry_lod_reference.py` (14 committed `test_geometry_lod_reference.py` cases passed). The async model simulates versioned IO, decoded cache, upload, resident fallback, multi-camera demand, hot reload and scene-reset drain under separate byte budgets; pages too large for mandatory limits are blocked before wasteful IO. The LOD selector checks world-error projection under perspective/orthographic cameras, near-plane crossings, resident-parent chains and temporal hysteresis. **27/27 committed tests passed locally**, including 1,200 randomized streaming operations and 700 projected-error checks; a separate extended local 25-test async suite passed but was not committed. Exact committed file bytes were verified by length/FNV-1a. No Godot/GPU execution or speedup measurement.
+
+```sh
+python -m unittest discover -s benchmarks/theory -p 'test_geometry_async_release.py' -v
+python -m unittest discover -s benchmarks/theory -p 'test_geometry_lod_reference.py' -v
+```
+
 ## Bounded upload scheduling and geometry residency (33 new CPU tests passed)
 
 [51](../../docs/worlds-engine/51-bounded-immutable-staging-upload-reference.md) documents `staging_upload_reference.py` (19 passing CPU tests), combining `FrameSlots` epoch/generation identity and `WSP1` packet descriptors into an immutable, byte-budgeted staging queue with simulated transfer acknowledgements, stale-update coalescing, draw-frame hazard checks, and conservative scene reset. [52](../../docs/worlds-engine/52-geometry-page-residency-cpu-contract.md) adds `geometry_residency_reference.py` (14 passing tests): pinned coarse roots, parent-first detail loading, per-camera epoch demands, resident/upload byte caps, transactional evictions and in-flight page holds. The local research directory ran **57/57 tests** with Python 3.13.5; it is a *partial local copy*, not a full repository CI run. The two new modules and tests are checksum-matched with GitHub.
