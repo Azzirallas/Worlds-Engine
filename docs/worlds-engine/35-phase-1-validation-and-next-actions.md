@@ -30,6 +30,10 @@ Graphics hardware is still unavailable, so **do not block development on GPU tes
 
 [56](56-2d-cluster-edges-and-synthetic-camera-traces.md) extends earlier integer-interval coverage to rectangle ownership, four-direction shared-edge profiles and explicit stitch/canonical vertex validation. A deterministic CPU trace now joins async page residency, LOD projection/hysteresis, conservative seam coarsening and camera frame retirement; its telemetry reports quality shortfall, structurally required extra detail, synthetic read/upload bytes and residency churn. **13 new 2D tests and 10 new integrated workload tests passed**; all **96 available local CPU tests passed** (including old exploratory tests not committed). A stable near view reaches target detail after page loads; damaged seam coarsens instead of authorizing cracks; rapid cuts cause safe evictions and cancellations. **No renderer/GPU work or speedup claim.** Next: compare global-root against independent regional-root topology and audit actual 3D shared-border geometry.
 
+## Regional roots and experimental native module (2026-11-14)
+
+[57](57-regional-geometry-roots-and-native-mesh-edge-audit.md) adds a validated **11-case CPU comparison** of global versus independent regional pinned coarse roots: global is structurally one far-view proxy draw, while regional pages can refine nearby regions without first loading unrelated coarse siblings. The candidate architecture is a **hybrid** with independent regional roots plus an optional aggregate distant proxy, not a forced all-world load dependency. Godot now contains **`modules/worlds_geometry/`**, disabled by default via `config.is_enabled() == False`, offering a read-only indexed-triangle topology analyzer. The standalone native C++ source compiled with `g++ -std=c++17 -Wall -Wextra -Werror -pedantic` and passed ten fixture scenarios, but **Godot integration/build validation remains unperformed**. Immediate hardware-free work: hybrid proxy residency tradeoff and geometric border comparisons; when build access exists, verify class registration and run native engine tests.
+
 ## High-level ranking
 
 | Task | Dependency | Outcome | Status |
