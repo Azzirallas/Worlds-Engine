@@ -7,8 +7,11 @@ def is_enabled():
 
 
 def can_build(env, platform):
-    """Indexed 3D mesh diagnostics need the engine's 3D types."""
-    return not env["disable_3d"]
+    """Require 3D mesh types and the existing meshoptimizer module."""
+    if env["disable_3d"]:
+        return False
+    env.module_add_dependencies("worlds_geometry", ["meshoptimizer"])
+    return True
 
 
 def configure(env):
