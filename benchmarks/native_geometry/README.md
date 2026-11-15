@@ -2,6 +2,37 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Offline meshlet generation and independent verification (2026-11-14)
+
+[60](../../docs/worlds-engine/60-offline-meshoptimizer-meshlet-validation.md) adds **`meshlet_contract.h/.cpp`** for an independent exact source triangle multiset/oriented-winding proof and **`meshlet_builder.h/.cpp`** for meshoptimizer-backed offline cluster generation. The independent verifier passed GCC/Clang C++17 strict-warning builds and Clang ASan+UBSan, with 26 `assert` sites including **800 randomized partitions**. The builder control-flow tests passed compiler/sanitizer checks **against a marked mock ABI only**, including deliberately corrupted triangle order and invalid bounds. Full vendor linking and Godot build are unverified.
+
+Standalone independent contract:
+
+```sh
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic \
+  -Imodules/worlds_geometry \
+  modules/worlds_geometry/meshlet_contract.cpp \
+  benchmarks/native_geometry/test_meshlet_contract.cpp \
+  -o /tmp/worlds_meshlet_contract
+/tmp/worlds_meshlet_contract
+```
+
+Mock-ABI control flow (not real meshoptimizer):
+
+```sh
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic \
+  -Ibenchmarks/native_geometry/mock_include -Imodules/worlds_geometry \
+  modules/worlds_geometry/meshlet_contract.cpp \
+  modules/worlds_geometry/mesh_surface_source.cpp \
+  modules/worlds_geometry/meshlet_builder.cpp \
+  benchmarks/native_geometry/mock_meshopt.cpp \
+  benchmarks/native_geometry/test_meshlet_builder_mock.cpp \
+  -o /tmp/worlds_meshlet_mock
+/tmp/worlds_meshlet_mock
+```
+
+The [headless Godot vendor smoke script](godot_meshlet_smoke.gd) is **committed but not executed**, and requires an engine build with `module_worlds_geometry_enabled=yes`. Diagnostics are read-only, per-surface/per-LOD and do not replace the conventional renderer.
+
 ## Mesh and ImporterMesh source/LOD adapter (2026-11-14)
 
 [Milestone 59](../../docs/worlds-engine/59-imported-mesh-readonly-topology-adapter.md) adds the portable `mesh_surface_source.h/.cpp` validator and `test_mesh_surface_source.cpp`. It prepares actual triangle index streams for existing topology checks, including read-only sequential indices for unindexed triangles. Rejected inputs receive explicit status codes; the source is never modified.
