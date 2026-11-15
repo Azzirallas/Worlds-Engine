@@ -32,6 +32,18 @@ public:
     Dictionary build_meshlets_importer_surface(const Ref<ImporterMesh> &p_mesh, int p_surface,
                                                int p_lod = -1, int p_max_vertices = 64,
                                                int p_max_triangles = 124) const;
+    // Offline WGC1 for a runtime surface/LOD; the original Mesh remains the render fallback.
+    Dictionary prepare_mesh_surface_cache(const Ref<Mesh> &p_mesh, int p_surface,
+                                          const PackedByteArray &p_asset_identity,
+                                          const PackedByteArray &p_import_settings,
+                                          const String &p_cache_path, int p_lod = -1,
+                                          int p_max_vertices = 64, int p_max_triangles = 124) const;
+    // Offline WGC1 for an importer-stage surface/LOD, without resource conversion.
+    Dictionary prepare_importer_surface_cache(const Ref<ImporterMesh> &p_mesh, int p_surface,
+                                              const PackedByteArray &p_asset_identity,
+                                              const PackedByteArray &p_import_settings,
+                                              const String &p_cache_path, int p_lod = -1,
+                                              int p_max_vertices = 64, int p_max_triangles = 124) const;
     // Conservative oriented shared-edge samples with an explicit distance tolerance.
     Dictionary compare_border_samples(const PackedVector3Array &p_border_a,
                                       const PackedVector3Array &p_border_b,

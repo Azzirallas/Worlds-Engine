@@ -189,3 +189,7 @@ A source-only audit is possible using GitHub connection, but actual graphics dat
 ## CPU import pipeline continuation — 2026-11-15
 
 [64 — offline geometry import orchestration](64-offline-geometry-import-pipeline.md) combines triangle stream preparation, separate boundary diagnostics, source/settings identity and WGC1 cache lookup through a new CPU-only C++ interface. GCC strict and Clang ASan/UBSan **mock-based** control-flow tests passed; a non-mock real-vendor + WGC1 fixture is now specified and syntax-checked but **not executed**. Next non-GPU gate: link that fixture to the real vendored meshoptimizer, rerun, then integrate opt-in read-only Godot Mesh/ImporterMesh adapters. No FPS or GPU claims.
+
+## Source adapter continuation — 2026-11-15
+
+[65 — opt-in WGC1 Godot surface bridge](65-godot-wgc1-surface-cache-bridge.md) adds script-callable runtime `Mesh` and importer `ImporterMesh` cache preparation methods, source/LOD metadata and guarded `user://worlds_geometry_cache/` file destinations. **Tested:** portable C++ cache-URI validator under GCC C++17 and Clang ASan+UBSan, 1,500 seeded path pairs. **Not yet tested:** full Godot native build, headless Godot cache smoke, real-vendor WGC1 end-to-end execution or visual performance. The source mesh remains the sole renderer input. Next: execute native end-to-end and Godot build gates, then add fully automatic source-identity collection/import hooks, always reversible and opt-in.

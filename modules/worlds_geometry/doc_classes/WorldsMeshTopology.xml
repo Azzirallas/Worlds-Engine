@@ -63,6 +63,34 @@
                 Inspects the original imported triangle surface or one of its stored LOD index streams without converting the resource or modifying its materials, skinning, or surface arrays. Each surface is clustered separately, preserving per-surface provenance. Generation is limited to 250000 source triangles per call. Malformed or nonfinite geometry and incorrect settings are rejected with a status. This method is experimental and not yet a virtual geometry renderer.
             </description>
         </method>
+        <method name="prepare_mesh_surface_cache">
+            <return type="Dictionary" />
+            <param index="0" name="mesh" type="Mesh" />
+            <param index="1" name="surface" type="int" />
+            <param index="2" name="asset_identity" type="PackedByteArray" />
+            <param index="3" name="import_settings" type="PackedByteArray" />
+            <param index="4" name="cache_path" type="String" />
+            <param index="5" name="lod_level" type="int" default="-1" />
+            <param index="6" name="max_vertices" type="int" default="64" />
+            <param index="7" name="max_triangles" type="int" default="124" />
+            <description>
+                Opt-in offline meshlet generation, SHA-256 provenance and WGC1 disk cache lookup for a runtime Mesh surface or its sorted LOD. Paths must use a restricted ASCII filename under [code]user://worlds_geometry_cache/[/code] and end in [code].wgc1[/code]. Provide complete asset identity and geometry-affecting import settings in the supplied byte arrays; these bytes are not discovered automatically. Returns explicit [code]READY_CACHED[/code], [code]READY_STORED[/code], [code]READY_MEMORY_ONLY[/code] or failure status, source and output triangle counts, boundary diagnostics and [code]verified[/code]. Every result sets [code]requires_standard_renderer[/code] to true: offline data acceptance does not enable GPU cluster rendering. The original Mesh is unchanged.
+            </description>
+        </method>
+        <method name="prepare_importer_surface_cache">
+            <return type="Dictionary" />
+            <param index="0" name="mesh" type="ImporterMesh" />
+            <param index="1" name="surface" type="int" />
+            <param index="2" name="asset_identity" type="PackedByteArray" />
+            <param index="3" name="import_settings" type="PackedByteArray" />
+            <param index="4" name="cache_path" type="String" />
+            <param index="5" name="lod_level" type="int" default="-1" />
+            <param index="6" name="max_vertices" type="int" default="64" />
+            <param index="7" name="max_triangles" type="int" default="124" />
+            <description>
+                Opt-in WGC1 preparation directly from ImporterMesh surface data or its original indexed LOD stream. No [code]get_mesh()[/code] call, material mutation, renderer changes, or automatic editor import is performed. The caller supplies a cache URI and complete asset/import provenance. The returned Dictionary includes the source name and optional LOD distance. Requires the experimental worlds_geometry and meshoptimizer modules at engine build time.
+            </description>
+        </method>
         <method name="compare_border_samples">
             <return type="Dictionary" />
             <param index="0" name="border_a" type="PackedVector3Array" />

@@ -2,6 +2,22 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Opt-in Godot Mesh/ImporterMesh WGC1 cache bridge (2026-11-15)
+
+[65 — Godot WGC1 cache bridge](../../docs/worlds-engine/65-godot-wgc1-surface-cache-bridge.md) adds two optional `WorldsMeshTopology` methods for preparing one runtime or importer surface/LOD. They require explicit asset/settings identity bytes, write only under a validated `user://worlds_geometry_cache/` URI, and **always retain the standard renderer**. The full Godot SCons build and the new [headless smoke fixture](godot_geometry_cache_smoke.gd) have **not** run.
+
+Standalone cache-URI policy **passed GCC C++17 strict and Clang ASan+UBSan tests**, including 1,500 deterministic randomized path pairs:
+
+```sh
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic -Imodules \
+  modules/worlds_geometry/geometry_cache_uri.cpp \
+  benchmarks/native_geometry/test_geometry_cache_uri.cpp \
+  -o /tmp/worlds_cache_uri
+/tmp/worlds_cache_uri
+```
+
+The real meshoptimizer + WGC1 end-to-end fixture remains unexecuted; do not confuse URI policy success with native Godot integration.
+
 ## Offline surface-to-WGC1 orchestration (2026-11-15)
 
 [64 — offline geometry import pipeline](../../docs/worlds-engine/64-offline-geometry-import-pipeline.md) adds `geometry_import_pipeline.h/.cpp`, a **passing CPU-only mock-boundary test**, and a separate **syntax-compiled but not yet executed** real-vendor end-to-end test.

@@ -89,3 +89,5 @@ The exact vendored sources and symbols were source-inspected. If additional link
 4. Add explicit per-LOD seam compatibility and cluster-hierarchy proofs before any experimental renderer treats a cached asset as drawable.
 
 All new implementation is independent; no proprietary Unreal source code or assets were copied.
+
+**Follow-on (2026-11-15):** [65 — opt-in Godot surface cache bridge](65-godot-wgc1-surface-cache-bridge.md) adds script-callable `Mesh`/`ImporterMesh` adapters and a restricted cache-URI policy; only the portable URI validator has been compiled/tested so far. Real Godot module linking and the previously unexecuted end-to-end real-vendor test remain separate acceptance gates.
