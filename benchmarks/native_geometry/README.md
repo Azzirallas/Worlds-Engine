@@ -2,6 +2,22 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Offline surface-to-WGC1 orchestration (2026-11-15)
+
+[64 — offline geometry import pipeline](../../docs/worlds-engine/64-offline-geometry-import-pipeline.md) adds `geometry_import_pipeline.h/.cpp`, a **passing CPU-only mock-boundary test**, and a separate **syntax-compiled but not yet executed** real-vendor end-to-end test.
+
+The orchestrator normalizes indexed and unindexed triangles, performs optional boundary diagnostics, supplies complete source/settings identity to the SHA-256/WGC1 cache store, and maps errors to explicit safe-fallback statuses. Ordinary Godot rendering remains untouched.
+
+```sh
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic -Imodules \
+  modules/worlds_geometry/geometry_import_pipeline.cpp \
+  benchmarks/native_geometry/test_geometry_import_pipeline.cpp \
+  -o /tmp/worlds_geometry_pipeline_mock
+/tmp/worlds_geometry_pipeline_mock
+```
+
+**Executed:** GCC strict C++17 and Clang ASan+UBSan passed against isolated function-level test doubles. **Unexecuted:** full real meshoptimizer + WGC1 + disk end-to-end fixture; see [64](../../docs/worlds-engine/64-offline-geometry-import-pipeline.md) for its proposed native compile command and exact pending acceptance gate.
+
 ## Canonical cache provenance and atomic file lifecycle (2026-11-14)
 
 [63 — source hashing and cache store](../../docs/worlds-engine/63-geometry-source-hashing-and-cache-store.md) adds standalone `geometry_source_hash.h/.cpp`, `geometry_cache_store.h/.cpp` and two CPU test suites. GCC 14 strict C++17 and Clang 17 ASan/UBSan executions passed for SHA-256 known vectors, source/setting invalidation and cache-store lifecycle. The **disk test uses a stub codec to isolate IO behavior**; the real WGC1 codec and native meshoptimizer were **not linked into that test**.

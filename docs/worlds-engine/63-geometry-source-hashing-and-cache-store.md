@@ -62,3 +62,5 @@ All six new files were copied byte-for-byte to GitHub blobs and checked against 
 5. Only after geometry/LOD/seam correctness and asset-cache validation, integrate the feature-gated experimental geometry renderer.
 
 **Performance:** none measured. The codec is an offline preparation milestone, not a claim of better GPU throughput or image quality.
+
+**2026-11-15 continuation:** [64 — offline import orchestration](64-offline-geometry-import-pipeline.md) now connects surface normalization, boundary diagnostics, and the cache-store contract. Its mock-backed standalone tests passed; the new **real-vendor WGC1 end-to-end fixture is committed but not linked/executed**, and native Godot import remains pending.

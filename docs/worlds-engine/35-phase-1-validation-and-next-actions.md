@@ -185,3 +185,7 @@ A source-only audit is possible using GitHub connection, but actual graphics dat
 ## Implementation continuation — WGC1 portable cache (2026-11-14)
 
 [62 — WGC1](62-portable-meshlet-cache-codec.md) adds a versioned, bounded **CPU-only** geometry-cache encoder/decoder with independent triangle coverage and sphere bound checks. GCC strict C++17 and Clang ASan+UBSan standalone tests passed. This is **not** a working Godot import cache, virtual renderer or GPU performance measurement. [63](63-geometry-source-hashing-and-cache-store.md) now implements portable canonical SHA-256 source/settings fingerprints and atomic cache writes, with CPU tests against a stub codec for the disk lifecycle. Next accept: **real WGC1 + vendored meshoptimizer end-to-end integration**, importer source bytes/settings provenance and native opt-in Godot module smoke. Avoid paid CI while constrained.
+
+## CPU import pipeline continuation — 2026-11-15
+
+[64 — offline geometry import orchestration](64-offline-geometry-import-pipeline.md) combines triangle stream preparation, separate boundary diagnostics, source/settings identity and WGC1 cache lookup through a new CPU-only C++ interface. GCC strict and Clang ASan/UBSan **mock-based** control-flow tests passed; a non-mock real-vendor + WGC1 fixture is now specified and syntax-checked but **not executed**. Next non-GPU gate: link that fixture to the real vendored meshoptimizer, rerun, then integrate opt-in read-only Godot Mesh/ImporterMesh adapters. No FPS or GPU claims.
