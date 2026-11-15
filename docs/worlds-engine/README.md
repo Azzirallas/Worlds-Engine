@@ -68,6 +68,7 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 - [Offline meshoptimizer meshlet generation and independent exact-triangle verification (portable CPU tests; real vendor build pending)](60-offline-meshoptimizer-meshlet-validation.md)
 - [Automatic triangle boundary extraction and derived cluster cache contract (portable CPU tests)](61-automatic-mesh-boundary-extraction-and-cache-contract.md)
 - [WGC1 versioned meshlet-cache codec, strict decoder and 700 mutation tests](62-portable-meshlet-cache-codec.md)
+- [SHA-256 source identity, atomic cache storage and automatic cache-miss regeneration](63-geometry-source-hashing-and-cache-store.md)
 
 ## Unreal rendering architecture audit (licensed-source research)
 

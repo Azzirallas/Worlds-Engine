@@ -81,3 +81,5 @@ The tests supply **synthetic** 32-byte identity digests; this proves *comparison
 5. Only then establish runtime resource ownership, fence-safe streaming, certified fallback and hardware render/quality benchmarks.
 
 The conventional Godot renderer remains unchanged. No Unreal engine code was copied.
+
+**Follow-on (2026-11-14):** [63 — deterministic SHA-256 and cache storage](63-geometry-source-hashing-and-cache-store.md) adds automatically calculated geometry/settings fingerprints, bounded file reads, atomic temp-file publication and regeneration on misses. The storage lifecycle was tested using a stub codec; real WGC1-plus-Godot integration remains pending.

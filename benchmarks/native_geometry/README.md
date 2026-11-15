@@ -2,6 +2,24 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Canonical cache provenance and atomic file lifecycle (2026-11-14)
+
+[63 — source hashing and cache store](../../docs/worlds-engine/63-geometry-source-hashing-and-cache-store.md) adds standalone `geometry_source_hash.h/.cpp`, `geometry_cache_store.h/.cpp` and two CPU test suites. GCC 14 strict C++17 and Clang 17 ASan/UBSan executions passed for SHA-256 known vectors, source/setting invalidation and cache-store lifecycle. The **disk test uses a stub codec to isolate IO behavior**; the real WGC1 codec and native meshoptimizer were **not linked into that test**.
+
+```sh
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic -Imodules \
+  modules/worlds_geometry/geometry_source_hash.cpp \
+  benchmarks/native_geometry/test_geometry_source_hash.cpp -o /tmp/worlds_source_hash_test
+/tmp/worlds_source_hash_test
+
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic -Imodules \
+  modules/worlds_geometry/geometry_source_hash.cpp modules/worlds_geometry/geometry_cache_store.cpp \
+  benchmarks/native_geometry/test_geometry_cache_store.cpp -o /tmp/worlds_cache_store_test
+/tmp/worlds_cache_store_test
+```
+
+This is not yet a Godot import callback or proven cross-platform file-cache workflow.
+
 ## Portable WGC1 meshlet cache (2026-11-14)
 
 [62 — WGC1 binary codec](../../docs/worlds-engine/62-portable-meshlet-cache-codec.md) adds `geometry_cache.h/.cpp` plus standalone `test_geometry_cache.cpp`. Portable GCC C++17 strict and Clang ASan+UBSan tests passed, including round-trips, truncations, invalid source/LOD provenance and 700 seeded mutations. **No actual file manager, real SHA-256 calculation, Godot engine build, GPU run or FPS measurements.** See [62](../../docs/worlds-engine/62-portable-meshlet-cache-codec.md) for reproduction and format.
