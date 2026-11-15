@@ -59,3 +59,5 @@ The on-disk byte layout, compression, checksum choice and version ABI are **not 
 5. Only after asset correctness, attempt opt-in GPU cluster rendering and genuine hardware comparisons.
 
 No Unreal source was copied. This is independent CPU research, not a validated renderer.
+
+**Follow-on:** [62 — portable WGC1 cache codec](62-portable-meshlet-cache-codec.md) now serializes/validates meshlet ranges, references, triangles and bounds with explicit source/settings provenance; it does **not yet serialize boundary chains** or supply a Godot import/disk cache manager.

@@ -181,3 +181,7 @@ If no graphics environment is available, inspect script against `RenderingDevice
 ## Hardware note
 
 A source-only audit is possible using GitHub connection, but actual graphics data must come from a capable machine. Users may test on Windows 11 laptop or Fedora desktop; confirm graphics hardware/backend before setting performance baselines. Do not compare data between those machines as if differences measured the renderer design.
+
+## Implementation continuation — WGC1 portable cache (2026-11-14)
+
+[62 — WGC1](62-portable-meshlet-cache-codec.md) adds a versioned, bounded **CPU-only** geometry-cache encoder/decoder with independent triangle coverage and sphere bound checks. GCC strict C++17 and Clang ASan+UBSan standalone tests passed. This is **not** a working Godot import cache, virtual renderer, source hashing implementation or GPU performance measurement. Next accept: canonical SHA-256 provenance, atomic file persistence and native opt-in Godot module smoke; avoid paid CI while constrained.

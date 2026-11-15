@@ -2,6 +2,10 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Portable WGC1 meshlet cache (2026-11-14)
+
+[62 — WGC1 binary codec](../../docs/worlds-engine/62-portable-meshlet-cache-codec.md) adds `geometry_cache.h/.cpp` plus standalone `test_geometry_cache.cpp`. Portable GCC C++17 strict and Clang ASan+UBSan tests passed, including round-trips, truncations, invalid source/LOD provenance and 700 seeded mutations. **No actual file manager, real SHA-256 calculation, Godot engine build, GPU run or FPS measurements.** See [62](../../docs/worlds-engine/62-portable-meshlet-cache-codec.md) for reproduction and format.
+
 ## Automatic oriented triangle boundary extraction (2026-11-14)
 
 [61 — border extraction](../../docs/worlds-engine/61-automatic-mesh-boundary-extraction-and-cache-contract.md) adds `mesh_boundary_extract.h/.cpp` and `test_mesh_boundary_extract.cpp`. Portable GCC strict C++17 and Clang ASan/UBSan regression suites passed. These are CPU-only tests, not a Godot build or real asset import. See [61](../../docs/worlds-engine/61-automatic-mesh-boundary-extraction-and-cache-contract.md) for the exact build command, validity limits and proposed (unimplemented) persistent cache.
