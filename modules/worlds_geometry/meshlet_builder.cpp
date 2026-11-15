@@ -97,7 +97,8 @@ MeshletBuild build_offline_meshlets(const std::vector<Point> &positions,
         const meshopt_Bounds bounds = meshopt_computeMeshletBounds(
                 result.vertices.data() + m.vertex_offset, result.triangles.data() + m.triangle_offset,
                 m.triangle_count, vertex_data.data(), positions.size(), sizeof(float) * 3);
-        if (!(std::isfinite(bounds.radius) && bounds.radius >= 0.0f)) {
+        if (!(std::isfinite(bounds.radius) && bounds.radius >= 0.0f &&
+                std::isfinite(bounds.cone_cutoff))) {
             result.status = "INVALID_BOUNDS";
             return result;
         }
