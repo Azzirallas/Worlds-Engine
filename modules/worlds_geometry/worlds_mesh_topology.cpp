@@ -59,6 +59,10 @@ void WorldsMeshTopology::_bind_methods() {
             &WorldsMeshTopology::analyze_mesh_surface, DEFVAL(true));
     ClassDB::bind_method(D_METHOD("analyze_importer_mesh_surface", "mesh", "surface", "include_lods"),
             &WorldsMeshTopology::analyze_importer_mesh_surface, DEFVAL(true));
+    ClassDB::bind_method(D_METHOD("build_meshlets_mesh_surface", "mesh", "surface", "lod_level", "max_vertices", "max_triangles"),
+            &WorldsMeshTopology::build_meshlets_mesh_surface, DEFVAL(-1), DEFVAL(64), DEFVAL(124));
+    ClassDB::bind_method(D_METHOD("build_meshlets_importer_surface", "mesh", "surface", "lod_level", "max_vertices", "max_triangles"),
+            &WorldsMeshTopology::build_meshlets_importer_surface, DEFVAL(-1), DEFVAL(64), DEFVAL(124));
     ClassDB::bind_method(D_METHOD("compare_border_samples", "border_a", "border_b", "tolerance"),
             &WorldsMeshTopology::compare_border_samples, DEFVAL(0.0));
 }
