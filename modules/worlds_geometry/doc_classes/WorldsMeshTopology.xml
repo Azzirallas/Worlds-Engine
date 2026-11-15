@@ -41,6 +41,28 @@
                 Inspects an ImporterMesh surface directly, including its native imported LOD index streams and surface name, without invoking get_mesh() or mutating import resources. Non-indexed triangle lists receive temporary sequential indices for diagnostics. The returned report distinguishes source stream validity from actual topological quality.
             </description>
         </method>
+        <method name="build_meshlets_mesh_surface">
+            <return type="Dictionary" />
+            <param index="0" name="mesh" type="Mesh" />
+            <param index="1" name="surface" type="int" />
+            <param index="2" name="lod_level" type="int" default="-1" />
+            <param index="3" name="max_vertices" type="int" default="64" />
+            <param index="4" name="max_triangles" type="int" default="124" />
+            <description>
+                Experimentally partitions a runtime triangle surface or one of its stored LODs into meshlets using the built-in meshoptimizer library. A negative lod_level of -1 selects the base triangle stream; nonnegative indices select sorted LOD distances. Reports source, surface, LOD level and distance, meshlet counts, checked triangle coverage, and each cluster's sphere and normal-cone metadata. This does not modify the Mesh, build GPU buffers, generate simplified LODs, or produce automatically renderable resources. Requires the opt-in worlds_geometry and meshoptimizer modules. The status OK and verified true require a complete orientation-preserving triangle partition; neither implies safe visual seams or runtime performance.
+            </description>
+        </method>
+        <method name="build_meshlets_importer_surface">
+            <return type="Dictionary" />
+            <param index="0" name="mesh" type="ImporterMesh" />
+            <param index="1" name="surface" type="int" />
+            <param index="2" name="lod_level" type="int" default="-1" />
+            <param index="3" name="max_vertices" type="int" default="64" />
+            <param index="4" name="max_triangles" type="int" default="124" />
+            <description>
+                Inspects the original imported triangle surface or one of its stored LOD index streams without converting the resource or modifying its materials, skinning, or surface arrays. Each surface is clustered separately, preserving per-surface provenance. Generation is limited to 250000 source triangles per call. Malformed or nonfinite geometry and incorrect settings are rejected with a status. This method is experimental and not yet a virtual geometry renderer.
+            </description>
+        </method>
         <method name="compare_border_samples">
             <return type="Dictionary" />
             <param index="0" name="border_a" type="PackedVector3Array" />
