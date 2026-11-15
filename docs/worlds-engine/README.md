@@ -65,6 +65,7 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 - [Regional versus global coarse geometry roots and opt-in native mesh audit (11 Python tests, standalone C++ checks)](57-regional-geometry-roots-and-native-mesh-edge-audit.md)
 - [Hybrid regional streaming and distant proxy; C++ position-welded topology and 3D border checks (12 new Python tests, 13 C++ fixtures)](58-hybrid-root-proxy-and-3d-mesh-border-audit.md)
 - [Read-only imported/runtime Mesh and LOD diagnostics, portable C++ tests and pending headless Godot smoke gate](59-imported-mesh-readonly-topology-adapter.md)
+- [Offline meshoptimizer meshlet generation and independent exact-triangle verification (portable CPU tests; real vendor build pending)](60-offline-meshoptimizer-meshlet-validation.md)
 
 ## Unreal rendering architecture audit (licensed-source research)
 
