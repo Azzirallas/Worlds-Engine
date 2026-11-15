@@ -2,6 +2,23 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Mesh and ImporterMesh source/LOD adapter (2026-11-14)
+
+[Milestone 59](../../docs/worlds-engine/59-imported-mesh-readonly-topology-adapter.md) adds the portable `mesh_surface_source.h/.cpp` validator and `test_mesh_surface_source.cpp`. It prepares actual triangle index streams for existing topology checks, including read-only sequential indices for unindexed triangles. Rejected inputs receive explicit status codes; the source is never modified.
+
+```sh
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic \
+  -Imodules \
+  modules/worlds_geometry/mesh_surface_source.cpp \
+  benchmarks/native_geometry/test_mesh_surface_source.cpp \
+  -o /tmp/worlds_surface_prepare_test
+/tmp/worlds_surface_prepare_test
+```
+
+**Executed in the local container:** GCC and Clang C++17 strict-warning builds passed; GCC undefined-behavior sanitizer run passed. The fixture contains 17 explicit assertions. All three source/test files were confirmed byte-identical to their GitHub commits.
+
+The opt-in `WorldsMeshTopology` GDScript class now declares `analyze_mesh_surface(mesh, surface, include_lods=true)` and `analyze_importer_mesh_surface(mesh, surface, include_lods=true)`. Both are read-only and inspect original LOD index streams. The [headless Godot smoke gate](godot_mesh_source_smoke.gd) is **committed but not run**: Godot needs a full experimental module build. These APIs have not been verified in an engine binary.
+
 ## Compile and execute, from the repository root
 
 ```sh
