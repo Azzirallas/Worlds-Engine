@@ -111,3 +111,5 @@ SCons, a complete local Godot checkout, and GPU hardware are unavailable in the 
 5. **Native renderer prototype:** only after actual asset correctness and a hardware benchmark baseline, connect certified clusters to a feature-gated experimental rendering path. Never infer FPS/VRAM improvements from these CPU tests.
 
 **Source ownership:** this code is newly authored against the vendored permissively licensed meshoptimizer API; no Unreal/Epic implementation was copied.
+
+**Follow-on (2026-11-14):** [61 — automatic boundary extraction](61-automatic-mesh-boundary-extraction-and-cache-contract.md) implements portable oriented triangle-derived loop extraction and proposes a versioned derived-cluster cache. It does not replace or validate the existing meshlet vendor integration.

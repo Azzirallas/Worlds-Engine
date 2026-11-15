@@ -2,6 +2,10 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Automatic oriented triangle boundary extraction (2026-11-14)
+
+[61 — border extraction](../../docs/worlds-engine/61-automatic-mesh-boundary-extraction-and-cache-contract.md) adds `mesh_boundary_extract.h/.cpp` and `test_mesh_boundary_extract.cpp`. Portable GCC strict C++17 and Clang ASan/UBSan regression suites passed. These are CPU-only tests, not a Godot build or real asset import. See [61](../../docs/worlds-engine/61-automatic-mesh-boundary-extraction-and-cache-contract.md) for the exact build command, validity limits and proposed (unimplemented) persistent cache.
+
 ## Offline meshlet generation and independent verification (2026-11-14)
 
 [60](../../docs/worlds-engine/60-offline-meshoptimizer-meshlet-validation.md) adds **`meshlet_contract.h/.cpp`** for an independent exact source triangle multiset/oriented-winding proof and **`meshlet_builder.h/.cpp`** for meshoptimizer-backed offline cluster generation. The independent verifier passed GCC/Clang C++17 strict-warning builds and Clang ASan+UBSan, with 26 `assert` sites including **800 randomized partitions**. The builder control-flow tests passed compiler/sanitizer checks **against a marked mock ABI only**, including deliberately corrupted triangle order and invalid bounds. Full vendor linking and Godot build are unverified.
