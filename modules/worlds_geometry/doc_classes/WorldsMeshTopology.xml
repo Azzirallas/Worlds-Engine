@@ -23,6 +23,24 @@
                 Returns [code]indexed[/code] and [code]welded[/code] topology Dictionaries, plus [code]unique_positions[/code], [code]coincident_vertex_duplicates[/code] and [code]indexed_open_edges_resolved[/code]. Welding uses exact XYZ equality, not a distance tolerance. Position-based adjacency is diagnostic and does not change mesh vertices.
             </description>
         </method>
+        <method name="analyze_mesh_surface">
+            <return type="Dictionary" />
+            <param index="0" name="mesh" type="Mesh" />
+            <param index="1" name="surface" type="int" />
+            <param index="2" name="include_lods" type="bool" default="true" />
+            <description>
+                Read-only analysis of a runtime Mesh or ArrayMesh triangle surface. The returned Dictionary contains source, surface, primitive, status, base, and lods. The base entry contains index_count, vertex_count, generated_indices, status and (on OK) an analysis Dictionary with indexed and welded connectivity reports. LOD entries use the same schema and preserve their distance metadata. Non-triangle primitives and malformed index streams are explicitly rejected. No mesh data is changed. The status OK only validates source-index preparation: check analysis.indexed.valid_input and the other diagnostics separately.
+            </description>
+        </method>
+        <method name="analyze_importer_mesh_surface">
+            <return type="Dictionary" />
+            <param index="0" name="mesh" type="ImporterMesh" />
+            <param index="1" name="surface" type="int" />
+            <param index="2" name="include_lods" type="bool" default="true" />
+            <description>
+                Inspects an ImporterMesh surface directly, including its native imported LOD index streams and surface name, without invoking get_mesh() or mutating import resources. Non-indexed triangle lists receive temporary sequential indices for diagnostics. The returned report distinguishes source stream validity from actual topological quality.
+            </description>
+        </method>
         <method name="compare_border_samples">
             <return type="Dictionary" />
             <param index="0" name="border_a" type="PackedVector3Array" />
