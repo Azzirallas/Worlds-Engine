@@ -71,6 +71,8 @@ Then run the generated Godot editor binary with `--headless --script` and the sc
 
 **This GDScript smoke test has been committed but not run.** No claim is made about the Godot binding API passing until the actual native engine build succeeds.
 
+**Follow-on experimental implementation (2026-11-14):** [60 — meshoptimizer meshlets with independent triangle coverage certification](60-offline-meshoptimizer-meshlet-validation.md) adds offline per-surface/per-LOD meshlet analysis and a C++ verifier with 800 randomized CPU tests. Builder control-flow tests used a mock ABI; the real vendored implementation, Godot module and headless smoke remain unexecuted. The existing read-only surface diagnostic methods are unchanged.
+
 ## Remaining obligations
 
 1. Compile the full fork with the experimental module and run the smoke script. Validate `ClassDB`, `Ref<ImporterMesh>` registration, `BitField::has_flag`, PackedArray Variant conversion and DocTools XML integration on the actual Godot baseline.
