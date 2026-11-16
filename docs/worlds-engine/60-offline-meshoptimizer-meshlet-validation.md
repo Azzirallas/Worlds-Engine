@@ -66,6 +66,7 @@ g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic \
   modules/worlds_geometry/meshlet_contract.cpp \
   modules/worlds_geometry/mesh_surface_source.cpp \
   modules/worlds_geometry/meshlet_builder.cpp \
+  modules/worlds_geometry/meshlet_payload.cpp \
   benchmarks/native_geometry/mock_meshopt.cpp \
   benchmarks/native_geometry/test_meshlet_builder_mock.cpp \
   -o /tmp/worlds_meshlet_mock
@@ -113,3 +114,5 @@ SCons, a complete local Godot checkout, and GPU hardware are unavailable in the 
 **Source ownership:** this code is newly authored against the vendored permissively licensed meshoptimizer API; no Unreal/Epic implementation was copied.
 
 **Follow-on (2026-11-14):** [61 — automatic boundary extraction](61-automatic-mesh-boundary-extraction-and-cache-contract.md) implements portable oriented triangle-derived loop extraction and proposes a versioned derived-cluster cache. It does not replace or validate the existing meshlet vendor integration.
+
+**Milestone 67 integration note (2026-11-15):** [post-audit meshlet payload compaction](67-certified-meshlet-payload-compaction.md) now removes unused scratch slots before returning valid meshlets. The historical mock ABI test result above is from before compaction was linked; rerun the updated command to revalidate the **current** builder. Standalone compaction tests passed, but real-vendor and updated mock-builder executions remain pending.

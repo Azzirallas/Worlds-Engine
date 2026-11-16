@@ -72,6 +72,7 @@ Worlds Engine is a Godot-based, general-purpose game engine project aimed at sub
 - [CPU offline geometry orchestration and real-meshoptimizer end-to-end test gate](64-offline-geometry-import-pipeline.md)
 - [Opt-in Mesh/ImporterMesh WGC1 cache bridge, restricted cache URI and headless Godot acceptance fixture](65-godot-wgc1-surface-cache-bridge.md)
 - [Godot importer empty-index compatibility audit and one-command real-vendor CPU acceptance gate](66-godot-import-index-semantics-and-native-gate.md)
+- [Certified meshlet payload compaction, 900 randomized CPU tests and leaner WGC1 storage](67-certified-meshlet-payload-compaction.md)
 
 ## Unreal rendering architecture audit (licensed-source research)
 

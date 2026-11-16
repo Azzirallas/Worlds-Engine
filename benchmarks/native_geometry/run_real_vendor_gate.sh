@@ -14,11 +14,18 @@ if [[ "${SANITIZE:-0}" == "1" ]]; then
 fi
 
 "$cxx" "${flags[@]}" \
+    "$root/modules/worlds_geometry/meshlet_payload.cpp" \
+    "$root/benchmarks/native_geometry/test_meshlet_payload.cpp" \
+    -o "$out/meshlet_payload"
+"$out/meshlet_payload"
+echo 'PASS: compact meshlet payload preserves oriented triangles'
+
+"$cxx" "${flags[@]}" \
     "$root/modules/worlds_geometry/mesh_surface_source.cpp" \
     "$root/benchmarks/native_geometry/test_mesh_index_presence.cpp" \
     -o "$out/index_presence"
 "$out/index_presence"
-printf '%s\n' 'PASS: explicit vs absent index array contract'
+printf '%s\n' 'PASS: Godot importer empty-index and explicit-index contract'
 
 "$cxx" "${flags[@]}" \
     "$root/modules/worlds_geometry/mesh_surface_source.cpp" \
@@ -26,6 +33,7 @@ printf '%s\n' 'PASS: explicit vs absent index array contract'
     "$root/modules/worlds_geometry/mesh_boundary_extract.cpp" \
     "$root/modules/worlds_geometry/meshlet_contract.cpp" \
     "$root/modules/worlds_geometry/meshlet_builder.cpp" \
+    "$root/modules/worlds_geometry/meshlet_payload.cpp" \
     "$root/modules/worlds_geometry/geometry_cache.cpp" \
     "$root/modules/worlds_geometry/geometry_source_hash.cpp" \
     "$root/modules/worlds_geometry/geometry_cache_store.cpp" \

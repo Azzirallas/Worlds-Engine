@@ -2,6 +2,19 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Meshlet payload compaction before WGC1 (2026-11-15)
+
+[67 — certified payload compaction](../../docs/worlds-engine/67-certified-meshlet-payload-compaction.md) adds `meshlet_payload.h/.cpp` and `test_meshlet_payload.cpp`. It removes unreferenced vendor scratch capacity and internal padding **only after independent triangle coverage succeeds**, while retaining oriented triangles and meshlet bounds. The WGC1 byte schema is unchanged. Both GCC strict C++17 and Clang ASan/UBSan tests passed, including **900 seeded multi-meshlet padding cases**. The real vendor integration remains **unexecuted**.
+
+```sh
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic -Imodules \
+  modules/worlds_geometry/meshlet_payload.cpp \
+  benchmarks/native_geometry/test_meshlet_payload.cpp -o /tmp/worlds_meshlet_payload
+/tmp/worlds_meshlet_payload
+```
+
+The `run_real_vendor_gate.sh` script now compiles this standalone test before its real-vendor/WGC1 stage and links `meshlet_payload.cpp` to the vendor-backed builder.
+
 ## Godot importer index semantics and portable native acceptance runner (2026-11-15)
 
 [66 — importer compatibility and native gate](../../docs/worlds-engine/66-godot-import-index-semantics-and-native-gate.md) audits the actual Godot `ImporterMesh` implementation: **an empty PackedInt32Array is correctly treated as nonindexed**, just like a missing index array. No behavior change was made to the existing adapters. A proposed type-only fix was rejected because it would break supported Godot semantics.
@@ -99,6 +112,7 @@ g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic \
   modules/worlds_geometry/meshlet_contract.cpp \
   modules/worlds_geometry/mesh_surface_source.cpp \
   modules/worlds_geometry/meshlet_builder.cpp \
+  modules/worlds_geometry/meshlet_payload.cpp \
   benchmarks/native_geometry/mock_meshopt.cpp \
   benchmarks/native_geometry/test_meshlet_builder_mock.cpp \
   -o /tmp/worlds_meshlet_mock

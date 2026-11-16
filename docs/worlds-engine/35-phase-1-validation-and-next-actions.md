@@ -197,3 +197,7 @@ A source-only audit is possible using GitHub connection, but actual graphics dat
 ## Godot importer compatibility review — 2026-11-15
 
 [66 — importer index semantics and native test gate](66-godot-import-index-semantics-and-native-gate.md) audits the actual Godot importer and confirms that empty packed index data means **nonindexed**, so size-based detection in the three existing `ImporterMesh` adapters must be preserved. **Passed:** byte-identical portable C++ index-policy regression with GCC strict and Clang ASan/UBSan. **Added, unexecuted:** native headless Godot importer smoke and a one-command, CPU-only actual meshoptimizer + WGC1 end-to-end build/test script. The script's Bash syntax was checked. Do not claim real-vendor linking, Godot SCons success or GPU measurements yet.
+
+## WGC1 meshlet payload-size checkpoint — 2026-11-15
+
+[67 — certified meshlet compaction](67-certified-meshlet-payload-compaction.md) adds a portable post-audit repacking pass to strip unused vendor scratch buffer entries and correct each meshlet's offsets before WGC1 serialization. **GCC strict C++17 and Clang ASan+UBSan passed** with 900 seeded multi-cluster fixtures. Native real-vendor/WGC1 and full Godot module integration remain **unexecuted**. Next accept: run `benchmarks/native_geometry/run_real_vendor_gate.sh` in a full checkout and verify non-mock end-to-end cache behavior, then evaluate actual cache sizes and imported assets.

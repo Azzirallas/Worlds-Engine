@@ -83,3 +83,5 @@ The tests supply **synthetic** 32-byte identity digests; this proves *comparison
 The conventional Godot renderer remains unchanged. No Unreal engine code was copied.
 
 **Follow-on (2026-11-14):** [63 — deterministic SHA-256 and cache storage](63-geometry-source-hashing-and-cache-store.md) adds automatically calculated geometry/settings fingerprints, bounded file reads, atomic temp-file publication and regeneration on misses. The storage lifecycle was tested using a stub codec; real WGC1-plus-Godot integration remains pending.
+
+**Follow-on (2026-11-15):** [67 — compact WGC1 meshlet payloads](67-certified-meshlet-payload-compaction.md) strips unused vertex/triangle slots after independent partition verification, prior to WGC1 encoding. Binary format v1.0 is unchanged. CPU-only compaction tests passed; no real imported cache-size benchmarks are yet available.

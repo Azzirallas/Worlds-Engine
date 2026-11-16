@@ -1,6 +1,7 @@
 // Uses Godot's existing meshoptimizer library; rejects unverified output.
 #include "meshlet_builder.h"
 #include "mesh_surface_source.h"
+#include "meshlet_payload.h"
 
 #include <thirdparty/meshoptimizer/meshoptimizer.h>
 
@@ -116,7 +117,15 @@ MeshletBuild build_offline_meshlets(const std::vector<Point> &positions,
         }
         result.meshlets.push_back(item);
     }
+    // Compact only after the vendor bounds and independent coverage audit succeed.
+    // Meshoptimizer's output arrays are initially sized to index_count capacity;
+    // do not carry their unused tails into WGC1 or later GPU staging.
     result.valid = true;
+    if (!compact_meshlet_payload(result)) {
+        result.valid = false;
+        result.status = "INVALID_MESHLET_STORAGE";
+        return result;
+    }
     result.status = "OK";
     return result;
 }

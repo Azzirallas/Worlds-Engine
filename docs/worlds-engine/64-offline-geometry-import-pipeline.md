@@ -67,6 +67,7 @@ g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic -I. -Imodules \
     modules/worlds_geometry/mesh_boundary_extract.cpp \
     modules/worlds_geometry/meshlet_contract.cpp \
     modules/worlds_geometry/meshlet_builder.cpp \
+  modules/worlds_geometry/meshlet_payload.cpp \
     modules/worlds_geometry/geometry_cache.cpp \
     modules/worlds_geometry/geometry_source_hash.cpp \
     modules/worlds_geometry/geometry_cache_store.cpp \
@@ -91,3 +92,5 @@ The exact vendored sources and symbols were source-inspected. If additional link
 All new implementation is independent; no proprietary Unreal source code or assets were copied.
 
 **Follow-on (2026-11-15):** [65 — opt-in Godot surface cache bridge](65-godot-wgc1-surface-cache-bridge.md) adds script-callable `Mesh`/`ImporterMesh` adapters and a restricted cache-URI policy; only the portable URI validator has been compiled/tested so far. Real Godot module linking and the previously unexecuted end-to-end real-vendor test remain separate acceptance gates.
+
+**Milestone 67 integration note (2026-11-15):** the no-mocks compilation example now links [meshlet payload compaction](67-certified-meshlet-payload-compaction.md). The script `benchmarks/native_geometry/run_real_vendor_gate.sh` also links it. The end-to-end real-vendor binary remains **unexecuted**; the standalone compaction test passed strict GCC and Clang sanitizer checks.
