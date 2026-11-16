@@ -2,6 +2,22 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Godot importer index semantics and portable native acceptance runner (2026-11-15)
+
+[66 — importer compatibility and native gate](../../docs/worlds-engine/66-godot-import-index-semantics-and-native-gate.md) audits the actual Godot `ImporterMesh` implementation: **an empty PackedInt32Array is correctly treated as nonindexed**, just like a missing index array. No behavior change was made to the existing adapters. A proposed type-only fix was rejected because it would break supported Godot semantics.
+
+`test_mesh_index_presence.cpp` passed **GCC C++17 strict and Clang ASan+UBSan**, against the byte-identical current portable source. The companion Godot importer smoke is committed but **unexecuted**.
+
+For a complete local checkout, the CPU-only real-vendor test runner is now:
+
+```sh
+bash benchmarks/native_geometry/run_real_vendor_gate.sh
+# Optional sanitizer mode:
+CXX=clang++ SANITIZE=1 bash benchmarks/native_geometry/run_real_vendor_gate.sh
+```
+
+**Observed:** script passed `bash -n`; real meshoptimizer + WGC1 linked execution still pending. No GitHub Actions were triggered.
+
 ## Opt-in Godot Mesh/ImporterMesh WGC1 cache bridge (2026-11-15)
 
 [65 — Godot WGC1 cache bridge](../../docs/worlds-engine/65-godot-wgc1-surface-cache-bridge.md) adds two optional `WorldsMeshTopology` methods for preparing one runtime or importer surface/LOD. They require explicit asset/settings identity bytes, write only under a validated `user://worlds_geometry_cache/` URI, and **always retain the standard renderer**. The full Godot SCons build and the new [headless smoke fixture](godot_geometry_cache_smoke.gd) have **not** run.

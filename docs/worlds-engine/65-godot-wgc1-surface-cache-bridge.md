@@ -83,3 +83,5 @@ The engine binary path is illustrative; check the actual generated executable. R
 5. Only after the above, feature-gated GPU-driven cluster rendering and hardware quality/performance comparisons.
 
 No proprietary Unreal code was copied. This remains an experimental Godot module, disabled by default.
+
+**2026-11-15 review correction:** [66 — importer semantics audit](66-godot-import-index-semantics-and-native-gate.md) checked the actual Godot `ImporterMesh` source and confirmed that an empty `PackedInt32Array` is nonindexed by Godot convention. The existing importer adapters correctly use `!indices.empty()`. A possible Variant-type-only change was **rejected**, not committed. New portable compatibility tests passed, while the added Godot smoke and true real-vendor WGC1 integration remain unexecuted.

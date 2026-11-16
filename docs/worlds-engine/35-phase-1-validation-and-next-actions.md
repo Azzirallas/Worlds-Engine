@@ -193,3 +193,7 @@ A source-only audit is possible using GitHub connection, but actual graphics dat
 ## Source adapter continuation — 2026-11-15
 
 [65 — opt-in WGC1 Godot surface bridge](65-godot-wgc1-surface-cache-bridge.md) adds script-callable runtime `Mesh` and importer `ImporterMesh` cache preparation methods, source/LOD metadata and guarded `user://worlds_geometry_cache/` file destinations. **Tested:** portable C++ cache-URI validator under GCC C++17 and Clang ASan+UBSan, 1,500 seeded path pairs. **Not yet tested:** full Godot native build, headless Godot cache smoke, real-vendor WGC1 end-to-end execution or visual performance. The source mesh remains the sole renderer input. Next: execute native end-to-end and Godot build gates, then add fully automatic source-identity collection/import hooks, always reversible and opt-in.
+
+## Godot importer compatibility review — 2026-11-15
+
+[66 — importer index semantics and native test gate](66-godot-import-index-semantics-and-native-gate.md) audits the actual Godot importer and confirms that empty packed index data means **nonindexed**, so size-based detection in the three existing `ImporterMesh` adapters must be preserved. **Passed:** byte-identical portable C++ index-policy regression with GCC strict and Clang ASan/UBSan. **Added, unexecuted:** native headless Godot importer smoke and a one-command, CPU-only actual meshoptimizer + WGC1 end-to-end build/test script. The script's Bash syntax was checked. Do not claim real-vendor linking, Godot SCons success or GPU measurements yet.
