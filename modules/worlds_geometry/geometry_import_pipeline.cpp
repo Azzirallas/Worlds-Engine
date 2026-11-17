@@ -66,7 +66,8 @@ GeometryPipelineResult prepare_offline_geometry(const GeometryPipelineInput &inp
     settings.push_back(1);
     settings.push_back(static_cast<std::uint8_t>(input.is_indexed));
 
-    const GeometryStoreResult store = load_or_build_geometry_cache(input.cache_path,
+    // The result owns potentially large decoded buffers; const would force a deep copy.
+    GeometryStoreResult store = load_or_build_geometry_cache(input.cache_path,
             std::move(source), input.asset_identity, settings,
             [&input, &prepared]() {
                 return build_offline_meshlets(input.positions, prepared.indices,

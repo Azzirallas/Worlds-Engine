@@ -35,6 +35,13 @@ printf '%s\n' 'PASS: Godot importer empty-index and explicit-index contract'
 printf '%s\n' 'PASS: cache-hit boundary diagnostics opt-in (isolated dependencies)'
 
 "$cxx" "${flags[@]}" \
+    "$root/modules/worlds_geometry/geometry_import_pipeline.cpp" \
+    "$root/benchmarks/native_geometry/test_geometry_pipeline_move.cpp" \
+    -o "$out/pipeline_move"
+"$out/pipeline_move"
+printf '%s\n' 'PASS: no meshlet-buffer copy on cache hit or successful rebuild (isolated dependencies)'
+
+"$cxx" "${flags[@]}" \
     "$root/modules/worlds_geometry/mesh_surface_source.cpp" \
     "$root/modules/worlds_geometry/mesh_edge_audit.cpp" \
     "$root/modules/worlds_geometry/mesh_boundary_extract.cpp" \

@@ -205,3 +205,7 @@ A source-only audit is possible using GitHub connection, but actual graphics dat
 ## Phase 1 integration review and fast-path checkpoint — 2026-11-17
 
 [68 — four-part rendering report](68-phase1-rendering-review.md) reviews delivered source components, original goals, concrete improvements and research gaps. New `analyze_boundaries=false` input default avoids a redundant read-only topology pass on cache hits/misses; it **does not skip** source hashing, independent meshlet validation, WGC1 bounds or checksum checks. A tested exact-source C++ regression passed GCC strict and Clang ASan+UBSan using isolated link stubs. Updated mock and real-vendor test fixtures are committed; real-vendor linked execution, Godot SCons/headless tests and GPU baselines remain **pending**. Immediate gates are real vendor → Godot build → asset provenance → GPU measured reference.
+
+## Native geometry cache ownership correction — 2026-11-17
+
+[69 — no-copy WGC1 result handoff](69-zero-copy-geometry-cache-handoff.md) fixes a verified `std::move(const MeshletBuild)` deep copy of cache-hit and newly built meshlet buffers. Exact source and new ownership test passed GCC strict C++17 and Clang ASan+UBSan; the old `const` path fails the same pointer-identity regression. **Still pending:** full real meshoptimizer/WGC1 linked binary, native opt-in Godot module, headless Godot tests and measured FPS/VRAM/CPU improvements. The standalone test uses mock cache-store and meshlet dependencies and does not substitute for the real-vendor gate.

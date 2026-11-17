@@ -2,6 +2,21 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Cache-result ownership and allocation regression (2026-11-17)
+
+[69 — zero-copy verified cache handoff](../../docs/worlds-engine/69-zero-copy-geometry-cache-handoff.md) fixes an accidental deep copy of `MeshletBuild` vectors when a `const GeometryStoreResult` was apparently moved. The pipeline now receives a mutable store result and moves the three vector buffers into its return value.
+
+The new `test_geometry_pipeline_move.cpp` verifies **vector storage identity** for 175,000 vertex references, 350,000 triangle bytes and 128 meshlets across cache hit, disk-stored build and memory-only build. It passed exact-source GCC strict and Clang ASan/UBSan. The old `const` version **fails** this same test, confirming regression sensitivity. Isolated store/meshlet stubs are used; real vendor, Godot SCons and GPU validation remain pending.
+
+```sh
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic -Imodules \
+  modules/worlds_geometry/geometry_import_pipeline.cpp \
+  benchmarks/native_geometry/test_geometry_pipeline_move.cpp \
+  -o /tmp/worlds_pipeline_move && /tmp/worlds_pipeline_move
+```
+
+The native gate runner also executes this regression before attempting the non-mock real vendor/WGC1 test.
+
 ## Boundary diagnostics opt-in and Phase 1 review (2026-11-17)
 
 [68 — Phase 1 four-part engineering report](../../docs/worlds-engine/68-phase1-rendering-review.md) updates `prepare_offline_geometry`: costly separate boundary extraction is **skipped by default** on both WGC1 misses and valid hits. Set `GeometryPipelineInput::analyze_boundaries=true` in native code to request it explicitly; the standalone Godot topology analysis methods remain available for diagnostics. Results include `boundaries_analyzed`; the Godot WGC1 report returns `boundary_status="NOT_REQUESTED"` when analysis was skipped.

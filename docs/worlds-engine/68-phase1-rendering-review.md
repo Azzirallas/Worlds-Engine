@@ -173,3 +173,5 @@ If full builds are unavailable, **do not block unrelated research indefinitely**
 5. Only begin feature-gated `RenderingDevice` rendering once A–C are green. Maintain fallback for older GPUs.
 
 **Bottom line:** valuable foundation and disciplined separation of concerns; no verified replacement renderer yet. The best return now is turning the source-level pieces into a **provably working end-to-end pipeline**, then benchmarking a minimal hardware-backed prototype against stock Godot before expanding features.
+
+**2026-11-17 follow-on:** [69 — cache-result zero-copy ownership](69-zero-copy-geometry-cache-handoff.md) fixes the unintended deep copy of meshlet vectors on a valid WGC1 cache hit or rebuild. Exact-source GCC and Clang sanitizer regressions passed, with negative-control failure on the prior const code; the true real-vendor and Godot tests remain unexecuted. This is an allocation-path correctness/performance fix, **not a measured rendering speedup**.
