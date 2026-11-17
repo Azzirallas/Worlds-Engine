@@ -28,6 +28,13 @@ echo 'PASS: compact meshlet payload preserves oriented triangles'
 printf '%s\n' 'PASS: Godot importer empty-index and explicit-index contract'
 
 "$cxx" "${flags[@]}" \
+    "$root/modules/worlds_geometry/geometry_import_pipeline.cpp" \
+    "$root/benchmarks/native_geometry/test_boundary_opt_in.cpp" \
+    -o "$out/boundary_opt_in"
+"$out/boundary_opt_in"
+printf '%s\n' 'PASS: cache-hit boundary diagnostics opt-in (isolated dependencies)'
+
+"$cxx" "${flags[@]}" \
     "$root/modules/worlds_geometry/mesh_surface_source.cpp" \
     "$root/modules/worlds_geometry/mesh_edge_audit.cpp" \
     "$root/modules/worlds_geometry/mesh_boundary_extract.cpp" \

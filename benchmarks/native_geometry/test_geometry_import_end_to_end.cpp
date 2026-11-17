@@ -37,6 +37,7 @@ GeometryPipelineInput quad(const std::filesystem::path &path) {
     in.surface = 2;
     in.lod = -1;
     in.generator_version = 1;
+    in.analyze_boundaries = true; // This fixture also explicitly audits borders.
     return in;
 }
 void expect_ready(const GeometryPipelineResult &r) {
@@ -44,6 +45,7 @@ void expect_ready(const GeometryPipelineResult &r) {
     assert(r.build.coverage.source_triangles == 2);
     assert(r.build.coverage.output_triangles == 2);
     assert(!r.build.meshlets.empty());
+    assert(r.boundaries_analyzed);
     assert(r.boundaries.status == BoundaryStatus::OK);
     assert(r.boundaries.boundary_edges == 4);
 }
@@ -101,6 +103,14 @@ int main() {
     expect_ready(r);
     r = prepare_offline_geometry(unindexed);
     assert(r.status == GeometryPipelineStatus::READY_CACHED && r.generated_indices);
+
+    // Fast path must not run redundant boundary extraction on valid hits.
+    auto fast = quad(temp.path / "no-boundary-analysis.wgc1");
+    fast.analyze_boundaries = false;
+    r = prepare_offline_geometry(fast);
+    assert(r.status == GeometryPipelineStatus::READY_STORED && !r.boundaries_analyzed);
+    r = prepare_offline_geometry(fast);
+    assert(r.status == GeometryPipelineStatus::READY_CACHED && !r.boundaries_analyzed);
 
     // Fail-closed behavior: never accept a malformed source as ready.
     auto bad = quad(temp.path / "invalid.wgc1");

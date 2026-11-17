@@ -2,6 +2,21 @@
 
 This is the **first compiled native-C++ research component** for Worlds Engine. It validates topology of indexed triangle surfaces without launching Godot, accessing graphics hardware, changing imported assets or touching the production renderer.
 
+## Boundary diagnostics opt-in and Phase 1 review (2026-11-17)
+
+[68 — Phase 1 four-part engineering report](../../docs/worlds-engine/68-phase1-rendering-review.md) updates `prepare_offline_geometry`: costly separate boundary extraction is **skipped by default** on both WGC1 misses and valid hits. Set `GeometryPipelineInput::analyze_boundaries=true` in native code to request it explicitly; the standalone Godot topology analysis methods remain available for diagnostics. Results include `boundaries_analyzed`; the Godot WGC1 report returns `boundary_status="NOT_REQUESTED"` when analysis was skipped.
+
+**Executed here:** GCC C++17 `-Wall -Wextra -Werror -pedantic` and Clang ASan+UBSan against the exact new `geometry_import_pipeline.cpp/.h` Git blobs and link-isolated meshlet/cache/diagnostic test doubles. The smoke verifies cache HIT, BUILT_STORED, BUILT_UNSTORED, opt-in diagnostics and invalid input short-circuiting. **Not executed:** real meshoptimizer/WGC1 linked runner, Godot SCons build, or hardware GPU tests.
+
+```sh
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic -Imodules \
+  modules/worlds_geometry/geometry_import_pipeline.cpp \
+  benchmarks/native_geometry/test_boundary_opt_in.cpp -o /tmp/worlds_boundary_opt_in
+/tmp/worlds_boundary_opt_in
+```
+
+The full local `run_real_vendor_gate.sh` now starts with this mock-boundary regression before its true vendor-linked stage.
+
 ## Meshlet payload compaction before WGC1 (2026-11-15)
 
 [67 — certified payload compaction](../../docs/worlds-engine/67-certified-meshlet-payload-compaction.md) adds `meshlet_payload.h/.cpp` and `test_meshlet_payload.cpp`. It removes unreferenced vendor scratch capacity and internal padding **only after independent triangle coverage succeeds**, while retaining oriented triangles and meshlet bounds. The WGC1 byte schema is unchanged. Both GCC strict C++17 and Clang ASan/UBSan tests passed, including **900 seeded multi-meshlet padding cases**. The real vendor integration remains **unexecuted**.

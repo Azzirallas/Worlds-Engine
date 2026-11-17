@@ -25,6 +25,8 @@ struct GeometryPipelineInput {
     std::vector<std::int32_t> indices;
     bool is_triangles = true;
     bool is_indexed = true;
+    // Topology diagnostics are opt-in: WGC1 source/meshlet validation does not need them.
+    bool analyze_boundaries = false;
     std::uint32_t surface = 0;
     std::int32_t lod = -1;
     std::uint32_t generator_version = 1;
@@ -40,6 +42,7 @@ struct GeometryPipelineResult {
     SurfaceStatus surface_status = SurfaceStatus::MISSING_VERTICES;
     GeometryStoreStatus store_status = GeometryStoreStatus::INVALID_SOURCE;
     bool generated_indices = false;
+    bool boundaries_analyzed = false;
     // Diagnostic only: never certifies cross-LOD seam compatibility or renderability.
     BoundaryExtraction boundaries;
     MeshletBuild build;

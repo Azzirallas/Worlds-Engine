@@ -1,0 +1,17 @@
+// Test exact pipeline source with link-isolated boundary and cache test doubles.
+#include "worlds_geometry/geometry_import_pipeline.h"
+#include <cassert>
+#include <cmath>
+#include <limits>
+using namespace worlds_geometry;
+namespace {int boundary_calls=0,builder_calls=0,store_calls=0;GeometryStoreStatus mode=GeometryStoreStatus::HIT;}
+namespace worlds_geometry {
+PreparedSurface prepare_triangle_surface(std::size_t n,bool tris,bool indexed,const std::vector<std::int32_t>& indices){PreparedSurface p;if(!tris){p.status=SurfaceStatus::UNSUPPORTED_PRIMITIVE;return p;}if(n==0)return p;if(indexed){if(indices.empty()){p.status=SurfaceStatus::EMPTY_INDICES;return p;}p.indices=indices;}else{if(!indices.empty()){p.status=SurfaceStatus::UNEXPECTED_INDICES;return p;}p.generated_indices=true;for(std::size_t i=0;i<n;i++)p.indices.push_back(static_cast<std::int32_t>(i));}if(p.indices.size()%3){p.status=SurfaceStatus::INCOMPLETE_TRIANGLES;return p;}for(auto id:p.indices)if(id<0||std::size_t(id)>=n){p.status=SurfaceStatus::INVALID_INDEX;return p;}p.status=SurfaceStatus::OK;return p;}
+BoundaryExtraction extract_mesh_boundaries(const std::vector<Point>&,const std::vector<std::int32_t>&){boundary_calls++;BoundaryExtraction b;b.status=BoundaryStatus::OK;b.boundary_edges=3;return b;}
+MeshletBuild build_offline_meshlets(const std::vector<Point>&,const std::vector<std::int32_t>&,std::uint32_t,std::uint32_t){builder_calls++;MeshletBuild m;m.valid=true;m.coverage.valid=true;return m;}
+GeometryStoreResult load_or_build_geometry_cache(const std::filesystem::path&,GeometryCacheSource src,const std::vector<std::uint8_t>&,const std::vector<std::uint8_t>&,const std::function<MeshletBuild()>& f){store_calls++;assert(src.source_triangles==std::vector<std::uint32_t>({0,1,2}));GeometryStoreResult r;r.status=mode;if(mode==GeometryStoreStatus::HIT){r.build.valid=true;r.build.coverage.valid=true;}else if(mode==GeometryStoreStatus::BUILT_STORED||mode==GeometryStoreStatus::BUILT_UNSTORED)r.build=f();return r;}
+}
+int main(){GeometryPipelineInput in;in.positions={{0,0,0},{1,0,0},{0,1,0}};in.indices={0,1,2};in.asset_identity={1};in.import_settings={1};in.cache_path="test.wgc1";
+for(auto status:{GeometryStoreStatus::HIT,GeometryStoreStatus::BUILT_STORED,GeometryStoreStatus::BUILT_UNSTORED}){mode=status;auto r=prepare_offline_geometry(in);assert(r.status== (status==GeometryStoreStatus::HIT?GeometryPipelineStatus::READY_CACHED:status==GeometryStoreStatus::BUILT_STORED?GeometryPipelineStatus::READY_STORED:GeometryPipelineStatus::READY_MEMORY_ONLY));assert(!r.boundaries_analyzed && r.boundaries.status==BoundaryStatus::INVALID_SURFACE);assert(boundary_calls==0);}assert(builder_calls==2);
+in.analyze_boundaries=true;auto r=prepare_offline_geometry(in);assert(r.status==GeometryPipelineStatus::READY_MEMORY_ONLY && r.boundaries_analyzed && r.boundaries.status==BoundaryStatus::OK && boundary_calls==1);mode=GeometryStoreStatus::HIT;r=prepare_offline_geometry(in);assert(r.status==GeometryPipelineStatus::READY_CACHED && r.boundaries_analyzed && boundary_calls==2);in.asset_identity.clear();r=prepare_offline_geometry(in);assert(r.status==GeometryPipelineStatus::INVALID_PROVENANCE && boundary_calls==2);in.asset_identity={1};in.positions[0].x=std::numeric_limits<double>::infinity();r=prepare_offline_geometry(in);assert(r.status==GeometryPipelineStatus::INVALID_SURFACE && boundary_calls==2);assert(store_calls==5);
+}

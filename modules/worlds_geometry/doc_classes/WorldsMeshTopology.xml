@@ -74,7 +74,7 @@
             <param index="6" name="max_vertices" type="int" default="64" />
             <param index="7" name="max_triangles" type="int" default="124" />
             <description>
-                Opt-in offline meshlet generation, SHA-256 provenance and WGC1 disk cache lookup for a runtime Mesh surface or its sorted LOD. Paths must use a restricted ASCII filename under [code]user://worlds_geometry_cache/[/code] and end in [code].wgc1[/code]. Provide complete asset identity and geometry-affecting import settings in the supplied byte arrays; these bytes are not discovered automatically. Returns explicit [code]READY_CACHED[/code], [code]READY_STORED[/code], [code]READY_MEMORY_ONLY[/code] or failure status, source and output triangle counts, boundary diagnostics and [code]verified[/code]. Every result sets [code]requires_standard_renderer[/code] to true: offline data acceptance does not enable GPU cluster rendering. The original Mesh is unchanged.
+                Opt-in offline meshlet generation, SHA-256 provenance and WGC1 disk cache lookup for a runtime Mesh surface or its sorted LOD. Paths must use a restricted ASCII filename under [code]user://worlds_geometry_cache/[/code] and end in [code].wgc1[/code]. Provide complete asset identity and geometry-affecting import settings in the supplied byte arrays; these bytes are not discovered automatically. Returns explicit [code]READY_CACHED[/code], [code]READY_STORED[/code], [code]READY_MEMORY_ONLY[/code] or failure status, source and output triangle counts, [code]boundaries_analyzed[/code] and [code]verified[/code]. Separate boundary extraction is skipped by default for fast cache lookup: [code]boundary_status[/code] is [code]NOT_REQUESTED[/code] until users invoke the dedicated surface analysis APIs. Every result sets [code]requires_standard_renderer[/code] to true: offline data acceptance does not enable GPU cluster rendering. The original Mesh is unchanged.
             </description>
         </method>
         <method name="prepare_importer_surface_cache">
@@ -88,7 +88,7 @@
             <param index="6" name="max_vertices" type="int" default="64" />
             <param index="7" name="max_triangles" type="int" default="124" />
             <description>
-                Opt-in WGC1 preparation directly from ImporterMesh surface data or its original indexed LOD stream. No [code]get_mesh()[/code] call, material mutation, renderer changes, or automatic editor import is performed. The caller supplies a cache URI and complete asset/import provenance. The returned Dictionary includes the source name and optional LOD distance. Requires the experimental worlds_geometry and meshoptimizer modules at engine build time.
+                Opt-in WGC1 preparation directly from ImporterMesh surface data or its original indexed LOD stream. No [code]get_mesh()[/code] call, material mutation, renderer changes, or automatic editor import is performed. The caller supplies a cache URI and complete asset/import provenance. The returned Dictionary includes the source name and optional LOD distance. For normal cache lookups, [code]boundaries_analyzed[/code] is false and [code]boundary_status[/code] is [code]NOT_REQUESTED[/code]; use dedicated mesh topology APIs to request a border inspection. Requires the experimental worlds_geometry and meshoptimizer modules at engine build time.
             </description>
         </method>
         <method name="compare_border_samples">

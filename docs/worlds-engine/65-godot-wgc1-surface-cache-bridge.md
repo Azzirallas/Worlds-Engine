@@ -85,3 +85,5 @@ The engine binary path is illustrative; check the actual generated executable. R
 No proprietary Unreal code was copied. This remains an experimental Godot module, disabled by default.
 
 **2026-11-15 review correction:** [66 — importer semantics audit](66-godot-import-index-semantics-and-native-gate.md) checked the actual Godot `ImporterMesh` source and confirmed that an empty `PackedInt32Array` is nonindexed by Godot convention. The existing importer adapters correctly use `!indices.empty()`. A possible Variant-type-only change was **rejected**, not committed. New portable compatibility tests passed, while the added Godot smoke and true real-vendor WGC1 integration remain unexecuted.
+
+**2026-11-17 performance/correctness note:** [68](68-phase1-rendering-review.md) changes the default WGC1 path to skip redundant boundary-chain extraction. The result reports `boundaries_analyzed=false` / `boundary_status=NOT_REQUESTED`. The regular topology methods remain the explicit analysis path; no GPU rendering is enabled or tested.

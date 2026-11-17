@@ -39,8 +39,12 @@ GeometryPipelineResult prepare_offline_geometry(const GeometryPipelineInput &inp
         return out;
     }
 
-    // Non-manifold boundaries are not automatically errors for a conventional mesh.
-    out.boundaries = extract_mesh_boundaries(input.positions, prepared.indices);
+    // Diagnostic-only topology analysis can be expensive on every cache hit.
+    // Independently audited meshlet coverage and WGC1 bounds are still mandatory.
+    if (input.analyze_boundaries) {
+        out.boundaries = extract_mesh_boundaries(input.positions, prepared.indices);
+        out.boundaries_analyzed = true;
+    }
     GeometryCacheSource source;
     source.positions = input.positions;
     source.source_triangles.reserve(prepared.indices.size());

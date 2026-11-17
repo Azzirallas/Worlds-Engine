@@ -15,6 +15,7 @@ GeometryStoreStatus next_store = GeometryStoreStatus::BUILT_STORED;
 bool return_invalid_success = false;
 int builder_calls = 0;
 int cache_calls = 0;
+int boundary_calls = 0;
 GeometryCacheSource seen_source;
 std::vector<std::uint8_t> seen_settings;
 MeshletBuild valid_build() {
@@ -28,6 +29,7 @@ GeometryPipelineInput basic() {
     GeometryPipelineInput in;
     in.positions = {{0,0,0},{1,0,0},{1,1,0},{0,1,0}};
     in.indices = {0,1,2,0,2,3};
+    in.analyze_boundaries = true;
     in.asset_identity = {'a','s','s','e','t'};
     in.import_settings = {'s','e','t','t','i','n','g','s'};
     in.cache_path = "derived/mesh.wgc1";
@@ -39,6 +41,7 @@ GeometryPipelineInput basic() {
 void reset() {
     builder_calls = 0;
     cache_calls = 0;
+    boundary_calls = 0;
     next_store = GeometryStoreStatus::BUILT_STORED;
     return_invalid_success = false;
 }
@@ -68,6 +71,7 @@ PreparedSurface prepare_triangle_surface(std::size_t count, bool triangles, bool
 }
 BoundaryExtraction extract_mesh_boundaries(const std::vector<Point> &p,
                                            const std::vector<std::int32_t> &indices) {
+    ++boundary_calls;
     BoundaryExtraction r;
     assert(!indices.empty());
     r.status = p[0].x == 7.0 ? BoundaryStatus::NONMANIFOLD_SURFACE : BoundaryStatus::OK;
@@ -104,7 +108,8 @@ int main() {
     auto r=prepare_offline_geometry(input);
     assert(r.status==GeometryPipelineStatus::READY_STORED);
     assert(r.store_status==GeometryStoreStatus::BUILT_STORED && r.build.valid);
-    assert(r.boundaries.status==BoundaryStatus::OK && r.boundaries.boundary_edges==4);
+    assert(r.boundaries_analyzed && r.boundaries.status==BoundaryStatus::OK && r.boundaries.boundary_edges==4);
+    assert(boundary_calls==1);
     assert(builder_calls==1 && cache_calls==1);
     assert(seen_source.source_triangles == std::vector<std::uint32_t>({0,1,2,0,2,3}));
     assert(seen_source.surface==3 && seen_source.lod==1 && seen_source.generator_version==7);
@@ -116,6 +121,17 @@ int main() {
     reset(); next_store=GeometryStoreStatus::HIT;
     r=prepare_offline_geometry(input);
     assert(r.status==GeometryPipelineStatus::READY_CACHED && builder_calls==0 && cache_calls==1);
+    assert(boundary_calls==1); // Explicit diagnostics still run on a cache hit.
+    // Default import path skips boundary extraction on both miss and hit.
+    reset(); input.analyze_boundaries=false; next_store=GeometryStoreStatus::HIT;
+    r=prepare_offline_geometry(input);
+    assert(r.status==GeometryPipelineStatus::READY_CACHED && !r.boundaries_analyzed);
+    assert(boundary_calls==0 && builder_calls==0 && cache_calls==1);
+    reset(); next_store=GeometryStoreStatus::BUILT_STORED;
+    r=prepare_offline_geometry(input);
+    assert(r.status==GeometryPipelineStatus::READY_STORED && !r.boundaries_analyzed);
+    assert(boundary_calls==0 && builder_calls==1 && cache_calls==1);
+    input.analyze_boundaries=true;
     reset(); next_store=GeometryStoreStatus::BUILT_UNSTORED;
     r=prepare_offline_geometry(input);
     assert(r.status==GeometryPipelineStatus::READY_MEMORY_ONLY && builder_calls==1);

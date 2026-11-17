@@ -92,7 +92,9 @@ Dictionary prepare(GeometryPipelineInput &&input, const String &cache_uri,
     report["status"] = worlds_geometry::geometry_pipeline_status_string(result.status);
     report["surface_status"] = worlds_geometry::surface_status_string(result.surface_status);
     report["generated_indices"] = result.generated_indices;
-    report["boundary_status"] = worlds_geometry::boundary_status_string(result.boundaries.status);
+    report["boundaries_analyzed"] = result.boundaries_analyzed;
+    report["boundary_status"] = result.boundaries_analyzed ?
+            worlds_geometry::boundary_status_string(result.boundaries.status) : "NOT_REQUESTED";
     report["boundary_edges"] = static_cast<int64_t>(result.boundaries.boundary_edges);
     report["boundary_chain_count"] = static_cast<int64_t>(result.boundaries.chains.size());
     const bool ready = result.status == GeometryPipelineStatus::READY_CACHED ||

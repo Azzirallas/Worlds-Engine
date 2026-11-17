@@ -201,3 +201,7 @@ A source-only audit is possible using GitHub connection, but actual graphics dat
 ## WGC1 meshlet payload-size checkpoint — 2026-11-15
 
 [67 — certified meshlet compaction](67-certified-meshlet-payload-compaction.md) adds a portable post-audit repacking pass to strip unused vendor scratch buffer entries and correct each meshlet's offsets before WGC1 serialization. **GCC strict C++17 and Clang ASan+UBSan passed** with 900 seeded multi-cluster fixtures. Native real-vendor/WGC1 and full Godot module integration remain **unexecuted**. Next accept: run `benchmarks/native_geometry/run_real_vendor_gate.sh` in a full checkout and verify non-mock end-to-end cache behavior, then evaluate actual cache sizes and imported assets.
+
+## Phase 1 integration review and fast-path checkpoint — 2026-11-17
+
+[68 — four-part rendering report](68-phase1-rendering-review.md) reviews delivered source components, original goals, concrete improvements and research gaps. New `analyze_boundaries=false` input default avoids a redundant read-only topology pass on cache hits/misses; it **does not skip** source hashing, independent meshlet validation, WGC1 bounds or checksum checks. A tested exact-source C++ regression passed GCC strict and Clang ASan+UBSan using isolated link stubs. Updated mock and real-vendor test fixtures are committed; real-vendor linked execution, Godot SCons/headless tests and GPU baselines remain **pending**. Immediate gates are real vendor → Godot build → asset provenance → GPU measured reference.
